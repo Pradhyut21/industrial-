@@ -13,6 +13,7 @@ from the deliberate production throttle):
     AI_RATE_LIMIT=1000 python run.py                  # Linux / macOS
     python -m backend.evals.load_test_concurrent
 """
+import os
 import asyncio
 import statistics
 import time
