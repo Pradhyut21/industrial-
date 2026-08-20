@@ -31,6 +31,6 @@ openpyxl           # .xlsx spreadsheet parsing (Continuity Vault)
 # x402 / Algorand — AI Agent Micropayment Gate (Section 9)
 # x402-avm implements the x402 HTTP 402 protocol on Algorand (GoPlausible facilitator).
 # py-algorand-sdk (algosdk) is used for the verifier payout mechanic (Section 9.6).
-"x402-avm[fastapi,avm]==2.0.2"
+x402-avm[fastapi,avm]==2.0.2
 py-algorand-sdk
 
