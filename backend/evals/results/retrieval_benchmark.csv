@@ -1,0 +1,51 @@
+Query,Category,Expected_Tag,Keyword_Hit,Semantic_Hit,Hybrid_Hit,Top_Hybrid_Tags
+What's the failure signature for pump cavitation on P-302?,exact_match,P-302,True,True,False,C-104|C-104|C-104
+Heater B-101 is drifting on temperature,exact_match,B-101,True,True,True,B-101|B-101
+V-205 valve controller keeps sticking,exact_match,V-205,True,True,True,V-205|V-205
+C-104 air unit overhaul tightening instructions,exact_match,C-104,True,True,True,C-104
+What are the tightening specs for C-104?,exact_match,C-104,True,True,True,C-104
+S-501 power panel running hot,exact_match,S-501,True,True,True,S-501
+TURBINE-04 controller delay on cold start,exact_match,TURBINE-04,True,True,True,TURBINE-04
+BOILER-2 gas switch overheating,exact_match,BOILER-2,False,False,False,Unassigned
+V-205 water system zeroing process,exact_match,V-205,True,True,True,V-205|V-205
+C-104 air unit clicking sound,exact_match,C-104,True,True,True,F-402|C-104|C-104
+water mover intake blockage,paraphrase,P-302,False,False,False,V-205|B-101|B-101
+cold weather controller inaccuracy,paraphrase,V-205,True,True,True,V-205
+steam generator wobbling at night,paraphrase,B-101,True,True,True,B-101
+power distribution rust on connections,paraphrase,S-501,False,False,True,S-501|Unassigned|C-104
+steam maker switch cooling vent change,paraphrase,BOILER-2,False,False,False,B-101|B-101|Unassigned
+spinning machine controller delay,paraphrase,TURBINE-04,False,True,False,V-205|Unassigned|Unassigned
+the big water pump keeps hunting,paraphrase,P-302,True,True,True,P-302|P-302|B-101
+the boiler feed is shaking too much,paraphrase,B-101,True,True,True,B-101|B-101|Unassigned
+air box keeps making that clicking noise,paraphrase,C-104,False,True,True,C-104|C-104|C-104
+main spark panel getting way too hot,paraphrase,S-501,True,True,True,S-501
+p302 cavitation history,informal_typo,P-302,True,False,True,P-302|F-402|C-104
+b101 temp drift,informal_typo,B-101,False,True,True,B-101|B-101
+v 205 sticking again,informal_typo,V-205,True,True,True,V-205|V-205|V-205
+c104 overhaul,informal_typo,C-104,False,True,True,C-104|C-104|C-104
+s 501 phase b,informal_typo,S-501,True,False,True,S-501
+turbine04 cold start,informal_typo,TURBINE-04,False,True,True,TURBINE-04
+boiler 2 overheating,informal_typo,BOILER-2,False,False,False,Unassigned
+p-302 pump is loud,informal_typo,P-302,True,True,True,P-302|P-302
+v-205 zero process,informal_typo,V-205,True,True,True,V-205|V-205
+c-104 screw tightening,informal_typo,C-104,True,True,True,C-104
+what did whoever last handled a cavitation issue on P-302 recommend,multi_hop,P-302,True,True,True,P-302|F-402|V-205
+how does the temperature drift on B-101 affect the downstream process,multi_hop,B-101,True,True,True,B-101|B-101
+does the sticking V-205 cause the same issue as last year,multi_hop,V-205,True,True,True,V-205|V-205|V-205
+who worked on the C-104 clicking sound recently,multi_hop,C-104,True,True,True,C-104|C-104|C-104
+compare S-501 rust to the previous phase-b hot run,multi_hop,S-501,True,False,True,S-501
+how did we fix the BOILER-2 gas switch last time it overheated,multi_hop,BOILER-2,False,False,False,Unassigned
+what are the common causes of TURBINE-04 cold start delays based on logs,multi_hop,TURBINE-04,True,True,True,TURBINE-04
+did the C-104 overhaul fix the loose screws issue permanently,multi_hop,C-104,True,True,True,C-104|C-104|F-402
+what's the consensus on P-302 intake blockage,multi_hop,P-302,True,True,True,P-302|B-101|B-101
+which engineer documented the V-205 cold weather inaccuracy,multi_hop,V-205,True,True,True,V-205
+where is the cafeteria menu posted,negative_control,NONE,True,False,False,S-501|C-104|B-101
+how many vacation days do I have left,negative_control,NONE,True,False,False,B-101|C-104|S-501
+who is the CEO of the company,negative_control,NONE,True,False,False,P-302|C-104|B-101
+how to connect to the guest wifi,negative_control,NONE,True,False,False,S-501|V-205|V-205
+what time does the morning shift start,negative_control,NONE,True,False,False,B-101|B-101|B-101
+where do I submit my timesheet,negative_control,NONE,True,False,False,P-302|C-104|Unassigned
+is there a holiday party this year,negative_control,NONE,True,False,False,S-501|B-101|V-205
+how to reset my email password,negative_control,NONE,True,False,False,S-501|C-104|V-205
+where is the nearest fire extinguisher,negative_control,NONE,True,False,False,S-501|P-302|C-104
+can I park in the visitor lot,negative_control,NONE,True,False,False,B-101|TURBINE-04|B-101

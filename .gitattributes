@@ -1,0 +1,17 @@
+# Auto-detect text files and perform LF normalization
+* text=auto eol=lf
+
+# Explicit binary files
+*.db binary
+*.sqlite binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg text
+*.pdf binary
+
+# Linguist overrides
+frontend/dist/* linguist-vendored
+backend/data/* linguist-vendored

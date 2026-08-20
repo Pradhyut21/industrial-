@@ -1,0 +1,28 @@
+name: 💡 Feature Proposal
+description: Suggest an idea or capability for DeadMind
+title: "[FEATURE] <concise summary>"
+labels: ["enhancement", "feature"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        We love ideas that enhance industrial knowledge preservation and operational safety!
+  - type: textarea
+    id: problem-statement
+    attributes:
+      label: Is your feature request related to a problem?
+      description: A clear description of the challenge facing plant engineers or operations.
+    validations:
+      required: true
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the solution, workflow, or UI/UX experience you would like to see.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternative Solutions Considered
+      description: Any alternative solutions or workarounds you've considered.

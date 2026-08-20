@@ -1,0 +1,52 @@
+<svg viewBox="0 0 2000 1050" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif">
+<defs>
+  <marker id="arrowhead" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+    <polygon points="0 0, 10 4, 0 8" fill="#00d2ff"/>
+  </marker>
+  <marker id="arrowhead-amber" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+    <polygon points="0 0, 10 4, 0 8" fill="#f0b429"/>
+  </marker>
+  <linearGradient id="titleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%" stop-color="#00ff88"/>
+    <stop offset="100%" stop-color="#00d2ff"/>
+  </linearGradient>
+</defs>
+<rect x="0" y="0" width="2000" height="1050" fill="#0D1117"/>
+<text x="60" y="60" font-size="34" font-weight="800" fill="url(#titleGrad)">DeadMind — System Architecture</text>
+<text x="60" y="88" font-size="15" fill="#8b949e">Industrial Knowledge Intelligence Pipeline — Ingestion, Retrieval, Audit &amp; Risk Modeling</text>
+<text x="60" y="150" font-family="Inter, sans-serif" font-size="13" font-weight="700" letter-spacing="2" fill="#f0b429">INGESTION · ADMIN VIEW</text>
+<rect x="60.0" y="161.0" width="210" height="78" rx="14" fill="#161b22" stroke="#30363d" stroke-width="2"/><rect x="60.0" y="161.0" width="6" height="78" rx="3" fill="#f0b429"/><text x="165.0" y="189.0" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#fff">Document / Voice</text><text x="165.0" y="211.0" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#fff">Ingestion</text>
+<rect x="315.0" y="161.0" width="210" height="78" rx="14" fill="#161b22" stroke="#30363d" stroke-width="2"/><rect x="315.0" y="161.0" width="6" height="78" rx="3" fill="#f0b429"/><text x="420.0" y="189.0" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#fff">NLP Entity Extraction</text><text x="420.0" y="211.0" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#fff">&amp; Coreference</text>
+<rect x="570.0" y="435.0" width="260" height="130" rx="14" fill="#0f2e1f" stroke="#00ff88" stroke-width="2"/><rect x="570.0" y="435.0" width="6" height="130" rx="3" fill="#00ff88"/><text x="700.0" y="479.0" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#fff">SQLite</text><text x="700.0" y="501.0" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#fff">Knowledge Graph</text><text x="700.0" y="551.0" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#8b949e">Central store · all views read/write</text>
+<path d="M 270.0 200 L 315.0 200" stroke="#00d2ff" stroke-width="2.5" fill="none" marker-end="url(#arrowhead)"/>
+<path d="M 525.0 200 Q 560 330 570.0 440" stroke="#00d2ff" stroke-width="2.5" fill="none" marker-end="url(#arrowhead)"/>
+<text x="940" y="150" font-family="Inter, sans-serif" font-size="13" font-weight="700" letter-spacing="2" fill="#a78bfa">AUDIT · PLANT HEAD VIEW</text>
+<rect x="935.0" y="161.0" width="210" height="78" rx="14" fill="#161b22" stroke="#30363d" stroke-width="2"/><rect x="935.0" y="161.0" width="6" height="78" rx="3" fill="#a78bfa"/><text x="1040.0" y="189.0" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#fff">SOP Compliance</text><text x="1040.0" y="211.0" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#fff">Shadow Auditing</text>
+<rect x="1215.0" y="161.0" width="210" height="78" rx="14" fill="#161b22" stroke="#30363d" stroke-width="2"/><rect x="1215.0" y="161.0" width="6" height="78" rx="3" fill="#a78bfa"/><text x="1320.0" y="189.0" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#fff">Audit View /</text><text x="1320.0" y="211.0" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#fff">Anomaly Analyzer</text>
+<path d="M 1145.0 200 L 1215.0 200" stroke="#00d2ff" stroke-width="2.5" fill="none" marker-end="url(#arrowhead)"/>
+<path d="M 830.0 470 Q 880 320 935.0 200" stroke="#00d2ff" stroke-width="2.5" fill="none" marker-end="url(#arrowhead)"/>
+<text x="940" y="880" font-family="Inter, sans-serif" font-size="13" font-weight="700" letter-spacing="2" fill="#ff7b72">RISK MODELING · CFO VIEW</text>
+<rect x="935.0" y="891.0" width="210" height="78" rx="14" fill="#161b22" stroke="#30363d" stroke-width="2"/><rect x="935.0" y="891.0" width="6" height="78" rx="3" fill="#ff7b72"/><text x="1040.0" y="919.0" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#fff">Decay Model &amp;</text><text x="1040.0" y="941.0" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#fff">Retirement Slider</text>
+<rect x="1215.0" y="891.0" width="210" height="78" rx="14" fill="#161b22" stroke="#30363d" stroke-width="2"/><rect x="1215.0" y="891.0" width="6" height="78" rx="3" fill="#ff7b72"/><text x="1320.0" y="919.0" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#fff">CFO Plant Map /</text><text x="1320.0" y="941.0" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#fff">ROI Analysis</text>
+<path d="M 1145.0 930 L 1215.0 930" stroke="#00d2ff" stroke-width="2.5" fill="none" marker-end="url(#arrowhead)"/>
+<path d="M 830.0 530 Q 880 680 935.0 930" stroke="#00d2ff" stroke-width="2.5" fill="none" marker-end="url(#arrowhead)"/>
+<text x="940" y="400" font-family="Inter, sans-serif" font-size="13" font-weight="700" letter-spacing="2" fill="#00d2ff">RETRIEVAL &amp; COPILOT · FIELD TECHNICIAN VIEW</text>
+<rect x="895.0" y="461.0" width="210" height="78" rx="14" fill="#161b22" stroke="#30363d" stroke-width="2"/><rect x="895.0" y="461.0" width="6" height="78" rx="3" fill="#00d2ff"/><text x="1000.0" y="489.0" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#fff">BM25 + FAISS</text><text x="1000.0" y="511.0" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#fff">Hybrid Index</text>
+<rect x="1125.0" y="461.0" width="210" height="78" rx="14" fill="#161b22" stroke="#30363d" stroke-width="2"/><rect x="1125.0" y="461.0" width="6" height="78" rx="3" fill="#00d2ff"/><text x="1230.0" y="500.0" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#fff">RRF Fusion</text>
+<rect x="1355.0" y="461.0" width="210" height="78" rx="14" fill="#161b22" stroke="#30363d" stroke-width="2"/><rect x="1355.0" y="461.0" width="6" height="78" rx="3" fill="#00d2ff"/><text x="1460.0" y="489.0" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#fff">Cross-Encoder</text><text x="1460.0" y="511.0" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#fff">Reranker</text>
+<rect x="1585.0" y="461.0" width="210" height="78" rx="14" fill="#161b22" stroke="#30363d" stroke-width="2"/><rect x="1585.0" y="461.0" width="6" height="78" rx="3" fill="#00d2ff"/><text x="1690.0" y="489.0" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#fff">RAG Inference</text><text x="1690.0" y="511.0" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#fff">Engine (Groq)</text>
+<path d="M 830.0 500 L 895.0 500" stroke="#00d2ff" stroke-width="2.5" fill="none" marker-end="url(#arrowhead)"/>
+<path d="M 1105.0 500 L 1125.0 500" stroke="#00d2ff" stroke-width="2.5" fill="none" marker-end="url(#arrowhead)"/>
+<path d="M 1335.0 500 L 1355.0 500" stroke="#00d2ff" stroke-width="2.5" fill="none" marker-end="url(#arrowhead)"/>
+<path d="M 1565.0 500 L 1585.0 500" stroke="#00d2ff" stroke-width="2.5" fill="none" marker-end="url(#arrowhead)"/>
+<rect x="1585.0" y="641.0" width="210" height="78" rx="14" fill="#161b22" stroke="#30363d" stroke-width="2"/><rect x="1585.0" y="641.0" width="6" height="78" rx="3" fill="#00d2ff"/><text x="1690.0" y="669.0" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#fff">SSE Streaming</text><text x="1690.0" y="691.0" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#fff">Layer</text>
+<rect x="1335.0" y="641.0" width="210" height="78" rx="14" fill="#0f2e1f" stroke="#00ff88" stroke-width="2"/><rect x="1335.0" y="641.0" width="6" height="78" rx="3" fill="#00ff88"/><text x="1440.0" y="669.0" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#fff">Expert Persona</text><text x="1440.0" y="691.0" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#fff">Copilot</text>
+<rect x="1335.0" y="811.0" width="210" height="78" rx="14" fill="#161b22" stroke="#30363d" stroke-width="2"/><rect x="1335.0" y="811.0" width="6" height="78" rx="3" fill="#a78bfa"/><text x="1440.0" y="839.0" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#fff">Consensus &amp;</text><text x="1440.0" y="861.0" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#fff">Dissent Analyzer</text>
+<rect x="1585.0" y="811.0" width="210" height="78" rx="14" fill="#161b22" stroke="#30363d" stroke-width="2"/><rect x="1585.0" y="811.0" width="6" height="78" rx="3" fill="#f0b429"/><text x="1690.0" y="850.0" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#fff">Feedback Loop</text>
+<path d="M 1690 539.0 Q 1690 600 1690 641.0" stroke="#00d2ff" stroke-width="2.5" fill="none" marker-end="url(#arrowhead)"/>
+<path d="M 1585.0 680 L 1545.0 680" stroke="#00d2ff" stroke-width="2.5" fill="none" marker-end="url(#arrowhead)"/>
+<path d="M 1440 719.0 Q 1440 770 1440 811.0" stroke="#00d2ff" stroke-width="2.5" fill="none" marker-end="url(#arrowhead)"/>
+<path d="M 1545.0 700 Q 1600 800 1585.0 850" stroke="#00d2ff" stroke-width="2.5" fill="none" marker-end="url(#arrowhead)"/>
+<path d="M 1690 811.0 L 1950 811.0 L 1950 340 L 1190 340 L 1190 461.0" stroke="#f0b429" stroke-width="2.5" fill="none" marker-end="url(#arrowhead-amber)" stroke-dasharray="6,5"/>
+<text x="1650" y="325" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#f0b429">feedback re-weights retrieval</text>
+</svg>

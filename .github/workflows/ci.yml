@@ -1,0 +1,116 @@
+name: DeadMind CI / CD Pipeline
+
+on:
+  push:
+    branches: [ "main", "master", "develop" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  backend-validation:
+    name: Backend Tests & Security Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tesseract-ocr poppler-utils libgl1-mesa-glx
+
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          pip install -r requirements.txt
+          pip install flake8 bandit
+
+      - name: Download spaCy Language Model
+        run: |
+          python -m spacy download en_core_web_sm
+
+      - name: Lint with Flake8
+        run: |
+          # Stop build if there are Python syntax errors or undefined names
+          flake8 backend --count --select=E9,F63,F7,F82 --show-source --statistics
+          # Exit-zero treats all warnings as non-fatal
+          flake8 backend --count --exit-zero --max-complexity=15 --max-line-length=127 --statistics
+
+      - name: Run Backend Pytest Suite
+        env:
+          GROQ_API_KEY: "stub_key_for_ci"
+          AI_RATE_LIMIT: "1000"
+        run: |
+          python -m pytest backend/tests/ -v --color=yes
+
+      - name: Security Scan (Bandit)
+        run: |
+          bandit -r backend -ll -ii -x backend/tests --exit-zero
+
+  frontend-validation:
+    name: Frontend Build & Typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install Frontend Dependencies
+        working-directory: ./frontend
+        run: |
+          npm ci || npm install
+
+      - name: Type Check & Frontend Build
+        working-directory: ./frontend
+        run: |
+          npm run build
+
+  docker-validation:
+    name: Docker Container Build Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [backend-validation, frontend-validation]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Backend Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: false
+          tags: deadmind-backend:ci-test
+
+      - name: Build Frontend Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          push: false
+          tags: deadmind-frontend:ci-test

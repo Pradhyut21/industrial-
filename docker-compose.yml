@@ -1,0 +1,69 @@
+services:
+  # ── Demo mode (default) ── zero config, runs with `docker compose up` ──────
+  backend:
+    build: .
+    ports: ["8000:8000"]
+    volumes: ["./backend/data:/app/backend/data", "./deadmind.db:/app/deadmind.db"]
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  frontend:
+    build: ./frontend
+    ports: ["8080:8080", "5173:5173"]
+    environment:
+      - VITE_API_BASE_URL=http://backend:8000
+    depends_on: [backend]
+
+  # ── Production profile ── `docker compose --profile prod up` ─────────────
+  # 2 stateless API replicas + 1 Celery worker (OCR/CV jobs), sharing
+  # Postgres + Redis, fronted by nginx round-robin LB.
+  backend-prod-1:
+    build: .
+    environment:
+      - DATABASE_URL=postgresql://deadmind:deadmind@postgres:5432/deadmind
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    depends_on: [postgres, redis]
+    profiles: ["prod"]
+
+  backend-prod-2:
+    build: .
+    environment:
+      - DATABASE_URL=postgresql://deadmind:deadmind@postgres:5432/deadmind
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    depends_on: [postgres, redis]
+    profiles: ["prod"]
+
+  celery-worker:
+    build: .
+    command: celery -A backend.tasks.celery_app worker --loglevel=info --concurrency=4
+    environment:
+      - DATABASE_URL=postgresql://deadmind:deadmind@postgres:5432/deadmind
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    depends_on: [postgres, redis]
+    profiles: ["prod"]
+
+  nginx-lb:
+    image: nginx:alpine
+    ports: ["8080:80"]
+    volumes: ["./nginx.conf:/etc/nginx/nginx.conf:ro"]
+    depends_on: [backend-prod-1, backend-prod-2]
+    profiles: ["prod"]
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      - POSTGRES_USER=deadmind
+      - POSTGRES_PASSWORD=deadmind
+      - POSTGRES_DB=deadmind
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+    profiles: ["prod"]
+
+  redis:
+    image: redis:7-alpine
+    profiles: ["prod"]
+
+volumes:
+  pgdata:

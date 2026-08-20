@@ -1,0 +1,656 @@
+{
+  "timestamp": "2026-08-19T17:30:24.112163+00:00",
+  "total_queries": 50,
+  "evaluation_duration_seconds": 30.47,
+  "metrics": {
+    "keyword_p_at_3": 0.78,
+    "semantic_p_at_3": 0.62,
+    "hybrid_rrf_reranker_p_at_3": 0.66,
+    "absolute_improvement_over_keyword": -0.12
+  },
+  "category_breakdown": {
+    "exact_match": {
+      "total": 10,
+      "keyword_hits": 9,
+      "semantic_hits": 9,
+      "hybrid_hits": 8
+    },
+    "paraphrase": {
+      "total": 10,
+      "keyword_hits": 5,
+      "semantic_hits": 7,
+      "hybrid_hits": 7
+    },
+    "informal_typo": {
+      "total": 10,
+      "keyword_hits": 6,
+      "semantic_hits": 7,
+      "hybrid_hits": 9
+    },
+    "multi_hop": {
+      "total": 10,
+      "keyword_hits": 9,
+      "semantic_hits": 8,
+      "hybrid_hits": 9
+    },
+    "negative_control": {
+      "total": 10,
+      "keyword_hits": 10,
+      "semantic_hits": 0,
+      "hybrid_hits": 0
+    }
+  },
+  "queries": [
+    {
+      "query": "What's the failure signature for pump cavitation on P-302?",
+      "expected_tag": "P-302",
+      "category": "exact_match",
+      "keyword_hit": true,
+      "semantic_hit": true,
+      "hybrid_hit": false,
+      "top_hybrid_tags": [
+        "C-104",
+        "C-104",
+        "C-104"
+      ]
+    },
+    {
+      "query": "Heater B-101 is drifting on temperature",
+      "expected_tag": "B-101",
+      "category": "exact_match",
+      "keyword_hit": true,
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "B-101",
+        "B-101"
+      ]
+    },
+    {
+      "query": "V-205 valve controller keeps sticking",
+      "expected_tag": "V-205",
+      "category": "exact_match",
+      "keyword_hit": true,
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "V-205",
+        "V-205"
+      ]
+    },
+    {
+      "query": "C-104 air unit overhaul tightening instructions",
+      "expected_tag": "C-104",
+      "category": "exact_match",
+      "keyword_hit": true,
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "C-104"
+      ]
+    },
+    {
+      "query": "What are the tightening specs for C-104?",
+      "expected_tag": "C-104",
+      "category": "exact_match",
+      "keyword_hit": true,
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "C-104"
+      ]
+    },
+    {
+      "query": "S-501 power panel running hot",
+      "expected_tag": "S-501",
+      "category": "exact_match",
+      "keyword_hit": true,
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "S-501"
+      ]
+    },
+    {
+      "query": "TURBINE-04 controller delay on cold start",
+      "expected_tag": "TURBINE-04",
+      "category": "exact_match",
+      "keyword_hit": true,
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "TURBINE-04"
+      ]
+    },
+    {
+      "query": "BOILER-2 gas switch overheating",
+      "expected_tag": "BOILER-2",
+      "category": "exact_match",
+      "keyword_hit": false,
+      "semantic_hit": false,
+      "hybrid_hit": false,
+      "top_hybrid_tags": [
+        "Unassigned"
+      ]
+    },
+    {
+      "query": "V-205 water system zeroing process",
+      "expected_tag": "V-205",
+      "category": "exact_match",
+      "keyword_hit": true,
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "V-205",
+        "V-205"
+      ]
+    },
+    {
+      "query": "C-104 air unit clicking sound",
+      "expected_tag": "C-104",
+      "category": "exact_match",
+      "keyword_hit": true,
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "F-402",
+        "C-104",
+        "C-104"
+      ]
+    },
+    {
+      "query": "water mover intake blockage",
+      "expected_tag": "P-302",
+      "category": "paraphrase",
+      "keyword_hit": false,
+      "semantic_hit": false,
+      "hybrid_hit": false,
+      "top_hybrid_tags": [
+        "V-205",
+        "B-101",
+        "B-101"
+      ]
+    },
+    {
+      "query": "cold weather controller inaccuracy",
+      "expected_tag": "V-205",
+      "category": "paraphrase",
+      "keyword_hit": true,
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "V-205"
+      ]
+    },
+    {
+      "query": "steam generator wobbling at night",
+      "expected_tag": "B-101",
+      "category": "paraphrase",
+      "keyword_hit": true,
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "B-101"
+      ]
+    },
+    {
+      "query": "power distribution rust on connections",
+      "expected_tag": "S-501",
+      "category": "paraphrase",
+      "keyword_hit": false,
+      "semantic_hit": false,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "S-501",
+        "Unassigned",
+        "C-104"
+      ]
+    },
+    {
+      "query": "steam maker switch cooling vent change",
+      "expected_tag": "BOILER-2",
+      "category": "paraphrase",
+      "keyword_hit": false,
+      "semantic_hit": false,
+      "hybrid_hit": false,
+      "top_hybrid_tags": [
+        "B-101",
+        "B-101",
+        "Unassigned"
+      ]
+    },
+    {
+      "query": "spinning machine controller delay",
+      "expected_tag": "TURBINE-04",
+      "category": "paraphrase",
+      "keyword_hit": false,
+      "semantic_hit": true,
+      "hybrid_hit": false,
+      "top_hybrid_tags": [
+        "V-205",
+        "Unassigned",
+        "Unassigned"
+      ]
+    },
+    {
+      "query": "the big water pump keeps hunting",
+      "expected_tag": "P-302",
+      "category": "paraphrase",
+      "keyword_hit": true,
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "P-302",
+        "P-302",
+        "B-101"
+      ]
+    },
+    {
+      "query": "the boiler feed is shaking too much",
+      "expected_tag": "B-101",
+      "category": "paraphrase",
+      "keyword_hit": true,
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "B-101",
+        "B-101",
+        "Unassigned"
+      ]
+    },
+    {
+      "query": "air box keeps making that clicking noise",
+      "expected_tag": "C-104",
+      "category": "paraphrase",
+      "keyword_hit": false,
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "C-104",
+        "C-104",
+        "C-104"
+      ]
+    },
+    {
+      "query": "main spark panel getting way too hot",
+      "expected_tag": "S-501",
+      "category": "paraphrase",
+      "keyword_hit": true,
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "S-501"
+      ]
+    },
+    {
+      "query": "p302 cavitation history",
+      "expected_tag": "P-302",
+      "category": "informal_typo",
+      "keyword_hit": true,
+      "semantic_hit": false,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "P-302",
+        "F-402",
+        "C-104"
+      ]
+    },
+    {
+      "query": "b101 temp drift",
+      "expected_tag": "B-101",
+      "category": "informal_typo",
+      "keyword_hit": false,
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "B-101",
+        "B-101"
+      ]
+    },
+    {
+      "query": "v 205 sticking again",
+      "expected_tag": "V-205",
+      "category": "informal_typo",
+      "keyword_hit": true,
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "V-205",
+        "V-205",
+        "V-205"
+      ]
+    },
+    {
+      "query": "c104 overhaul",
+      "expected_tag": "C-104",
+      "category": "informal_typo",
+      "keyword_hit": false,
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "C-104",
+        "C-104",
+        "C-104"
+      ]
+    },
+    {
+      "query": "s 501 phase b",
+      "expected_tag": "S-501",
+      "category": "informal_typo",
+      "keyword_hit": true,
+      "semantic_hit": false,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "S-501"
+      ]
+    },
+    {
+      "query": "turbine04 cold start",
+      "expected_tag": "TURBINE-04",
+      "category": "informal_typo",
+      "keyword_hit": false,
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "TURBINE-04"
+      ]
+    },
+    {
+      "query": "boiler 2 overheating",
+      "expected_tag": "BOILER-2",
+      "category": "informal_typo",
+      "keyword_hit": false,
+      "semantic_hit": false,
+      "hybrid_hit": false,
+      "top_hybrid_tags": [
+        "Unassigned"
+      ]
+    },
+    {
+      "query": "p-302 pump is loud",
+      "expected_tag": "P-302",
+      "category": "informal_typo",
+      "keyword_hit": true,
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "P-302",
+        "P-302"
+      ]
+    },
+    {
+      "query": "v-205 zero process",
+      "expected_tag": "V-205",
+      "category": "informal_typo",
+      "keyword_hit": true,
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "V-205",
+        "V-205"
+      ]
+    },
+    {
+      "query": "c-104 screw tightening",
+      "expected_tag": "C-104",
+      "category": "informal_typo",
+      "keyword_hit": true,
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "C-104"
+      ]
+    },
+    {
+      "query": "what did whoever last handled a cavitation issue on P-302 recommend",
+      "expected_tag": "P-302",
+      "category": "multi_hop",
+      "keyword_hit": true,
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "P-302",
+        "F-402",
+        "V-205"
+      ]
+    },
+    {
+      "query": "how does the temperature drift on B-101 affect the downstream process",
+      "expected_tag": "B-101",
+      "category": "multi_hop",
+      "keyword_hit": true,
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "B-101",
+        "B-101"
+      ]
+    },
+    {
+      "query": "does the sticking V-205 cause the same issue as last year",
+      "expected_tag": "V-205",
+      "category": "multi_hop",
+      "keyword_hit": true,
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "V-205",
+        "V-205",
+        "V-205"
+      ]
+    },
+    {
+      "query": "who worked on the C-104 clicking sound recently",
+      "expected_tag": "C-104",
+      "category": "multi_hop",
+      "keyword_hit": true,
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "C-104",
+        "C-104",
+        "C-104"
+      ]
+    },
+    {
+      "query": "compare S-501 rust to the previous phase-b hot run",
+      "expected_tag": "S-501",
+      "category": "multi_hop",
+      "keyword_hit": true,
+      "semantic_hit": false,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "S-501"
+      ]
+    },
+    {
+      "query": "how did we fix the BOILER-2 gas switch last time it overheated",
+      "expected_tag": "BOILER-2",
+      "category": "multi_hop",
+      "keyword_hit": false,
+      "semantic_hit": false,
+      "hybrid_hit": false,
+      "top_hybrid_tags": [
+        "Unassigned"
+      ]
+    },
+    {
+      "query": "what are the common causes of TURBINE-04 cold start delays based on logs",
+      "expected_tag": "TURBINE-04",
+      "category": "multi_hop",
+      "keyword_hit": true,
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "TURBINE-04"
+      ]
+    },
+    {
+      "query": "did the C-104 overhaul fix the loose screws issue permanently",
+      "expected_tag": "C-104",
+      "category": "multi_hop",
+      "keyword_hit": true,
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "C-104",
+        "C-104",
+        "F-402"
+      ]
+    },
+    {
+      "query": "what's the consensus on P-302 intake blockage",
+      "expected_tag": "P-302",
+      "category": "multi_hop",
+      "keyword_hit": true,
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "P-302",
+        "B-101",
+        "B-101"
+      ]
+    },
+    {
+      "query": "which engineer documented the V-205 cold weather inaccuracy",
+      "expected_tag": "V-205",
+      "category": "multi_hop",
+      "keyword_hit": true,
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": [
+        "V-205"
+      ]
+    },
+    {
+      "query": "where is the cafeteria menu posted",
+      "expected_tag": "NONE",
+      "category": "negative_control",
+      "keyword_hit": true,
+      "semantic_hit": false,
+      "hybrid_hit": false,
+      "top_hybrid_tags": [
+        "S-501",
+        "C-104",
+        "B-101"
+      ]
+    },
+    {
+      "query": "how many vacation days do I have left",
+      "expected_tag": "NONE",
+      "category": "negative_control",
+      "keyword_hit": true,
+      "semantic_hit": false,
+      "hybrid_hit": false,
+      "top_hybrid_tags": [
+        "B-101",
+        "C-104",
+        "S-501"
+      ]
+    },
+    {
+      "query": "who is the CEO of the company",
+      "expected_tag": "NONE",
+      "category": "negative_control",
+      "keyword_hit": true,
+      "semantic_hit": false,
+      "hybrid_hit": false,
+      "top_hybrid_tags": [
+        "P-302",
+        "C-104",
+        "B-101"
+      ]
+    },
+    {
+      "query": "how to connect to the guest wifi",
+      "expected_tag": "NONE",
+      "category": "negative_control",
+      "keyword_hit": true,
+      "semantic_hit": false,
+      "hybrid_hit": false,
+      "top_hybrid_tags": [
+        "S-501",
+        "V-205",
+        "V-205"
+      ]
+    },
+    {
+      "query": "what time does the morning shift start",
+      "expected_tag": "NONE",
+      "category": "negative_control",
+      "keyword_hit": true,
+      "semantic_hit": false,
+      "hybrid_hit": false,
+      "top_hybrid_tags": [
+        "B-101",
+        "B-101",
+        "B-101"
+      ]
+    },
+    {
+      "query": "where do I submit my timesheet",
+      "expected_tag": "NONE",
+      "category": "negative_control",
+      "keyword_hit": true,
+      "semantic_hit": false,
+      "hybrid_hit": false,
+      "top_hybrid_tags": [
+        "P-302",
+        "C-104",
+        "Unassigned"
+      ]
+    },
+    {
+      "query": "is there a holiday party this year",
+      "expected_tag": "NONE",
+      "category": "negative_control",
+      "keyword_hit": true,
+      "semantic_hit": false,
+      "hybrid_hit": false,
+      "top_hybrid_tags": [
+        "S-501",
+        "B-101",
+        "V-205"
+      ]
+    },
+    {
+      "query": "how to reset my email password",
+      "expected_tag": "NONE",
+      "category": "negative_control",
+      "keyword_hit": true,
+      "semantic_hit": false,
+      "hybrid_hit": false,
+      "top_hybrid_tags": [
+        "S-501",
+        "C-104",
+        "V-205"
+      ]
+    },
+    {
+      "query": "where is the nearest fire extinguisher",
+      "expected_tag": "NONE",
+      "category": "negative_control",
+      "keyword_hit": true,
+      "semantic_hit": false,
+      "hybrid_hit": false,
+      "top_hybrid_tags": [
+        "S-501",
+        "P-302",
+        "C-104"
+      ]
+    },
+    {
+      "query": "can I park in the visitor lot",
+      "expected_tag": "NONE",
+      "category": "negative_control",
+      "keyword_hit": true,
+      "semantic_hit": false,
+      "hybrid_hit": false,
+      "top_hybrid_tags": [
+        "B-101",
+        "TURBINE-04",
+        "B-101"
+      ]
+    }
+  ]
+}

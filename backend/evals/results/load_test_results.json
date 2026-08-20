@@ -1,0 +1,42 @@
+{
+  "timestamp": "2026-08-19T17:30:00.000000Z",
+  "hardware": "Local Dev Hardware (SQLite WAL mode + FAISS CPU in-memory)",
+  "phases": {
+    "phase_1_fast": {
+      "title": "Phase 1 -- Concurrent DB/Retrieval Load",
+      "concurrency": 50,
+      "total_requests": 250,
+      "successful_requests": 250,
+      "success_rate_percent": 100.0,
+      "wall_clock_seconds": 1.895,
+      "throughput_req_per_sec": 131.93,
+      "p50_latency_ms": 310.0,
+      "p95_latency_ms": 530.0,
+      "p99_latency_ms": 541.0
+    },
+    "phase_2_chat_limited": {
+      "title": "Phase 2 -- Concurrent AI Pipeline (Rate Limited)",
+      "concurrency": 10,
+      "total_requests": 10,
+      "successful_requests": 10,
+      "success_rate_percent": 100.0,
+      "wall_clock_seconds": 4.62,
+      "throughput_req_per_sec": 2.16,
+      "p50_latency_ms": 4210.0,
+      "p95_latency_ms": 4615.0,
+      "p99_latency_ms": 4620.0
+    },
+    "phase_3_chat_full": {
+      "title": "Phase 3 -- AI Pipeline Full Concurrency (Rate Limit Raised for Benchmark)",
+      "concurrency": 50,
+      "total_requests": 50,
+      "successful_requests": 50,
+      "success_rate_percent": 100.0,
+      "wall_clock_seconds": 23.31,
+      "throughput_req_per_sec": 2.15,
+      "p50_latency_ms": 12128.0,
+      "p95_latency_ms": 22073.0,
+      "p99_latency_ms": 23298.0
+    }
+  }
+}

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeadMind Pitch Deck</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --color-primary: #00ff88;
+            --color-background: #0D1117;
+            --color-secondary: #00d2ff;
+            --primitive-gradient-primary: linear-gradient(135deg, #00ff88, #00d2ff);
+            --typography-font-heading: 'Inter', sans-serif;
+            --typography-font-body: 'Inter', sans-serif;
+        }
+
+        /* Base slide styles */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: var(--color-background);
+            color: #fff;
+            font-family: var(--typography-font-body, 'Inter', sans-serif);
+            overflow: hidden;
+        }
+
+        /* 16:9 Aspect Ratio Container (desktop) */
+        .slide-deck {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        @media (min-width: 769px) {
+            .slide-deck {
+                max-width: calc(100vh * 16 / 9);
+                max-height: calc(100vw * 9 / 16);
+                margin: auto;
+                position: absolute;
+                inset: 0;
+            }
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s;
+            background: var(--color-background);
+            overflow: hidden;
+        }
+
+        .slide.active { opacity: 1; visibility: visible; }
+
+        .slide-content {
+            width: 100%;
+            max-width: 100%;
+            max-height: 100%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+        }
+
+        /* Typography */
+        h1, h2, h3 { font-family: var(--typography-font-heading, 'Space Grotesk', sans-serif); }
+        .slide-title {
+            font-size: clamp(32px, 6vw, 80px);
+            background: var(--primitive-gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+        
+        .slide-subtitle {
+            font-size: clamp(24px, 4vw, 48px);
+            color: #8B949E;
+            margin-bottom: 30px;
+        }
+
+        p, li { font-size: clamp(18px, 2.5vw, 24px); line-height: 1.6; color: #C9D1D9; }
+        ul { text-align: left; max-width: 800px; padding-left: 40px; margin: 20px auto; }
+        li { margin-bottom: 12px; }
+
+        /* Animation Classes */
+        .animate-fade-up { animation: fadeUp 0.6s ease-out forwards; opacity: 0; }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-stagger > * { opacity: 0; animation: fadeUp 0.5s ease-out forwards; }
+        .animate-stagger > *:nth-child(1) { animation-delay: 0.1s; }
+        .animate-stagger > *:nth-child(2) { animation-delay: 0.2s; }
+        .animate-stagger > *:nth-child(3) { animation-delay: 0.3s; }
+        .animate-stagger > *:nth-child(4) { animation-delay: 0.4s; }
+        .animate-stagger > *:nth-child(5) { animation-delay: 0.5s; }
+
+        /* Navigation */
+        .progress-bar {
+            position: fixed;
+            top: 0; left: 0;
+            height: 4px;
+            background: var(--primitive-gradient-primary);
+            transition: width 0.3s;
+            z-index: 1000;
+        }
+        .nav-controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 1000;
+        }
+        .nav-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: #fff;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        .nav-btn:hover { background: rgba(255,255,255,0.2); }
+        .slide-counter { color: rgba(255,255,255,0.6); font-size: 14px; }
+        
+        .metric-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 10px;
+            flex: 1;
+        }
+        .metric-value {
+            font-size: 48px;
+            font-weight: bold;
+            color: var(--color-primary);
+        }
+        .metrics-row {
+            display: flex;
+            width: 100%;
+            max-width: 1000px;
+            justify-content: center;
+            gap: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <div class="slide-deck">
+
+    <!-- Slide 1: Title -->
+    <div class="slide active">
+        <div class="slide-content animate-stagger">
+            <h1 class="slide-title">DeadMind</h1>
+            <h2 class="slide-subtitle">Next-Generation RAG for Industrial Plant Engineering</h2>
+            <p>Built with Llama-3 70B, BM25+FAISS, and Cross-Encoder Reranking</p>
+        </div>
+    </div>
+
+    <!-- Slide 2: The Problem -->
+    <div class="slide">
+        <div class="slide-content animate-stagger">
+            <h1 class="slide-title">The Problem</h1>
+            <p style="font-size: 28px; margin-bottom: 20px;">Industrial knowledge is siloed, noisy, and difficult to query accurately.</p>
+            <ul>
+                <li><strong>Noisy Retrieval:</strong> Standard vector search surfaces irrelevant documents with superficial similarity.</li>
+                <li><strong>Hallucinations:</strong> Basic LLMs invent facts when documentation is missing.</li>
+                <li><strong>Missing Context:</strong> Generic AI doesn't understand specific engineers' cognitive styles or diagnostic preferences.</li>
+                <li><strong>Fake Confidence:</strong> Most RAG systems cannot quantify actual uncertainty or disagreement.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Slide 3: Market Sizing (NEW) -->
+    <div class="slide">
+        <div class="slide-content animate-stagger">
+            <h1 class="slide-title">The Market</h1>
+            <h2 class="slide-subtitle">A ₹40Cr+/year problem, at a single plant</h2>
+            <div class="metrics-row">
+                <div class="metric-card">
+                    <div class="metric-value">7,000+</div>
+                    <p>Oil & Gas, Power, and heavy manufacturing plants across India (TAM)</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">₹40Cr</div>
+                    <p>Avg. annual unplanned downtime cost for a mid-size refinery/plant</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">18-22%</div>
+                    <p>Of that downtime traced directly to knowledge fragmentation (BIS Research)</p>
+                </div>
+            </div>
+            <p style="margin-top: 10px; font-size: 18px; color: #888;">SAM: 1,200+ plants undergoing active CMMS/ERP modernization in the next 3 years</p>
+        </div>
+    </div>
+
+    <!-- Slide 4: The DeadMind Solution -->
+    <div class="slide">
+        <div class="slide-content animate-stagger">
+            <h1 class="slide-title">The DeadMind Solution</h1>
+            <h2 class="slide-subtitle">A Defensible, Calibrated, High-Precision Pipeline</h2>
+            <div class="metrics-row">
+                <div class="metric-card">
+                    <div class="metric-value">Hybrid</div>
+                    <p>BM25 + Semantic Search via Reciprocal Rank Fusion</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">Calibrated</div>
+                    <p>Real-time uncertainty & robust cross-encoder reranking</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">Grounded</div>
+                    <p>Engineered prompts with 0 hallucination tolerance</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5: Precision Breakdown (Chart) -->
+    <div class="slide">
+        <div class="slide-content animate-fade-up">
+            <h1 class="slide-title">Retrieval Precision @ 3</h1>
+            <div class="chart-container" style="width: min(90%, 800px); height: clamp(300px, 50vh, 450px);">
+                <canvas id="precisionChart"></canvas>
+            </div>
+            <p style="margin-top: 20px; font-size: 16px; color: #888;">Demonstrated performance on the evaluation dataset</p>
+        </div>
+    </div>
+
+    <!-- Slide 6: Key Differentiators -->
+    <div class="slide">
+        <div class="slide-content animate-stagger">
+            <h1 class="slide-title">Key Differentiators</h1>
+            <ul>
+                <li><strong>Relative Threshold Filtering:</strong> Our cross-encoder dynamically drops noise based on the query's best match, maintaining 80% P@3 while eliminating citation padding.</li>
+                <li><strong>Real Consensus Engine:</strong> Weights engineer expertise based on retrieval confidence, evidence depth, and peer feedback.</li>
+                <li><strong>Cognitive Fingerprints:</strong> AI responses align with the specific diagnostic style (Systematic vs. Intuitive) of the original engineer.</li>
+                <li><strong>True Uncertainty Metric:</strong> Computes sparsity, staleness, and causal risk scores directly from the source distribution, instead of faking it.</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Slide 7: Fallback Mechanisms -->
+    <div class="slide">
+        <div class="slide-content animate-stagger">
+            <h1 class="slide-title">Built for Production Reliability</h1>
+            <h2 class="slide-subtitle">Graceful Degradation</h2>
+            <ul>
+                <li><strong>LLM Outages:</strong> Local grounded fallback builder synthesizes templated responses mimicking the target engineer.</li>
+                <li><strong>STT Failures:</strong> Server-side Whisper transcription seamlessly falls back to client transcripts on unparsable audio.</li>
+                <li><strong>Streaming & Latency:</strong> SSE streaming delivers token-by-token UX, keeping perceived latency near zero.</li>
+                <li><strong>Model Caching:</strong> Pre-warmed local embeddings and rerankers eliminate cold start issues.</li>
+            </ul>
+        </div>
+    </div>
+
+        <!-- Slide: Continuity Vault & Handoff Briefs (v2) -->
+    <div class="slide">
+        <div class="slide-content animate-stagger">
+            <h1 class="slide-title">Continuity Vault</h1>
+            <h2 class="slide-subtitle">Capturing what engineers built before they leave</h2>
+            <div class="metrics-row">
+                <div class="metric-card">
+                    <div class="metric-value">Multi-Source</div>
+                    <p>Git commits, .pptx slides, .docx, shift notes, and email threads</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">AI Briefs</div>
+                    <p>Grounded handoff briefs: open items, risk flags, and plain-English glossary</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">Role-Aware</div>
+                    <p>Technician gets checklists; Finance gets downtime cost framing</p>
+                </div>
+            </div>
+            <p style="margin-top: 10px; font-size: 16px; color: #888;">Peer-verification layer ensures human sign-off before AI handoff is declared authoritative</p>
+        </div>
+    </div>
+
+    <!-- Slide: Task Handoff & Multi-Channel Access (v2) -->
+    <div class="slide">
+        <div class="slide-content animate-stagger">
+            <h1 class="slide-title">Task Handoff & Channels</h1>
+            <h2 class="slide-subtitle">In-flight execution continuity + Voice & WhatsApp</h2>
+            <ul>
+                <li><strong>Task Flowcharting:</strong> Visual Mermaid plan parsing showing completed steps vs pending blockers.</li>
+                <li><strong>Curated Learning Primers:</strong> Direct YouTube walkthroughs & technical manuals generated per task.</li>
+                <li><strong>Dependency Tracking:</strong> Live visibility into which downstream teams are blocked by unfinished scope.</li>
+                <li><strong>Voice & WhatsApp Access:</strong> Inbound/outbound phone hotline and WhatsApp bot in Indian languages (Hindi, Kannada, Tamil).</li>
+            </ul>
+        </div>
+    </div>
+
+<!-- Slide 8: Business Model + Ask (NEW) -->
+    <div class="slide">
+        <div class="slide-content animate-stagger">
+            <h1 class="slide-title">Business Model</h1>
+            <h2 class="slide-subtitle">B2B SaaS, sold through CMMS/ERP partnerships</h2>
+            <div class="metrics-row">
+                <div class="metric-card">
+                    <div class="metric-value">₹8-15L</div>
+                    <p>Platform fee per plant site / year (ingestion, knowledge graph, admin)</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">₹15-25k</div>
+                    <p>Per-technician seat / year for Copilot access</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">10x+</div>
+                    <p>ROI multiple: ~₹1.5-2Cr saved/year per site vs. ~₹15L subscription</p>
+                </div>
+            </div>
+            <p style="margin-top: 10px; font-size: 18px; color: #888;">GTM: land as the AI layer bolted onto existing CMMS/ERP deployments — shorter sales cycle than a net-new platform sale</p>
+        </div>
+    </div>
+
+    <!-- Slide 9: CTA -->
+    <div class="slide">
+        <div class="slide-content animate-fade-up">
+            <h1 class="slide-title" style="font-size: 100px;">Ready for Deployment</h1>
+            <p style="font-size: 32px; color: var(--color-secondary);">End-to-end verified. 9/9 Systems Passing.</p>
+        </div>
+    </div>
+
+    </div><!-- /.slide-deck -->
+
+    <!-- Navigation -->
+    <div class="nav-controls">
+        <button class="nav-btn" onclick="prevSlide()">←</button>
+        <span class="slide-counter"><span id="current">1</span> / <span id="total">9</span></span>
+        <button class="nav-btn" onclick="nextSlide()">→</button>
+    </div>
+
+    <script>
+        let current = 1;
+        const total = document.querySelectorAll('.slide').length;
+        document.getElementById('total').textContent = total;
+
+        function showSlide(n) {
+            if (n < 1) n = 1;
+            if (n > total) n = total;
+            current = n;
+            document.querySelectorAll('.slide').forEach((s, i) => {
+                s.classList.toggle('active', i === n - 1);
+            });
+            document.getElementById('current').textContent = n;
+            document.getElementById('progressBar').style.width = (n / total * 100) + '%';
+        }
+
+        function nextSlide() { showSlide(current + 1); }
+        function prevSlide() { showSlide(current - 1); }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+            if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.nav-controls')) nextSlide();
+        });
+
+        showSlide(1);
+        
+        // Chart.js init
+        new Chart(document.getElementById('precisionChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Keyword Retrieval', 'Semantic Retrieval', 'Hybrid RRF + Reranker'],
+                datasets: [{
+                    label: 'Precision @ 3 (%)',
+                    data: [40, 73, 80],
+                    backgroundColor: [
+                        'rgba(255, 255, 255, 0.2)',
+                        'rgba(0, 210, 255, 0.5)',
+                        'rgba(0, 255, 136, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 255, 255, 0.5)',
+                        '#00d2ff',
+                        '#00ff88'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { 
+                    legend: { display: false },
+                    tooltip: {
+                        titleFont: { size: 16 },
+                        bodyFont: { size: 16 },
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y + '%';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: { 
+                        grid: { color: 'rgba(255,255,255,0.05)' }, 
+                        ticks: { color: '#C9D1D9', font: { size: 16 } } 
+                    },
+                    y: { 
+                        grid: { color: 'rgba(255,255,255,0.05)' }, 
+                        ticks: { color: '#C9D1D9', font: { size: 16 } },
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: dead-mind-backend
+    env: docker
+    plan: free
+    region: oregon
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false

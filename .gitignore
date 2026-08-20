@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+*.coverage.*
+.venv/
+venv/
+ENV/
+env/
+dist/
+build/
+*.egg-info/
+
+# Environment variables & secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# Node / Frontend
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/.output/
+frontend/.vinxi/
+frontend/.tanstack/**
+frontend/.nitro/
+frontend/.wrangler/
+frontend/.next/
+
+# Databases & local state
+*.db
+*.db-journal
+*.db.bak
+*.sqlite
+*.sqlite3
+*.log
+backend/data/faiss*
+backend/data/*.pkl
+backend/data/*.index
+
+# OS & IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo

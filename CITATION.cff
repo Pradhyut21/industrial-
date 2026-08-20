@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you use DeadMind in your research or project, please cite it as below."
+authors:
+  - name: "DeadMind Core Team"
+title: "DeadMind: Industrial Knowledge Intelligence & Cognitive Continuity Platform"
+version: 2.0.0
+date-released: 2026-08-19
+url: "https://github.com/deadmind-ai/DeadMind"
+keywords:
+  - "industrial-ai"
+  - "rag"
+  - "knowledge-graph"
+  - "continuous-operations"
+  - "enterprise-continuity"
