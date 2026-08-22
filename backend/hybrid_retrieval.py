@@ -28,6 +28,12 @@ def get_feedback_scores():
     conn.close()
     return scores
 
+# Minimum RRF fused score for a result to be returned.
+# For rrf_k=60, a doc at rank 1 in both lists scores 2/61 ≈ 0.033.
+# A doc at rank 20 in one list only scores 1/80 ≈ 0.012.
+# Docs below this threshold are noise; filtering them enables negative-control abstention.
+MIN_HYBRID_FUSED_SCORE = 0.012
+
 def reciprocal_rank_fusion(query: str, k: int = 5, rrf_k: int = 60):
     if _bm25_index is None:
         build_bm25_index()
@@ -72,5 +78,14 @@ def reciprocal_rank_fusion(query: str, k: int = 5, rrf_k: int = 60):
     
     from backend.reranker import rerank_results
     reranked_results = rerank_results(query, results, relative_gap=4.0)
-    
+
+    # Negative-control gate: BM25 always produces high RRF scores regardless of relevance
+    # (even "cafeteria menu" scores ~0.157 due to incidental term rank contributions).
+    # The reliable out-of-domain signal is the semantic vector: if it finds nothing above
+    # MIN_SEMANTIC_SCORE, the query is out-of-domain and hybrid should also abstain.
+    from backend.retrieval import retrieve_expert_knowledge_semantic, MIN_SEMANTIC_SCORE
+    sem_check = store.search(query, k=1)
+    if not sem_check or sem_check[0].get("score", 0.0) < MIN_SEMANTIC_SCORE:
+        return []
+
     return reranked_results[:k]

@@ -1,4 +1,4 @@
-"""
+﻿"""
 research_agent_demo.py
 ======================
 DeadMind Autonomous Continuity Research Agent with Spend Policy Guard
@@ -204,7 +204,7 @@ class DeadMindResearchAgent:
         
         print("  Waiting for round confirmation on AlgoNode...")
         transaction.wait_for_confirmation(self.algod, txn_id, 4)
-        print(f"  *** Confirmed on-chain! Explorer: https://testnet.explorer.perawallet.app/tx/{txn_id}")
+        print(f"  *** Confirmed on-chain! Explorer: https://lora.algokit.io/testnet/transaction/{txn_id}")
         self.policy.record_spend(amount_micro)
 
         # ── Step 4: Token Proof Assembly & Resource Unlocking ─────────────────
@@ -241,7 +241,7 @@ class DeadMindResearchAgent:
                 return brief_data
         except urllib.error.HTTPError as e:
             print(f"  Facilitator verification status: HTTP {e.code} ({e.reason})")
-            print(f"  On-chain txn is still permanently valid at https://testnet.explorer.perawallet.app/tx/{txn_id}")
+            print(f"  On-chain txn is still permanently valid at https://lora.algokit.io/testnet/transaction/{txn_id}")
             return None
         except Exception as ex:
             print(f"  Failed: {ex}")

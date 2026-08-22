@@ -35,6 +35,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { SpritePortrait } from "@/components/SpritePortrait";
+import type { OfficeCharacterName } from "@/scene/office/cast";
 
 const API =
   (import.meta.env.VITE_API_BASE_URL as string | undefined) ??
@@ -56,7 +57,7 @@ interface EmployeeData {
   id: string;
   name: string;
   role: string;
-  avatarChar: string;
+  avatarChar: OfficeCharacterName;
   pod: string;
   knowledgePreserved: number;
   activeTask: string;
@@ -64,7 +65,7 @@ interface EmployeeData {
   successor: {
     name: string;
     role: string;
-    avatarChar: string;
+    avatarChar: OfficeCharacterName;
     skillOverlap: number;
     readiness: "Immediate" | "1-Day Handover" | "1-Week Shadow";
     transferPlan: string;
@@ -78,7 +79,7 @@ interface StageInfo {
   domainManager: {
     name: string;
     role: string;
-    avatarChar: string;
+    avatarChar: OfficeCharacterName;
   };
   title: string;
   progress: number;
@@ -95,7 +96,7 @@ const INITIAL_STAGES: Record<string, StageInfo> = {
     stageNumber: 1,
     domain: "Executive Strategy & Roadmapping",
     domainManager: {
-      name: "Michael Scott",
+      name: "Marcus Vance",
       role: "Principal Plant Strategist",
       avatarChar: "michael",
     },
@@ -112,7 +113,7 @@ const INITIAL_STAGES: Record<string, StageInfo> = {
     employees: [
       {
         id: "emp-1",
-        name: "Michael Scott",
+        name: "Marcus Vance",
         role: "Principal Plant Strategist",
         avatarChar: "michael",
         pod: "Executive Strategy Pod",
@@ -120,7 +121,7 @@ const INITIAL_STAGES: Record<string, StageInfo> = {
         activeTask: "Finalized 2026 cognitive continuity vision and plant exposure roadmap.",
         verifiedSops: 34,
         successor: {
-          name: "Jim Halpert",
+          name: "Dev Sen",
           role: "Deputy Operations Lead",
           avatarChar: "jim",
           skillOverlap: 92,
@@ -135,7 +136,7 @@ const INITIAL_STAGES: Record<string, StageInfo> = {
     stageNumber: 2,
     domain: "Compliance & Statutory Operations",
     domainManager: {
-      name: "Angela Martin",
+      name: "Ananya Deshmukh",
       role: "Chief Compliance Administrator",
       avatarChar: "angela",
     },
@@ -152,7 +153,7 @@ const INITIAL_STAGES: Record<string, StageInfo> = {
     employees: [
       {
         id: "emp-3",
-        name: "Angela Martin",
+        name: "Ananya Deshmukh",
         role: "Chief Compliance Administrator",
         avatarChar: "angela",
         pod: "Admin & Operations Pod",
@@ -160,7 +161,7 @@ const INITIAL_STAGES: Record<string, StageInfo> = {
         activeTask: "Validated all regulatory clearances for industrial sensor network.",
         verifiedSops: 46,
         successor: {
-          name: "Oscar Martinez",
+          name: "Omar Farooq",
           role: "Senior Process Analyst",
           avatarChar: "oscar",
           skillOverlap: 94,
@@ -175,7 +176,7 @@ const INITIAL_STAGES: Record<string, StageInfo> = {
     stageNumber: 3,
     domain: "UX & Digital Twin Architecture",
     domainManager: {
-      name: "Pam Beesly",
+      name: "Priya Nair",
       role: "Plant Operations & UX Specialist",
       avatarChar: "pam",
     },
@@ -192,7 +193,7 @@ const INITIAL_STAGES: Record<string, StageInfo> = {
     employees: [
       {
         id: "emp-5",
-        name: "Pam Beesly",
+        name: "Priya Nair",
         role: "Plant Operations & UX Specialist",
         avatarChar: "pam",
         pod: "Executive Strategy Pod",
@@ -258,7 +259,7 @@ const INITIAL_STAGES: Record<string, StageInfo> = {
         activeTask: "PRJ-ENG-04: Tuning 80ms fast transfer interlocks on 6.6kV vacuum breakers.",
         verifiedSops: 41,
         successor: {
-          name: "Dwight Schrute",
+          name: "Rajan Sharma",
           role: "Senior Electrical Auditor",
           avatarChar: "dwight",
           skillOverlap: 91,
@@ -273,7 +274,7 @@ const INITIAL_STAGES: Record<string, StageInfo> = {
     stageNumber: 5,
     domain: "Industrial Safety & Standards",
     domainManager: {
-      name: "Dwight Schrute",
+      name: "Rajan Sharma",
       role: "Safety & Compliance Officer",
       avatarChar: "dwight",
     },
@@ -290,7 +291,7 @@ const INITIAL_STAGES: Record<string, StageInfo> = {
     employees: [
       {
         id: "emp-9",
-        name: "Dwight Schrute",
+        name: "Rajan Sharma",
         role: "Safety & Compliance Officer",
         avatarChar: "dwight",
         pod: "Industrial Safety Pod",
@@ -298,7 +299,7 @@ const INITIAL_STAGES: Record<string, StageInfo> = {
         activeTask: "Conducting automated OISD-118 regression tests against all 58 runbooks.",
         verifiedSops: 49,
         successor: {
-          name: "Angela Martin",
+          name: "Ananya Deshmukh",
           role: "Safety Auditor",
           avatarChar: "angela",
           skillOverlap: 95,
@@ -353,7 +354,7 @@ const INITIAL_STAGES: Record<string, StageInfo> = {
     stageNumber: 7,
     domain: "Operations Staging & Parity",
     domainManager: {
-      name: "Jim Halpert",
+      name: "Dev Sen",
       role: "Plant Operations Co-Lead",
       avatarChar: "jim",
     },
@@ -370,7 +371,7 @@ const INITIAL_STAGES: Record<string, StageInfo> = {
     employees: [
       {
         id: "emp-11",
-        name: "Jim Halpert",
+        name: "Dev Sen",
         role: "Plant Operations Co-Lead",
         avatarChar: "jim",
         pod: "Executive Strategy Pod",
@@ -378,7 +379,7 @@ const INITIAL_STAGES: Record<string, StageInfo> = {
         activeTask: "Monitoring telemetry parity between physical PLC and Digital Twin.",
         verifiedSops: 31,
         successor: {
-          name: "Michael Scott",
+          name: "Marcus Vance",
           role: "Principal Strategist",
           avatarChar: "michael",
           skillOverlap: 90,
@@ -393,7 +394,7 @@ const INITIAL_STAGES: Record<string, StageInfo> = {
     stageNumber: 8,
     domain: "Executive Strategy & Client Sign-off",
     domainManager: {
-      name: "Michael Scott",
+      name: "Marcus Vance",
       role: "Principal Plant Strategist",
       avatarChar: "michael",
     },
@@ -410,7 +411,7 @@ const INITIAL_STAGES: Record<string, StageInfo> = {
     employees: [
       {
         id: "emp-12",
-        name: "Michael Scott",
+        name: "Marcus Vance",
         role: "Principal Plant Strategist",
         avatarChar: "michael",
         pod: "Executive Strategy Pod",
@@ -418,7 +419,7 @@ const INITIAL_STAGES: Record<string, StageInfo> = {
         activeTask: "Presenting executive briefing to client leadership.",
         verifiedSops: 34,
         successor: {
-          name: "Pam Beesly",
+          name: "Priya Nair",
           role: "Operations Liaison",
           avatarChar: "pam",
           skillOverlap: 89,
@@ -433,7 +434,7 @@ const INITIAL_STAGES: Record<string, StageInfo> = {
     stageNumber: 9,
     domain: "Infrastructure & Hardening",
     domainManager: {
-      name: "Oscar Martinez",
+      name: "Omar Farooq",
       role: "Financial & Infrastructure Analyst",
       avatarChar: "oscar",
     },
@@ -450,7 +451,7 @@ const INITIAL_STAGES: Record<string, StageInfo> = {
     employees: [
       {
         id: "emp-13",
-        name: "Oscar Martinez",
+        name: "Omar Farooq",
         role: "Financial & Infrastructure Analyst",
         avatarChar: "oscar",
         pod: "Admin & Operations Pod",
@@ -458,7 +459,7 @@ const INITIAL_STAGES: Record<string, StageInfo> = {
         activeTask: "Executing pre-prod database redundancy verification.",
         verifiedSops: 37,
         successor: {
-          name: "Angela Martin",
+          name: "Ananya Deshmukh",
           role: "Compliance Administrator",
           avatarChar: "angela",
           skillOverlap: 92,
@@ -524,16 +525,16 @@ const DETAILED_EMPLOYEES = [
       title: "PRJ-OPS-01: Secondary Superheater Pressure Bypass Calibration",
       branch: "feature/boiler-bypass-curve",
       targetAsset: "B-101 (Secondary Superheater)",
-      status: "In Flight · Sprint 4",
+      status: "In Flight Â· Sprint 4",
       description: "Tuning differential pressure trip threshold to prevent thermal shock during rapid cold-start bypass.",
       acceptanceCriteria: [
-        "1. Calibrate thermocouple response curve under 400°C.",
+        "1. Calibrate thermocouple response curve under 400Â°C.",
         "2. Validate against historical thermal incident logs from 2021 turnaround.",
         "3. Preserve step-by-step recovery guide into DeadMind vector store.",
       ],
     },
     inheritedWork: {
-      predecessor: "S. Namboodiri (Former Senior Boiler Chief · Retired 2024)",
+      predecessor: "S. Namboodiri (Former Senior Boiler Chief Â· Retired 2024)",
       handoverDate: "November 2024",
       inheritedAssets: [
         "14 Baseline Boiler Startup Curves",
@@ -558,7 +559,7 @@ const DETAILED_EMPLOYEES = [
       title: "PRJ-ENG-04: 6.6kV Vacuum Breaker Fast-Transfer Interlock Tuning",
       branch: "feature/6.6kv-bus-transfer",
       targetAsset: "K-301 (6.6kV Bus-Tie Substation)",
-      status: "In Review · Sprint 4",
+      status: "In Review Â· Sprint 4",
       description: "Aligning vacuum circuit breaker bus transfer delay to under 80ms to eliminate arc-flash hazards.",
       acceptanceCriteria: [
         "1. Fast-transfer timing verified via oscilloscope telemetry.",
@@ -567,7 +568,7 @@ const DETAILED_EMPLOYEES = [
       ],
     },
     inheritedWork: {
-      predecessor: "V. Swaminathan (Lead Electrical Specialist · Retired 2025)",
+      predecessor: "V. Swaminathan (Lead Electrical Specialist Â· Retired 2025)",
       handoverDate: "March 2025",
       inheritedAssets: [
         "6.6kV Switchgear Protective Relay Schemes",
@@ -592,16 +593,16 @@ const DETAILED_EMPLOYEES = [
       title: "PRJ-TEST-09: Automated Zero-Span Positioner PyTest Regression",
       branch: "test/positioner-zero-span",
       targetAsset: "B-101 (Valve Positioner Rig)",
-      status: "Active Testing · Sprint 4",
+      status: "Active Testing Â· Sprint 4",
       description: "Automated regression tests asserting zero-drift tolerances on 4-20mA mechanical positioners.",
       acceptanceCriteria: [
-        "1. 500-cycle stress test asserting ±0.05% deadband repeatability.",
+        "1. 500-cycle stress test asserting Â±0.05% deadband repeatability.",
         "2. PyTest assertions for OISD-118 Section 4.2 compliance.",
         "3. Automated CI/CD execution pipeline passing with zero errors.",
       ],
     },
     inheritedWork: {
-      predecessor: "David Wallace (Senior QA Principal · Reassigned 2025)",
+      predecessor: "David Wallace (Senior QA Principal Â· Reassigned 2025)",
       handoverDate: "January 2025",
       inheritedAssets: [
         "Plant Hardware Fault Injection Testbeds",
@@ -615,7 +616,7 @@ const DETAILED_EMPLOYEES = [
   },
   {
     id: "michael",
-    name: "Michael Scott",
+    name: "Marcus Vance",
     role: "Principal Plant Operations Strategist",
     pod: "Executive Strategy Pod",
     avatarChar: "michael",
@@ -660,7 +661,7 @@ const DOMAIN_MANAGERS = [
   },
   {
     id: "michael",
-    name: "Michael Scott",
+    name: "Marcus Vance",
     role: "Principal Plant Strategist",
     avatarChar: "michael",
     domain: "Executive Strategy & Roadmapping / Client Sign-off",
@@ -668,7 +669,7 @@ const DOMAIN_MANAGERS = [
   },
   {
     id: "angela",
-    name: "Angela Martin",
+    name: "Ananya Deshmukh",
     role: "Chief Compliance Administrator",
     avatarChar: "angela",
     domain: "Compliance & Statutory Operations",
@@ -676,7 +677,7 @@ const DOMAIN_MANAGERS = [
   },
   {
     id: "pam",
-    name: "Pam Beesly",
+    name: "Priya Nair",
     role: "Plant Operations & UX Specialist",
     avatarChar: "pam",
     domain: "UX & Digital Twin Architecture",
@@ -684,7 +685,7 @@ const DOMAIN_MANAGERS = [
   },
   {
     id: "dwight",
-    name: "Dwight Schrute",
+    name: "Rajan Sharma",
     role: "Safety & Compliance Officer",
     avatarChar: "dwight",
     domain: "Industrial Safety & Standards",
@@ -700,7 +701,7 @@ const DOMAIN_MANAGERS = [
   },
   {
     id: "jim",
-    name: "Jim Halpert",
+    name: "Dev Sen",
     role: "Plant Operations Co-Lead",
     avatarChar: "jim",
     domain: "Operations Staging & Parity",
@@ -708,7 +709,7 @@ const DOMAIN_MANAGERS = [
   },
   {
     id: "oscar",
-    name: "Oscar Martinez",
+    name: "Omar Farooq",
     role: "Financial & Infrastructure Analyst",
     avatarChar: "oscar",
     domain: "Infrastructure & Hardening",
@@ -724,7 +725,7 @@ const DOMAIN_MANAGERS = [
   },
 ];
 
-export default function ProjectOperationsHub() {
+function ProjectOperationsHub() {
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<"pipeline" | "profiles">("pipeline");
 
@@ -790,7 +791,7 @@ export default function ProjectOperationsHub() {
   const handleToggleDeliverable = (delivId: string) => {
     if (!isAuthorizedManager) {
       toast.error(
-        `🔒 Permission Denied: Only Domain Manager "${currentStage.domainManager.name}" can edit or complete deliverables in the "${currentStage.domain}" domain.`
+        `ðŸ”’ Permission Denied: Only Domain Manager "${currentStage.domainManager.name}" can edit or complete deliverables in the "${currentStage.domain}" domain.`
       );
       return;
     }
@@ -812,7 +813,7 @@ export default function ProjectOperationsHub() {
 
       if (newStatus === "Completed" && stage.status !== "Completed") {
         toast.success(
-          `🎉 Phase "${stage.title}" marked as COMPLETED by Domain Manager ${currentManager.name}!`
+          `ðŸŽ‰ Phase "${stage.title}" marked as COMPLETED by Domain Manager ${currentManager.name}!`
         );
       }
 
@@ -857,7 +858,7 @@ export default function ProjectOperationsHub() {
     });
 
     toast.success(
-      `⚡ Zero-Downtime Handover Complete: ${employee.successor.name} replaced ${employee.name} with 100% memory retention!`
+      `âš¡ Zero-Downtime Handover Complete: ${employee.successor.name} replaced ${employee.name} with 100% memory retention!`
     );
     setDepartingEmployee(null);
   };
@@ -887,7 +888,7 @@ export default function ProjectOperationsHub() {
       if (res.ok) {
         queryClient.invalidateQueries({ queryKey: ["submissions"] });
         toast.success(
-          `🚀 Work Submitted: PR "${newPrTitle}" submitted to Plant Manager for review!`
+          `ðŸš€ Work Submitted: PR "${newPrTitle}" submitted to Plant Manager for review!`
         );
         setShowSubmitModal(false);
         setNewPrTitle("");
@@ -913,7 +914,7 @@ export default function ProjectOperationsHub() {
       if (res.ok) {
         queryClient.invalidateQueries({ queryKey: ["submissions"] });
         toast.success(
-          "✅ Pull Request Approved: Merged into Plant Vault & +25 bonus credits awarded!"
+          "âœ… Pull Request Approved: Merged into Plant Vault & +25 bonus credits awarded!"
         );
       }
     } catch {
@@ -973,7 +974,7 @@ export default function ProjectOperationsHub() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6 font-sans text-foreground">
-      {/* ── Header Bar ────────────────────────────────────────────────────── */}
+      {/* â”€â”€ Header Bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="border-b border-border pb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
@@ -996,7 +997,7 @@ export default function ProjectOperationsHub() {
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2 p-1.5 bg-card border border-border font-mono text-xs shadow-sm">
             <div className="w-6 h-7 bg-[#18161d] border border-primary flex items-end justify-center overflow-hidden shrink-0">
-              <SpritePortrait character={currentManager.avatarChar} scale={0.7} />
+              <SpritePortrait character={currentManager.avatarChar as OfficeCharacterName} scale={0.7} />
             </div>
             <div>
               <span className="text-[9px] text-muted-foreground block leading-none">Domain Session:</span>
@@ -1041,9 +1042,9 @@ export default function ProjectOperationsHub() {
         </div>
       </div>
 
-      {/* ═════════════════════════════════════════════════════════════════════ */}
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       {/* TAB 1: 10-PHASE PIPELINE & SUCCESSION SIMULATOR                       */}
-      {/* ═════════════════════════════════════════════════════════════════════ */}
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       {activeTab === "pipeline" && (
         <div className="space-y-6 animate-in fade-in duration-200">
           {/* 10-Phase Interactive Stepper */}
@@ -1125,7 +1126,7 @@ export default function ProjectOperationsHub() {
                   </span>
                 </div>
 
-                {/* 🔒 DOMAIN CLEARANCE & ACCESS CONTROL BOX */}
+                {/* ðŸ”’ DOMAIN CLEARANCE & ACCESS CONTROL BOX */}
                 <div
                   className={`p-3 border text-xs space-y-1.5 ${
                     isAuthorizedManager
@@ -1144,7 +1145,7 @@ export default function ProjectOperationsHub() {
                           : "bg-[#d99b62]/20 text-[#d99b62] border-[#d99b62]/40"
                       }`}
                     >
-                      {isAuthorizedManager ? "🟢 Manager Authorized" : "🔒 Read-Only Mode"}
+                      {isAuthorizedManager ? "ðŸŸ¢ Manager Authorized" : "ðŸ”’ Read-Only Mode"}
                     </span>
                   </div>
 
@@ -1175,7 +1176,7 @@ export default function ProjectOperationsHub() {
                     </p>
                   ) : (
                     <p className="text-[10px] text-[#5ca97a] leading-tight pt-1 border-t border-[#5ca97a]/40">
-                      ✓ You are the authorized Domain Manager. You have full clearance to toggle deliverables and seal completion.
+                      âœ“ You are the authorized Domain Manager. You have full clearance to toggle deliverables and seal completion.
                     </p>
                   )}
                 </div>
@@ -1236,7 +1237,7 @@ export default function ProjectOperationsHub() {
                           </span>
                         </div>
                         {!isAuthorizedManager && (
-                          <span className="text-[9px] text-muted-foreground shrink-0 font-mono">🔒</span>
+                          <span className="text-[9px] text-muted-foreground shrink-0 font-mono">ðŸ”’</span>
                         )}
                       </button>
                     ))}
@@ -1295,7 +1296,7 @@ export default function ProjectOperationsHub() {
                             </span>
                           </div>
                           <div className="text-[10px] text-muted-foreground font-mono mt-0.5">
-                            {emp.role} · Preserved: <strong className="text-[#5ca97a]">{emp.knowledgePreserved}% Memory</strong> ({emp.verifiedSops} SOPs)
+                            {emp.role} Â· Preserved: <strong className="text-[#5ca97a]">{emp.knowledgePreserved}% Memory</strong> ({emp.verifiedSops} SOPs)
                           </div>
                         </div>
                       </div>
@@ -1336,9 +1337,9 @@ export default function ProjectOperationsHub() {
         </div>
       )}
 
-      {/* ═════════════════════════════════════════════════════════════════════ */}
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       {/* TAB 2: EMPLOYEE WORK PROFILES & GIT PULL REQUESTS HUB                 */}
-      {/* ═════════════════════════════════════════════════════════════════════ */}
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       {activeTab === "profiles" && (
         <div className="space-y-6 font-mono animate-in fade-in duration-200">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -1366,7 +1367,7 @@ export default function ProjectOperationsHub() {
                       }`}
                     >
                       <div className="w-8 h-10 bg-[#18161d] border border-primary flex items-end justify-center overflow-hidden shrink-0 mt-0.5">
-                        <SpritePortrait character={emp.avatarChar} scale={1} />
+                        <SpritePortrait character={emp.avatarChar as OfficeCharacterName} scale={1} />
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
@@ -1378,7 +1379,7 @@ export default function ProjectOperationsHub() {
                         <span className="text-[10px] text-muted-foreground block mt-0.5">{emp.role}</span>
                         <div className="flex items-center gap-2 text-[9px] text-primary mt-1">
                           <span>{emp.verifiedSops} Verified SOPs</span>
-                          <span>·</span>
+                          <span>Â·</span>
                           <span>{emp.commitsCount} Commits</span>
                         </div>
                       </div>
@@ -1395,7 +1396,7 @@ export default function ProjectOperationsHub() {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-3">
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-14 bg-[#18161d] border border-primary flex items-end justify-center overflow-hidden shrink-0">
-                      <SpritePortrait character={selectedProfile.avatarChar} scale={1.2} />
+                      <SpritePortrait character={selectedProfile.avatarChar as OfficeCharacterName} scale={1.2} />
                     </div>
                     <div>
                       <h2 className="text-base font-bold text-foreground">{selectedProfile.name}</h2>
@@ -1439,7 +1440,7 @@ export default function ProjectOperationsHub() {
                         <span className="text-[9px] text-muted-foreground uppercase font-bold">Acceptance Criteria:</span>
                         {selectedProfile.activeWork.acceptanceCriteria.map((ac, acIdx) => (
                           <div key={acIdx} className="text-[10px] text-foreground/90 flex items-start gap-1">
-                            <span className="text-primary font-bold">▸</span>
+                            <span className="text-primary font-bold">â–¸</span>
                             <span>{ac}</span>
                           </div>
                         ))}
@@ -1521,9 +1522,9 @@ export default function ProjectOperationsHub() {
                         </div>
                         <div className="text-[10px] text-muted-foreground flex items-center gap-3">
                           <span>Author: <strong className="text-foreground">{sub.user_name}</strong></span>
-                          <span>·</span>
+                          <span>Â·</span>
                           <span>Branch: <strong className="text-primary">{sub.branch || "main"}</strong></span>
-                          <span>·</span>
+                          <span>Â·</span>
                           <span>{sub.submitted_at}</span>
                         </div>
                         {sub.work_description && (
@@ -1556,7 +1557,7 @@ export default function ProjectOperationsHub() {
         </div>
       )}
 
-      {/* ── MODAL: SUBMIT WORK / PULL REQUEST TO MANAGER ─────────────────── */}
+      {/* â”€â”€ MODAL: SUBMIT WORK / PULL REQUEST TO MANAGER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       {showSubmitModal && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
           <div className="w-full max-w-lg bg-card border border-border shadow-2xl p-6 space-y-4 font-mono animate-in zoom-in-95 duration-200">
@@ -1676,7 +1677,7 @@ export default function ProjectOperationsHub() {
         </div>
       )}
 
-      {/* ── MODAL: SIMULATE EMPLOYEE DEPARTURE & SUCCESSION HANDOVER ─────── */}
+      {/* â”€â”€ MODAL: SIMULATE EMPLOYEE DEPARTURE & SUCCESSION HANDOVER â”€â”€â”€â”€â”€â”€â”€ */}
       {departingEmployee && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
           <div className="w-full max-w-xl bg-card border border-border shadow-2xl p-6 space-y-5 font-mono animate-in zoom-in-95 duration-200">
@@ -1785,7 +1786,7 @@ export default function ProjectOperationsHub() {
         </div>
       )}
 
-      {/* ── MODAL: DOMAIN MANAGER AUTHENTICATION & ROLE SWITCHER ────────── */}
+      {/* â”€â”€ MODAL: DOMAIN MANAGER AUTHENTICATION & ROLE SWITCHER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       {showManagerAuthModal && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
           <div className="w-full max-w-lg bg-card border border-border shadow-2xl p-6 space-y-4 font-mono animate-in zoom-in-95 duration-200">
@@ -1828,7 +1829,7 @@ export default function ProjectOperationsHub() {
                     }`}
                   >
                     <div className="w-8 h-10 bg-[#18161d] border border-primary flex items-end justify-center overflow-hidden shrink-0 mt-0.5">
-                      <SpritePortrait character={mgr.avatarChar} scale={1} />
+                      <SpritePortrait character={mgr.avatarChar as OfficeCharacterName} scale={1} />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center justify-between">

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * TRIGGERS — every way the God orchestrator gets woken up without a human typing.
  *
  * This module is the single contract shared by main, preload and renderer. Four
@@ -14,7 +14,7 @@
  * `TriggerMode` gate and both write to one `TriggerHistoryEntry` ledger.
  */
 
-/* ────────────────────────────── behaviour gate ───────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ behaviour gate â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 /**
  * How much an external sender is trusted.
@@ -67,7 +67,7 @@ export function classifyInboundKind(text: string): InboundKind {
   return asksOnly ? 'communication' : 'directive';
 }
 
-/* ──────────────────────────── context trigger ────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ context trigger â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 /**
  * One half of the context trigger (compact, or clear). Both the *message* sent to
@@ -147,7 +147,7 @@ export const DEFAULT_CONTEXT_TRIGGER: ContextTriggerConfig = {
   }
 };
 
-/* ──────────────────────────── webhook triggers ───────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ webhook triggers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 /**
  * One inbound endpoint. Several may exist at once; they are multiplexed over a
@@ -190,11 +190,11 @@ export const DEFAULT_WEBHOOK_SCHEMA_OBJECT = {
 
 export const DEFAULT_WEBHOOK_SCHEMA = JSON.stringify(DEFAULT_WEBHOOK_SCHEMA_OBJECT, null, 2);
 
-/* ────────────────────────── organisation trigger ─────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ organisation trigger â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 /**
  * Peer-to-peer messaging between teammates' installs. Each teammate runs their own
- * Munder Difflin; setting an org key lets their instance address yours.
+ * DeadMind; setting an org key lets their instance address yours.
  *
  * UI + persistence only for now — the transport service does not exist yet, so
  * nothing reads `apiKey` beyond the settings surfaces that display it.
@@ -214,10 +214,10 @@ export const DEFAULT_ORG_TRIGGER: OrgTriggerConfig = {
 /** Copy shown under the org key field. Kept here so Settings and Triggers agree. */
 export const CLONE_NODE_BLURB =
   'Set an organisation key and your teammates can message your clone node — the copy of '
-  + 'Munder Difflin running on your machine. Each teammate runs their own, so an org key '
+  + 'DeadMind running on your machine. Each teammate runs their own, so an org key '
   + 'is how two installs find each other.';
 
-/* ──────────────────────────── trigger history ────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ trigger history â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 /**
  * One line in the ledger. Both directions are recorded so the operator can read a
@@ -247,7 +247,7 @@ export interface TriggerHistoryEntry {
 /** Ledger cap. Oldest entries are dropped past this so the file can't grow forever. */
 export const TRIGGER_HISTORY_LIMIT = 500;
 
-/* ───────────────────────── minimal schema validation ─────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ minimal schema validation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 /**
  * A deliberately small JSON-Schema subset checker — `type`, `required`,

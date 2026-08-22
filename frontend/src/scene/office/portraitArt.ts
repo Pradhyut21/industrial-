@@ -1,11 +1,8 @@
-// Procedural portraits for The Office cast.
+// Procedural portraits for DeadMind Industrial Engineering Cast.
 //
-// These are fully custom-drawn busts (NOT recolored LimeZu sprites): each
-// character is an explicit recipe layering skin → clothing → face → facial hair
-// → hairstyle → glasses on an 18×28 canvas. This gives real control over each
-// person's hairstyle shape, garment cut/color, and facial hair so they read as
-// the specific show character. The in-scene walking sprites still use the LimeZu
-// recolor in cast.ts; this module only powers the static portraits in the UI.
+// Fully custom-drawn pixel art busts: each plant engineer has an explicit recipe
+// layering skin → protective/office clothing → face → hairstyle → glasses on
+// an 18×28 canvas. Powers the engineer avatar portraits across the platform.
 
 import type { OfficeCharacterName } from './cast';
 

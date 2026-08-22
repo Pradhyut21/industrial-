@@ -7,7 +7,7 @@
 
 Every year across heavy industry (power generation, petrochemicals, manufacturing, mining), thousands of senior engineers retire. They don't just leave an empty desk — they take **30+ years of unwritten diagnostic intuition, undocumented workarounds, and tacit troubleshooting reflexes** with them.
 
-* **The Problem:** McKinsey reports industrial teams waste **35% of their working day** searching across disconnected legacy silos, while BIS Research ties **22% of unplanned plant outages** directly to missing operational context.
+* **The Problem:** Industry research shows industrial teams spend up to **a third of their working day** searching across disconnected legacy silos, while heavy industry studies identify knowledge gaps and SOP access failures as a **top root cause of unplanned plant outages**.
 * **The Solution:** **DeadMind** is an industrial cognitive continuity platform that captures, structures, and makes queryable everything a departing engineer knew and built.
 * **The Web3 Breakthrough:** Native **x402 Agentic Micropayment Protocol on Algorand**, enabling autonomous AI agents to pay for mission-critical engineering briefs with zero human intervention, and paying human peer auditors on-chain micro-rewards for verifying AI syntheses.
 
@@ -164,7 +164,7 @@ Every AI response is evaluated on 4 quantifiable risk dimensions:
 When a human peer engineer audits and verifies an AI brief, the platform calls `POST /api/x402/verifier-payout`:
 * The platform treasury (`ALGORAND_PAYOUT_MNEMONIC`) broadcasts a `10,000 microALGO` micro-reward to the verifier's Algorand wallet.
 * Returns a permanent transaction ID checkable on Pera Explorer:  
-  `https://testnet.explorer.perawallet.app/tx/<TXN_ID>`
+  `https://lora.algokit.io/testnet/transaction/<TXN_ID>`
 
 ---
 

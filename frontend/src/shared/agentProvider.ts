@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Agent providers — the CLI a worker runs on. The app is no longer Claude-only:
  * a worker can run Claude Code, the OpenAI Codex CLI (`codex`), Kimi Code
  * (`kimi`), xAI Grok (`grok`), the Antigravity CLI (`agy`, Gemini models), or
@@ -35,13 +35,13 @@ export type AgentProvider =
   | 'custom';
 
 /** Structured descriptor for how a NON-hiveAware provider gets hive lifecycle
- *  events (live status + Stop→inbox-drain + cost), introduced alongside the legacy
+ *  events (live status + Stopâ†’inbox-drain + cost), introduced alongside the legacy
  *  `hookBridge` so call sites can switch on `bridge.kind` without a big-bang
  *  rewrite. Two kinds:
- *   - 'hooks'  → a config-file hook shim is installed (agy/codex). Derived from the
+ *   - 'hooks'  â†’ a config-file hook shim is installed (agy/codex). Derived from the
  *               legacy `hookBridge` by `bridgeOf`, so agy/codex keep working with no
  *               preset change.
- *   - 'proxy'  → the CLI has NO hook surface (qwen), so a loopback reverse-proxy
+ *   - 'proxy'  â†’ the CLI has NO hook surface (qwen), so a loopback reverse-proxy
  *               sidecar observes its LLM traffic and SYNTHESIZES the same HIVE_SOCK
  *               payloads the shims emit. `api` selects the usage/tool-call shape
  *               (OpenAI vs Anthropic), `baseUrlEnv` is the env var the CLI reads for
@@ -86,15 +86,15 @@ export interface AgentProviderPreset {
   hiveAware: boolean;
   /** Which config-file lifecycle-hook bridge a NON-hiveAware provider uses to get
    *  the same live status that Claude gets from `--settings`:
-   *    - 'agy'   → installAgyHooks() writes ~/.gemini/.../hooks.json (translating
+   *    - 'agy'   â†’ installAgyHooks() writes ~/.gemini/.../hooks.json (translating
    *                shim, because agy's stdin/stdout shape differs from Claude's).
-   *    - 'codex' → installCodexHooks() writes a per-agent CODEX_HOME config and
+   *    - 'codex' â†’ installCodexHooks() writes a per-agent CODEX_HOME config and
    *                reuses the Claude `cth-hook` shim verbatim (Codex's hook payload
    *                + response contract are already Claude-shaped).
-   *    - 'grok'  → installGrokHooks() installs an AGENT_ID-scoped adapter for
+   *    - 'grok'  â†’ installGrokHooks() installs an AGENT_ID-scoped adapter for
    *                Grok's camelCase lifecycle payloads.
    *  Claude leaves this undefined (it uses its native `--settings` path, gated by
-   *  hiveAware); `custom` leaves it undefined (no bridge → no hooks). This is the
+   *  hiveAware); `custom` leaves it undefined (no bridge â†’ no hooks). This is the
    *  single switch hive.ensureAgent dispatches on to wire the bridge. */
   hookBridge?: 'agy' | 'codex' | 'grok';
   /** Structured bridge descriptor (the forward-looking replacement for the legacy
@@ -126,7 +126,7 @@ export interface AgentProviderPreset {
   /** How the hive protocol seed is delivered for a CLI that takes NEITHER a flag
    *  nor a positional seed. `'type-into-tui'` = the CLI is a bare interactive TUI
    *  that rejects a positional initial prompt (Crush: its first positional is read
-   *  as a Cobra SUBCOMMAND → `Unknown command "You are…"`), so the harness must NOT
+   *  as a Cobra SUBCOMMAND â†’ `Unknown command "You areâ€¦"`), so the harness must NOT
    *  append the protocol to argv — it spawns the bare TUI and hands the protocol
    *  back as `seedPrompt`, which the renderer types into the TUI's editor after boot
    *  (through the SAME per-pty write-chain as the inbox-wake nudge, so they can't
@@ -148,14 +148,14 @@ export interface AgentProviderPreset {
   installCommand?: string;
   /** A SELF-CONTAINED installer that needs no Node/npm at all, per platform.
    *
-   *  `installCommand` is `npm install -g …` for every provider, which silently
+   *  `installCommand` is `npm install -g â€¦` for every provider, which silently
    *  assumes npm — i.e. node — is already on the machine. When it isn't, the
    *  missing-CLI banner prints a command that CANNOT succeed, so the user watches
    *  an installer fail instead of an app work. Where the vendor ships a native
    *  installer we run that instead (see buildMissingCliScript's ladder).
    *
    *  Trusted, hardcoded constants — never user/manifest input. MUST contain no
-   *  double-quotes: the Windows form is wrapped verbatim in `cmd /d /s /c "…"`. */
+   *  double-quotes: the Windows form is wrapped verbatim in `cmd /d /s /c "â€¦"`. */
   nativeInstallCommand?: { posix: string; win32: string };
   /** Optional docs URL surfaced as a manual-setup hint in the missing-CLI banner. */
   docsUrl?: string;
@@ -190,14 +190,14 @@ export const AGENT_PROVIDER_PRESETS: AgentProviderPreset[] = [
   },
   {
     id: 'codex',
-    label: 'Codex · GPT',
+    label: 'Codex Â· GPT',
     defaultCommand: 'codex',
     commandGroups: CODEX_COMMAND_GROUPS,
     // Full claude-parity auto mode: skip ALL approval prompts AND drop the sandbox,
     // exactly like Claude's `bypassPermissions` / agy's `--dangerously-skip-permissions`.
     // The earlier `-a never -s workspace-write` confined writes to the PTY cwd
     // (the user's project), but a hive worker must also write to its agent folder
-    // at <harnessHome>/hive/agents/<id>/ (inbox→.done, memory.md, outbox JSON,
+    // at <harnessHome>/hive/agents/<id>/ (inboxâ†’.done, memory.md, outbox JSON,
     // deliverables) — a DIFFERENT path tree from cwd, which workspace-write blocked,
     // so codex workers couldn't do HIVE PROTOCOL housekeeping. The single bypass flag
     // is codex's documented equivalent of `--dangerously-skip-permissions` (no -a/-s
@@ -213,13 +213,13 @@ export const AGENT_PROVIDER_PRESETS: AgentProviderPreset[] = [
     // Codex's INITIAL prompt, which it takes POSITIONALLY (`codex "<prompt>"`) —
     // hence initialPromptFlag is undefined and hive.ts appends it as a trailing arg.
     hiveAware: false,
-    // …but Codex DOES expose a Claude-style hooks system (hooks.json / config.toml
-    // [hooks]; PreToolUse/PostToolUse/Stop/…), so it gets full hive parity via the
+    // â€¦but Codex DOES expose a Claude-style hooks system (hooks.json / config.toml
+    // [hooks]; PreToolUse/PostToolUse/Stop/â€¦), so it gets full hive parity via the
     // 'codex' bridge: a per-agent CODEX_HOME/hooks.json wired to the cth-hook shim
-    // (see hive.installCodexHooks). Stop→drain works natively (Codex's Stop honors
+    // (see hive.installCodexHooks). Stopâ†’drain works natively (Codex's Stop honors
     // {decision:'block',reason} = continue-with-prompt, exactly like Claude).
     hookBridge: 'codex',
-    // Inbox drains via the codex-hook bridge's Stop→drain (the renderer's idle
+    // Inbox drains via the codex-hook bridge's Stopâ†’drain (the renderer's idle
     // inbox-wake nudge remains as a harmless fallback for an idle worker).
     canReceiveInbox: true,
     initialPromptFlag: undefined,
@@ -238,7 +238,7 @@ export const AGENT_PROVIDER_PRESETS: AgentProviderPreset[] = [
   },
   {
     id: 'grok',
-    label: 'Grok · xAI',
+    label: 'Grok Â· xAI',
     defaultCommand: 'grok',
     commandGroups: GROK_COMMAND_GROUPS,
     // Grok documents bypassPermissions as the CLI/config spelling of its
@@ -263,20 +263,20 @@ export const AGENT_PROVIDER_PRESETS: AgentProviderPreset[] = [
     defaultCommand: 'kimi',
     commandGroups: [],
     // Kimi --auto handles every approval and does not stop to ask questions,
-    // matching Munder Difflin's autonomous Claude/Codex default.
+    // matching the autonomous Claude/Codex default.
     autoModeFlag: '--auto',
     autoFlag: '--auto',
     supportsModel: true,
     modelFlag: '--model',
     hiveAware: false,
     // Kimi's interactive TUI has no positional initial-prompt form. It supports
-    // lifecycle hooks, but Munder Difflin does not yet install a Kimi hook bridge,
+    // lifecycle hooks, but DeadMind does not yet install a Kimi hook bridge,
     // so mail must bounce rather than being delivered with no drain path.
     canReceiveInbox: false
   },
   {
     id: 'antigravity',
-    label: 'Antigravity · Gemini',
+    label: 'Antigravity Â· Gemini',
     defaultCommand: 'agy',
     commandGroups: [],
     autoModeFlag: '--dangerously-skip-permissions',
@@ -284,8 +284,8 @@ export const AGENT_PROVIDER_PRESETS: AgentProviderPreset[] = [
     modelFlag: '--model',
     autoFlag: '--dangerously-skip-permissions',
     hiveAware: false,
-    hookBridge: 'agy', // installAgyHooks() → ~/.gemini/.../hooks.json (translating shim)
-    canReceiveInbox: true, // via the agy-hook bridge (Stop→drain); verified agy honors hook decisions
+    hookBridge: 'agy', // installAgyHooks() â†’ ~/.gemini/.../hooks.json (translating shim)
+    canReceiveInbox: true, // via the agy-hook bridge (Stopâ†’drain); verified agy honors hook decisions
     initialPromptFlag: '-i', // agy --prompt-interactive: orient the session, then continue
     recommendedOrchestratorModel: 'Gemini 3.1 Pro (High)', // agy takes the display-name label
     resumeFlag: '--conversation' // agy: resume a previous conversation by ID
@@ -316,7 +316,7 @@ export const AGENT_PROVIDER_PRESETS: AgentProviderPreset[] = [
   },
   {
     // OpenCode — the TypeScript AI coding agent (opencode.ai / anomalyco/opencode,
-    // ex sst/opencode). NOT the archived Go opencode-ai/opencode (→ Crush). Run as
+    // ex sst/opencode). NOT the archived Go opencode-ai/opencode (â†’ Crush). Run as
     // its interactive TUI in a PTY (like codex), oriented by --prompt.
     id: 'opencode',
     label: 'OpenCode',
@@ -336,7 +336,7 @@ export const AGENT_PROVIDER_PRESETS: AgentProviderPreset[] = [
     // NATIVE PLUGIN bridge (god Decision 1): OpenCode has no Claude-shaped Stop hook,
     // but its plugin API DOES expose a real lifecycle event (session.idle). A bundled
     // per-agent plugin drains the inbox on idle and posts HIVE_SOCK payloads — the
-    // same Stop→drain semantics as codex's hooks, provider-agnostic, no traffic
+    // same Stopâ†’drain semantics as codex's hooks, provider-agnostic, no traffic
     // interception. Modeled as a `hooks` bridge with a new `opencode` shim so it
     // reuses the existing hooks dispatch arm (installOpenCodePlugin, sibling of
     // installCodexHooks). The config-injection proxy is the documented fallback only.
@@ -368,7 +368,7 @@ export const AGENT_PROVIDER_PRESETS: AgentProviderPreset[] = [
     // installer could be resolved (offline / unsupported platform) — until now
     // OpenCode had none, so that rung printed a manual hint and installed nothing.
     // Both are trusted, hardcoded constants and contain no double-quotes (the
-    // win32 form is wrapped verbatim in `cmd /d /s /c "…"`).
+    // win32 form is wrapped verbatim in `cmd /d /s /c "â€¦"`).
     //
     // Unlike Claude, OpenCode ships NO standalone Windows one-liner: opencode.ai
     // serves the POSIX install script but has no `install.ps1` (verified 404), and
@@ -388,9 +388,9 @@ export const AGENT_PROVIDER_PRESETS: AgentProviderPreset[] = [
     // the archived Go opencode-ai/opencode. Non-hiveAware. Its hook surface is
     // Claude-shaped but exposes ONLY PreToolUse today (NO Stop/SessionEnd) — so a
     // hooks bridge can't drain on turn-end. Hence a PROXY bridge (qwen tier): a
-    // loopback sidecar observes its LLM traffic and SYNTHESIZES the Stop→drain.
+    // loopback sidecar observes its LLM traffic and SYNTHESIZES the Stopâ†’drain.
     id: 'crush',
-    label: 'Crush · Charm',
+    label: 'Crush Â· Charm',
     defaultCommand: 'crush',
     commandGroups: [],
     // No CODEX_NON_INTERACTIVE analogue. First-run onboarding is suppressed by the
@@ -419,8 +419,8 @@ export const AGENT_PROVIDER_PRESETS: AgentProviderPreset[] = [
     canReceiveInbox: true,
     // Bare `crush` is an interactive Bubble Tea TUI on a Cobra root command: the
     // first positional is parsed as a SUBCOMMAND, so a positional seed dies with
-    // `unknown command "You are…"` (ondev-b live repro / spec-crush MF3). Crush has
-    // NO --prompt flag either. So neither flag nor positional works → deliver the
+    // `unknown command "You areâ€¦"` (ondev-b live repro / spec-crush MF3). Crush has
+    // NO --prompt flag either. So neither flag nor positional works â†’ deliver the
     // protocol by TYPING it into the TUI after boot (renderer nudge path).
     initialPromptFlag: undefined,
     seedDelivery: 'type-into-tui',
@@ -431,7 +431,7 @@ export const AGENT_PROVIDER_PRESETS: AgentProviderPreset[] = [
   {
     // Pi (Pi Coding Agent, earendil-works; npm @earendil-works/pi-coding-agent).
     // Terminal-first, headless-driveable, 15-provider BYOK. Non-hiveAware, but has a
-    // rich pi.on(event) lifecycle (tool_call→PreToolUse, agent_end→Stop, …). Bridged
+    // rich pi.on(event) lifecycle (tool_callâ†’PreToolUse, agent_endâ†’Stop, â€¦). Bridged
     // via a bundled per-agent extension (installPiHooks) that posts HIVE_SOCK payloads
     // and auto-approves tools — a `hooks` bridge with a new `pi` shim.
     id: 'pi',
@@ -486,7 +486,7 @@ export const AGENT_PROVIDER_PRESETS: AgentProviderPreset[] = [
     initialPromptFlag: '-p', // copilot -p "<orchestrator/worker brief>" runs it non-interactively
     recommendedOrchestratorModel: 'claude-sonnet-4.5', // Copilot's default; user may pick gpt-5.4
     // Copilot supports session resume by id (`--resume=<id>`); attached only when a
-    // prior session id was recorded (no hook bridge captures it yet → best-effort).
+    // prior session id was recorded (no hook bridge captures it yet â†’ best-effort).
     resumeFlag: '--resume',
     // Print mode exits per turn and there is no hook bridge to drain on idle, so a
     // copilot worker can't receive routed inbox mail (it bounces to the god).
@@ -503,7 +503,7 @@ export const AGENT_PROVIDER_PRESETS: AgentProviderPreset[] = [
     supportsModel: false,
     autoFlag: '',
     hiveAware: false,
-    canReceiveInbox: false // no inbox-drain path → mail bounces to the god
+    canReceiveInbox: false // no inbox-drain path â†’ mail bounces to the god
   }
 ];
 
@@ -547,7 +547,7 @@ export function canReceiveInbox(provider: AgentProvider | undefined): boolean {
   return providerPreset(provider ?? 'claude').canReceiveInbox;
 }
 
-/** The bare executable from a command string ('agy --model x' → 'agy'). */
+/** The bare executable from a command string ('agy --model x' â†’ 'agy'). */
 function commandBinary(command: string | undefined): string {
   const first = (command ?? '').trim().split(/\s+/)[0] ?? '';
   // strip a path + extension so 'C:\...\agy.exe' and '/usr/bin/claude' both map

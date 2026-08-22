@@ -154,36 +154,9 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
-import { ForgePanel } from "@/components/forge";
-
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const [scrolled, setScrolled] = useState(false);
-  const [authenticated, setAuthenticated] = useState(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("deadmind_auth") === "true";
-    }
-    return false;
-  });
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [authError, setAuthError] = useState("");
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (username === "admin" && password === "demo123") {
-      setAuthenticated(true);
-      localStorage.setItem("deadmind_auth", "true");
-      setAuthError("");
-    } else {
-      setAuthError("INVALID CREDENTIALS. Standard demo login: admin / demo123");
-    }
-  };
-
-  const handleAutoFill = () => {
-    setUsername("admin");
-    setPassword("demo123");
-  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -194,80 +167,6 @@ function RootComponent() {
 
   const isMac =
     typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform);
-
-  if (!authenticated) {
-    return (
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider>
-          <div className="min-h-screen flex items-center justify-center bg-background/95 p-4 relative overflow-hidden">
-            <BootSequence />
-            <AuroraBg />
-            <AmbientParticles />
-            <ForgePanel className="w-full max-w-md p-8 border border-primary/50 relative z-10 scanlines bg-card/90 backdrop-blur-xl shadow-[0_0_50px_oklch(0.85_0.16_80_/_0.15)] animate-fade-in">
-              <div className="flex flex-col items-center mb-6">
-                <h1 className="font-display text-2xl font-bold tracking-[0.2em] text-primary uppercase">
-                  DeadMind
-                </h1>
-                <div className="section-label mt-1 text-center">Cognitive Preservation Console</div>
-              </div>
-              
-              <form onSubmit={handleLogin} className="space-y-4">
-                <div>
-                  <label className="section-label block mb-1">Operator ID</label>
-                  <input
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    className="w-full bg-popover border border-border text-foreground px-3 py-2 focus:outline-none focus:border-primary font-mono text-sm"
-                    placeholder="admin"
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <label className="section-label block mb-1">Passkey</label>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full bg-popover border border-border text-foreground px-3 py-2 focus:outline-none focus:border-primary font-mono text-sm"
-                    placeholder="••••••••"
-                    required
-                  />
-                </div>
-
-                {authError && (
-                  <div className="text-xs font-mono text-destructive uppercase tracking-wide bg-destructive/10 border border-destructive/25 p-2 rounded-sm">
-                    {authError}
-                  </div>
-                )}
-
-                <div className="flex gap-2 pt-2">
-                  <button
-                    type="button"
-                    onClick={handleAutoFill}
-                    className="flex-1 bg-transparent border border-border text-foreground/80 px-4 py-2 text-xs font-display uppercase tracking-wider hover:bg-accent/15 cursor-pointer"
-                  >
-                    Auto-fill demo
-                  </button>
-                  <button
-                    type="submit"
-                    className="flex-1 bg-primary text-primary-foreground px-4 py-2 text-xs font-display uppercase tracking-wider hover:bg-primary/90 cursor-pointer shadow-[0_0_15px_oklch(0.85_0.16_80_/_0.4)]"
-                  >
-                    Initialize
-                  </button>
-                </div>
-              </form>
-              
-              <div className="mt-6 text-[10px] text-center text-muted-foreground border-t border-border/40 pt-4">
-                Standard Access Credentials: <code className="text-primary bg-muted px-1">admin</code> / <code className="text-primary bg-muted px-1">demo123</code>
-              </div>
-            </ForgePanel>
-          </div>
-        </ThemeProvider>
-      </QueryClientProvider>
-    );
-  }
 
   const location = useLocation();
   const isOffice = location.pathname === "/office";

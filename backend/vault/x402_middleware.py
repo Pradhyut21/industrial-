@@ -99,7 +99,7 @@ def make_402_body(resource_url: str, description: str) -> dict:
     conforming to the x402 spec (https://x402.org).
     """
     return {
-        "x402Version": 1,
+        "x402Version": 2,
         "error": "X402 Payment Required",
         "accepts": [
             {

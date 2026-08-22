@@ -482,7 +482,7 @@ function LoseScreen({
 
 // ── Main game component ────────────────────────────────────────────────────────
 
-export default function RecoveryRunGame() {
+function RecoveryRunGame() {
   const { taskId } = Route.useParams();
   // personId passed as query param from the vault task list
   const search = useSearch({ strict: false }) as { personId?: string };

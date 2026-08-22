@@ -347,6 +347,20 @@ def init_db():
     )
     """)
 
+    # 23. Saved Chat Sessions (Field Copilot Troubleshooting Records)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS saved_chat_sessions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT,
+        engineer_name TEXT,
+        created_at TEXT,
+        message_count INTEGER,
+        summary TEXT,
+        messages_json TEXT,
+        tag TEXT
+    )
+    """)
+
     conn.commit()
 
     # Auto-seed if engineers table is empty

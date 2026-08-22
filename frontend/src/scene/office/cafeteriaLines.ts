@@ -1,17 +1,15 @@
-// Cafeteria small-talk — The Office edition.
+// DeadMind Control Room & Break Area Dialogue
 //
-// The cast ARE Dunder Mifflin (see cast.ts), so an agent's coffee break is an
-// excuse for a one-liner in character. Two kinds of line:
-//   • solo  — one quip shown above a single agent at a break spot
-//   • pair  — a two-beat exchange between two agents at the same table
+// Shift engineering banter and field coordination:
+//   • solo  — thought / observation above an engineer at an ambient spot
+//   • pair  — technical exchange between two plant engineers at a station
 //
-// Lines are kept short so they fit the ThoughtBubble (≈MAX_WIDTH). Character
-// keys match OfficeCharacterName; anyone without bespoke lines falls back to the
-// shared GENERIC pool so the floor never feels empty.
+// All lines are tailored to industrial operations: DCS telemetry, boiler
+// calibrations, OISD compliance audits, vibration analysis, and shift handovers.
 
 import type { OfficeCharacterName } from './cast';
 
-/** Where an agent is lingering — picks a contextual line pool. */
+/** Where an engineer is stationed — picks a contextual line pool. */
 export type BreakSpot = 'coffee' | 'vending' | 'snack' | 'table';
 
 const pick = <T,>(arr: readonly T[], seed: number): T =>
@@ -20,218 +18,105 @@ const pick = <T,>(arr: readonly T[], seed: number): T =>
 // ─── solo lines, by spot ─────────────────────────────────────────────────────
 
 const COFFEE: readonly string[] = [
-  'is this… decaf?? who did this',
-  "we're out of beans again",
-  'World’s Best Boss mug',
-  'first cup of the day. and the fifth.',
-  'the coffee here is basically a hug',
-  'who took my mug?',
+  'is this control room blend fresh?',
+  'checking steam drum telemetry between sips',
+  'triple shot before the 6.6kV bus-tie switchover',
+  'first cup of shift. third logbook signed.',
+  'black coffee, zero-drift sensor calibration.',
+  'who left the thermocouple checklist by the kettle?',
 ];
 
 const VENDING: readonly string[] = [
-  'the machine ate my dollar',
-  'B4… please be the pretzels',
-  'it’s stuck. classic.',
-  'shaking it. gently. respectfully.',
-  'one (1) emotional-support snack',
-  'A1 again. living dangerously.',
+  'grabbing a quick snack before DCS trend audit',
+  'shift ran long on the superheater curve check',
+  'field tech fuel',
+  'quick refuel before the OISD-118 walk-through',
+  'night shift nutrition',
 ];
 
 const SNACK: readonly string[] = [
-  'is it Pretzel Day?',
-  'who finished the chips??',
-  'just a little treat',
-  'these are everyone’s? cool cool cool',
-  'second breakfast',
+  'quick bite before the turbine vibration modal test',
+  'shift turnover notes are ready on the dashboard',
+  'grabbing energy before the valve bench test',
+  'refreshing after the 400°C furnace scan',
 ];
 
 const TABLE: readonly string[] = [
-  'big day. lots of meetings.',
-  'just five more minutes',
-  'did you see the standup notes?',
-  'pretending to read my notes',
-  'I needed this break, honestly',
-  'do NOT tell Michael I’m in here',
+  'reviewing the secondary superheater bypass curve',
+  'verifying OISD-118 statutory compliance checklist',
+  'checking differential pressure logs from Unit 2',
+  'predecessor handover notes looking comprehensive',
+  'analyzing thermocouple drift logs from last quarter',
+  'syncing with DCS lead on PID loop tuning',
 ];
 
 const SPOT_POOL: Record<BreakSpot, readonly string[]> = {
   coffee: COFFEE, vending: VENDING, snack: SNACK, table: TABLE,
 };
 
-// ─── character flavour — overrides the generic pool when present ─────────────
+// ─── character flavour — discipline-specific engineering thoughts ─────────────
 
 const BY_CHARACTER: Partial<Record<OfficeCharacterName, readonly string[]>> = {
-  michael:  ['I DECLARE… BANKRUPTCY!', "that's what she said", "I'm not superstitious. just a little stitious.", 'no meetings before coffee. that’s the rule.'],
-  dwight:   ['FALSE.', 'identity theft is not a joke', 'that mug is regulation', 'this fridge needs a beet drawer', 'Schrute Farms has better coffee'],
-  jim:      ["...that's what she said", 'bears. beets. Battlestar Galactica.', 'I moved Dwight’s stapler again', 'just here for the gossip'],
-  pam:      ['Dunder Mifflin, this is Pam', 'sketching the vending machine', 'the watercolor of the break room'],
-  kevin:    ['the chili is NOT ready', 'why waste time say lot word', 'me want snack', 'cookie? cookie.'],
-  angela:   ['this break room is filthy', 'party planning committee, 3pm', 'I’m judging the fridge'],
-  oscar:    ['actually, it’s “espresso”', 'well, actually…', 'the budget for snacks is concerning'],
-  stanley:  ['is it Pretzel Day?', 'did I stutter?', 'crossword and coffee. leave me be.', "I'll retire before this brews"],
-  phyllis:  ['Bob is picking me up at five', 'knitting and a nice cup of tea'],
-  andy:     ['Cornell, ever heard of it?', 'rit-dit-dit, coffee break!', 'Big Tuna, grab a chair'],
-  kelly:    ['did you HEAR what happened??', 'so. much. to tell you.', 'I am the GOSSIP queen'],
-  ryan:     ['I’m kind of a big deal', 'the temp needs caffeine', 'starting a coffee startup, actually'],
-  toby:     ['I should write that up…', 'HR-wise this break is fine', 'no one ever sits with me'],
-  creed:    ['which one of you is the new guy?', 'I’ve eaten worse out of that fridge', 'mung beans. under my desk.'],
-  meredith: ['is it 5 o’clock yet?', 'someone spike the coffee?'],
+  michael:  ['Plant operations pipeline is running at 94% throughput.', 'All domain managers: confirm handover readiness before Friday.', 'DeadMind knowledge vault is sealing verified SOPs.', 'Checking executive briefing telemetry.'],
+  dwight:   ['Boiler B-101 differential pressure is within 0.2 bar.', 'Never bypass a safety interlock without two supervisor keys.', 'Thermocouple calibration verified under 400°C.', 'Preserving shift recovery procedures in vector store.'],
+  jim:      ['DCS bus-tie synchronization looks rock solid.', 'Checking Modbus TCP latency to Substation 4.', 'Telemetry pipeline is streaming at 60 Hz.', 'PID auto-tune completed on bypass valve P-302.'],
+  pam:      ['Digital twin telemetry mapped across all 14 plant nodes.', 'Equipment health schematic rendering in real time.', 'Vulnerability causal chains updated for CFO review.', 'Node severity overlays aligned with sensor thresholds.'],
+  kevin:    ['PSV-104 relief valve setpoint tested at 42.5 bar.', 'Zero leakage detected on flare header safety seals.', 'Rupture disc integrity verified for Unit 3.', 'Pressure relief calculations logged in compliance audit.'],
+  angela:   ['Statutory OISD-118 audit signoff completed.', 'Every maintenance procedure requires cryptographic sealing.', 'Handover transition matrix verified for all retiring leads.', 'Zero non-conformances in statutory plant records.'],
+  oscar:    ['Turbine shaft vibration spectrum shows 1X harmonic peak.', 'Modal analysis indicates healthy journal bearing clearance.', 'Fast Fourier Transform clean across all 8 probe channels.', 'Vibration cascade simulation within safe envelope.'],
+  stanley:  ['Combustion airflow ratio tuned for peak thermal efficiency.', 'Feedwater deaerator dissolved oxygen below 5 ppb.', '38 years of boiler runbooks safely preserved in the vault.', 'Watching the oxygen trim curve settle.'],
+  phyllis:  ['Mean time between failures improved by 18% this quarter.', 'Root cause analysis complete on feed pump seal wear.', 'Plant reliability metrics meeting ISO-55000 standards.', 'Updating rotating equipment maintenance schedules.'],
+  andy:     ['4-20mA current loop loop-checks green across Rack 12.', 'HART protocol diagnostic telemetry synced to field copilot.', 'Field transmitter zero and span calibrated within 0.05%.', 'RTD resistance curves validated against standard tables.'],
+  kelly:    ['Shift handover dispatch broadcast sent to all pods.', 'Control room incident log synchronized across shift leads.', 'Real-time telemetry alert acknowledged in 4 seconds.', 'Dispatch coordination running smoothly across stations.'],
+  ryan:     ['Ladder logic interlock verified in PLC simulation.', 'Checking structured text routines for conveyor sequencing.', 'Field bus drop test passed with 0 packet drops.', 'Updating I/O mapping documentation for commissioning.'],
+  toby:     ['All field technicians certified for hazardous zone entry.', 'Permit-to-work audit score: 100% across all 4 units.', 'Safety hazard mitigation matrix approved by statutory board.', 'Reviewing lockout/tagout isolation logs for turnaround.'],
+  creed:    ['6.6kV switchgear vacuum bottle integrity verified.', 'Transformer oil dissolved gas analysis looks pristine.', 'Bus-tie fast transfer completed in under 45 milliseconds.', 'Checking battery bank float voltage in DC control room.'],
+  meredith: ['Critical turbine spare rotor staged in climate-controlled bay.', 'BUNA-N seal kits inventoried for planned spring turnaround.', 'Procurement lead times for inconel valves tracked in ERP.', 'Critical spares buffer at 100% target availability.'],
 };
 
-/** A solo break-room line. Character flavour ~60% of the time, else the line
- *  fits the spot the agent is standing at. `seed` keeps it deterministic per
- *  call site (avoids Math.random, which Pixi/Electron CSP-safe code prefers). */
+/** A solo field thought line. Character flavour ~60% of the time, else spot line. */
 export function pickSoloLine(character: OfficeCharacterName, spot: BreakSpot, seed: number): string {
   const flavour = BY_CHARACTER[character];
   if (flavour && seed % 5 < 3) return pick(flavour, Math.floor(seed / 5));
   return pick(SPOT_POOL[spot], seed);
 }
 
-// ─── paired exchanges (two agents at one table) ──────────────────────────────
-//
-// Each exchange is a list of beats that ALTERNATE between the two agents:
-// beat[0] = the speaker who sat down, beat[1] = their table-mate, beat[2] =
-// speaker again, and so on. The director plays them out one beat at a time.
-// Lines are trimmed to fit the thought cloud; longer ones auto-truncate.
+// ─── paired exchanges (two engineers at one station) ─────────────────────────
 
 type Exchange = readonly string[];
 
-// Generic banter — works between any two agents (they're all Dunder Mifflin).
 const EXCHANGES: readonly Exchange[] = [
-  ['world’s best boss.', 'you are. I had the mug made.', 'and I cherish it.'],
-  ['would an idiot do this?', '...if yes, I don’t.', 'that’s my boy.'],
-  ['feared or loved? both.', 'that’s beautiful.', 'I know.'],
-  ['I edited your wiki page again.', 'I know. thank you.'],
-  ['question. how many bears?', 'one.', 'that’s too many.'],
-  ['fact: bears eat beets.', 'bears. beets. Galactica.', 'what is happening.'],
-  ['I grew up on a beet farm.', 'shocking.', '...not shocking at all.'],
-  ['what’s Schrute Farms smell like?', 'victory. and beets.'],
-  ['did you just throw your phone?', 'didn’t like what it said.', 'cool.'],
-  ['is a hot dog a sandwich?', 'it is.', 'I know, right?'],
-  ['three-hole-punch Jim returns.', 'never gets old.'],
-  ['why few word when lot word?', '...genuinely profound.', 'I know.'],
-  ['I am not a bad person.', '...', 'not a great person either.', 'there it is.'],
-  ['I love my cats more than people.', 'including us?', 'especially you.'],
-  ['cats are better than dogs.', 'dogs are better.', '...sorry.'],
-  ['do you love me?', 'I love… being here.', 'that’s a yes.'],
-  ['I’m kind of a big deal.', 'you are?', 'in my mind. yes.'],
-  ['did you miss me?', 'no.', 'a little?', '...there it is.'],
-  ['did you just roll your eyes?', 'I did.', 'why?', 'muscle memory.'],
-  ['I’ve watched that clock since 4.', 'weren’t you working?', 'watching the clock.'],
-  ['what do we sell again?', 'paper.', 'sure, yeah.'],
-  ['how old are you?', 'yeah.', 'that’s not an answer.', 'sure it is.'],
-  ['that’s not how math works.', 'I know.', 'then why?', 'faster.'],
-  ['I’m not an alcoholic.', 'you went to a meeting.', 'for the food.'],
-  ['I went to Cornell.', 'nobody cares.', 'I went to Cornell.', 'still nobody cares.'],
-  ['I have a lot of feelings.', 'I can tell.', 'is that bad?', 'for us? yes.'],
-  ['why are you the way you are?', '...', 'honestly.'],
-  ['your cat died.', 'I know.', 'I’m sorry.', '...thank you.'],
-  ['stop looking at me.', 'you stop looking at me.'],
-  ['sign this.', 'what is it?', 'doesn’t matter.', '...fine.'],
-  ['you can’t say that.', 'I just did.', 'gonna stop me?', '...no.'],
-  ['that’s a fire lane.', 'fire hasn’t happened yet.'],
-  ['I wrapped your stapler in Jello.', 'I’ll eat around it.', 'fair.'],
-  ['zombie attack plan?', 'especially that.', 'of course.'],
-  ['just seeing if you’d answer.', 'I hate you.', 'I know.'],
-  ['a little stitious, not super.', 'that’s not a word.', 'it is now.'],
-  ['funniest person in the office?', 'and other times?', 'other times I know it.'],
-  ['that’s what she said.', '...every time.', 'come on.'],
-  ['I started the fire.', 'no you didn’t.', 'in our hearts, I did.'],
-  ['is today a day ending in Y?', 'yes.', 'then no.'],
-  ['Bob Vance.', 'Phyllis Vance.', 'Vance Refrigeration.'],
-  ['you look beautiful today.', '...I know.'],
-  ['I’m better than you in every way.', 'probably.', 'definitely.', 'sure.'],
-  ['I’m a nice guy.', 'you’re okay.', 'nicest thing you’ve said.'],
-  ['are you okay?', 'I’ve been worse.', 'when?', 'can’t narrow it down.'],
-  ['there’s a spider on your desk.', 'where?', '...you ate it.', 'protein.'],
-  ['soul mates can be bosses.', 'you’re my boss.', 'exactly.'],
-  ['standup ran 40 minutes.', 'could’ve been an email.'],
-  ['is the build green yet?', '...don’t look.'],
-  ['who reply-all’d everyone?', 'we don’t talk about it.'],
+  ['Did you review the bypass valve calibration logs?', 'Checked them this morning — zero drift on the positioner.', 'Excellent, let’s seal the procedure into DeadMind.'],
+  ['How is the steam drum level responding to the step change?', 'PID loop settled within 12 seconds with no overshoot.', 'Clean tuning. Good work.'],
+  ['Are the 6.6kV bus-tie fast transfer tests scheduled?', 'Yes, running during the low-demand window at 02:00.', 'I will have the transient recorder armed.'],
+  ['Did the turbine vibration probe pick up any sub-synchronous whirl?', 'Clean 1X peak only, journal bearing oil film is stable.', 'That confirms the lube oil viscosity is right on spec.'],
+  ['What is the status of the OISD-118 statutory compliance audit?', 'All 14 safety checklists validated and signed off.', 'Ready for executive operations presentation.'],
+  ['How much knowledge has been captured for the boiler turnaround?', '97% of Rajan’s 38-year operational heuristics are in the vault.', 'Zero-downtime succession is officially ready.'],
+  ['Did you check the dissolved oxygen in the deaerator outlet?', 'Steady at 3 ppb, chemical dosing is right on target.', 'That will protect the economizer tubes from pitting.'],
+  ['Are the Modbus TCP packets arriving reliably from Substation 4?', 'Zero packet drops across 100,000 poll cycles.', 'Deterministic communications confirmed.'],
+  ['How is the Field Copilot performing for the technicians?', 'Retrieval precision at 84% with hybrid semantic gating.', 'Technicians are resolving field alarms in half the time.'],
+  ['Did the relief valve bench test meet statutory ASME Section VIII?', 'Lift pressure verified at exactly 42.5 bar.', 'Logging the certification into the compliance database.'],
+  ['Is the secondary superheater bypass curve ready for cold start?', 'Calibrated up to 400°C with thermal incident safeguards.', 'Ready for plant manager authorization.'],
+  ['How does the digital twin schematic look for the CFO overview?', 'Real-time failure cascades mapped with live telemetry feeds.', 'Provides full plant risk visibility.'],
 ];
 
-// ─── "that's what she said" ──────────────────────────────────────────────────
-//
-// The office's favourite bit. These are generic (added to the shared pool
-// below) so ANY two agents at a table can run them: whoever sits down first
-// delivers the innocent setup (beat 0) and their table-mate lands the punchline
-// (beat 1). Some carry the show's follow-up beats — a sheepish clarification and
-// the inevitable "still counts." Setups are trimmed to fit the thought cloud.
-const TWSS_EXCHANGES: readonly Exchange[] = [
-  ['taking way longer than I expected.', 'that’s what she said.'],
-  ['it’s too big, can’t fit it in my mouth.', 'that’s what she said.'],
-  ['you really need to slow down.', 'that’s what she said.'],
-  ['gonna need a bigger one.', 'that’s what she said.'],
-  ['help, I can’t get it to go in.', 'that’s what she said.'],
-  ['it’s not that hard if you just push.', 'that’s what she said.'],
-  ['I can’t do this all night.', 'that’s what she said.'],
-  ['I need it now, I can’t wait.', 'that’s what she said.'],
-  ['so hot in here, I’m sweating.', 'that’s what she said.'],
-  ['it keeps slipping out of my hands.', 'that’s what she said.'],
-  ['why not just stick it in already?', 'that’s what she said.', '*looks at camera*'],
-  ['I just need a few more inches.', 'that’s what she said.', 'for the shelf!', 'still counts.'],
-  ['make it louder, I can barely feel it.', 'that’s what she said.'],
-  ['can we get this over with quickly?', 'that’s what she said.', 'I meant the meeting.', 'sure.'],
-  ['I just need you to hold it steady.', 'that’s what she said.'],
-  ['can’t believe I did that all morning.', 'that’s what she said.'],
-  ['my hands are cramping.', 'that’s what she said.', 'from typing!', 'that’s what she said.'],
-  ['hours in and barely halfway done.', 'that’s what she said.'],
-  ['surprisingly heavy for its size.', 'that’s what she said.'],
-  ['be more precise. less sloppy.', 'that’s what she said.', 'I meant the spreadsheet.', 'I know.'],
-  ['how long was it?', 'that’s what she said.', '*the whole room goes quiet*', 'I’m sorry, I can’t help it.'],
-  ['too tight, cutting off my circulation.', 'that’s what she said.', '*mouths thank you*'],
-  ['I don’t think it’ll fit.', 'that’s what she said.', '*stands up and applauds*'],
-  ['stop, you’re doing it wrong.', 'that’s what she said.', 'never been prouder.'],
-  ['this just keeps getting harder.', 'that’s what she said.', 'he’s ready.'],
-  ['not wide enough, I need more room.', 'that’s what she said.'],
-  ['I can hold it a really long time.', 'that’s what she said.', 'my breath!', 'still.'],
-  ['why is it taking so long?', 'that’s what she said.', 'I hate you.', 'then why set me up?'],
-  ['I can’t do it with people watching.', 'that’s what she said.', 'the presentation!', 'sure.'],
-  ['it’s deeper than it looks.', 'that’s what she said.', 'the pothole, Michael!', 'doesn’t matter.'],
-  ['so much longer than last time.', 'that’s what she said.', 'the report, Michael.', 'right, right.'],
-  ['oh my god, it went on FOREVER.', 'that’s what she said.', 'the Twilight movie!', 'classic.'],
-  ['can’t believe how thick this is.', 'that’s what she said.', 'the folder. *stares*'],
-  ['I fit all THAT in one day?', 'that’s what she said.', 'that’s actually what I said!', 'meta.'],
-  ['I went at it hard this morning.', 'that’s what she said.', 'at the gym!', 'irrelevant.'],
-  ['someone help me finish this off.', 'that’s what she said.', 'the leftover cake!', 'still works.'],
-  ['get in, do my thing, get out.', 'that’s what she said.', '*doesn’t look up from crossword*'],
-  ['can’t believe it took this long.', 'that’s what she said.', 'the raise. eight years.', 'that one’s on me.'],
-  ['do it slower, it’ll hurt less.', 'that’s what she said.', 'for the quarterly review.', 'sure, Oscar.'],
-  ['didn’t realize how big it’d be.', 'that’s what she said.', 'the calzone, it’s enormous!', 'I love this office.'],
-  ['*to no one* that’s what she said.', 'nobody said anything.', 'just thinking about earlier.'],
-  ['*on the phone* that’s what she said.', 'who was that?', 'my mother. about a sandwich.'],
-  ['too hot in here! that’s what she said.', 'you said both parts.', 'I contain multitudes.'],
-  ['*at the TV* that’s what she said.', 'you’re alone, Michael.', 'she doesn’t know that.'],
-  ['you need to be more professional.', 'that’s what she said.', 'I am she.', '...that’s what she said.'],
-  ['stop. just stop. every time—', 'that’s what she said.', '*leaves the room*', '*whispers* that’s what she said.'],
-  ['as you can see, it’s going up.', 'that’s what she said.', '*everyone groans*', 'set that one up myself.'],
-  ['I declared bankruptcy once. felt good.', 'what does that have to do with—', 'that’s what she said.', 'it doesn’t.', 'I know.'],
-  ['you didn’t say it.', 'I know.', 'why not?', 'I’m growing.', '...that’s what she said.', 'there it is.'],
-  ['impressive you held back today.', 'thank you.', 'I counted zero times.', 'that’s what she said.', 'still counts.'],
-];
-
-// Everything any table-mate pair can draw from.
-const PAIR_POOL: readonly Exchange[] = [...EXCHANGES, ...TWSS_EXCHANGES];
-
-// Keyed off the SPEAKER so, when the right character sits down first, they get
-// to open with their signature bit.
 const KEYED_EXCHANGES: Partial<Record<OfficeCharacterName, Exchange>> = {
-  michael:  ['that’s what she said.', '...there it is.'],
-  dwight:   ['identity theft is not a joke.', 'nobody touched your stapler, Dwight.'],
-  kevin:    ['why few word when lot word?', '...just use the words, Kevin.'],
-  kelly:    ['okay don’t freak out, but—', 'I’m already freaking out.'],
-  oscar:    ['well, actually—', '...here we go.'],
-  angela:   ['this table is filthy.', 'it’s a break room, Angela.'],
-  creed:    ['which one are you again?', '...we sit next to each other.'],
-  stanley:  ['is it Pretzel Day?', 'no, Stanley.', '...did I stutter?'],
-  andy:     ['I went to Cornell.', 'nobody cares.', '...I went to Cornell.'],
-  jim:      ['question.', 'yes.', 'nothing. just checking.'],
+  michael:  ['What is our overall plant continuity readiness score?', '94% across all three operations pods.', 'Let’s drive it to 100% before the turnaround.'],
+  dwight:   ['Never ignore a 0.1 bar differential pressure fluctuation.', 'Agreed, early detection prevents boiler thermal shock.', 'Preserve the heuristic in DeadMind.'],
+  jim:      ['DCS communication bus is operating at peak telemetry rates.', 'Fast polling enabled across all station RTUs.', 'SCADA screen latency is under 20 milliseconds.'],
+  oscar:    ['Turbine shaft centerline orbit is perfectly circular.', 'No signs of misalignment or rotor unbalance.', 'Modal health confirmed.'],
+  angela:   ['Every procedure change must carry verifiable audit trails.', 'Cryptographic hashes logged for all updated SOPs.', 'Complies fully with regulatory standards.'],
+  kevin:    ['Flare header backpressure is steady below 0.5 bar.', 'All rupture disc pressure indicators are green.', 'Safety barrier verified.'],
+  stanley:  ['Combustion flame scanner telemetry looks solid.', 'Air-fuel ratio is optimized for minimum NOx emissions.', 'Running smooth and steady.'],
+  andy:     ['Transmitter loop calibration complete on Rack 12.', 'HART diagnostics report 100% sensor health.', 'Field telemetry locked in.'],
+  toby:     ['Permit-to-work safety verification signed for hot work.', 'Combustible gas sniff test returned 0% LEL.', 'Safe to proceed with maintenance.'],
+  creed:    ['Substation transformer insulation resistance test passed.', 'Dielectric breakdown voltage is well above 60kV.', 'Power grid ready for full load.'],
 };
 
-/** A multi-beat exchange for two agents sharing a table. Beats alternate:
- *  index 0 = `speaker`, 1 = the table-mate, 2 = speaker, … */
+/** A multi-beat exchange for two engineers sharing a station. */
 export function pickExchange(speaker: OfficeCharacterName, seed: number): Exchange {
   const keyed = KEYED_EXCHANGES[speaker];
-  if (keyed && seed % 4 === 0) return keyed;
-  return pick(PAIR_POOL, seed);
+  if (keyed && seed % 3 === 0) return keyed;
+  return pick(EXCHANGES, seed);
 }
+

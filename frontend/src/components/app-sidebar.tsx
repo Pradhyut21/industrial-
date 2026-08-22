@@ -1,5 +1,6 @@
+import React from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Network, Bot, ShieldCheck, Archive } from "lucide-react";
+import { Network, Bot, ShieldCheck, Archive, Zap, Building2 } from "lucide-react";
 
 import {
   Sidebar,
@@ -13,15 +14,14 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-// Note: Compliance (QHS Manager) and Lessons Learned (Reliability Engineer) were removed
-// in the Continuity Intelligence Platform v2 repositioning. Their functionality is now
-// superseded by the Continuity Vault's unresolved-items list and Task Explainer gap analysis.
-const items = [
-  { title: "Plant Map",          url: "/",        icon: Network,     role: "CFO" },
-  { title: "Field Copilot",      url: "/copilot", icon: Bot,         role: "Field Technician" },
-  { title: "SOP Audit & Freshness", url: "/audit", icon: ShieldCheck, role: "Ops Lead" },
-  { title: "Continuity Vault",   url: "/vault",   icon: Archive,     role: "Vault Custodian" },
-] as const;
+const items: Array<{ title: string; url: string; icon: React.FC<{ className?: string }>; role: string }> = [
+  { title: "Plant Map",             url: "/",          icon: Network,     role: "CFO" },
+  { title: "Operations Floor",      url: "/office",    icon: Building2,   role: "Simulation" },
+  { title: "Field Copilot",         url: "/copilot",   icon: Bot,         role: "Field Technician" },
+  { title: "SOP Audit & Freshness", url: "/audit",     icon: ShieldCheck, role: "Ops Lead" },
+  { title: "Continuity Vault",      url: "/vault",     icon: Archive,     role: "Vault Custodian" },
+  { title: "x402 Payment Demo",     url: "/x402-demo", icon: Zap,         role: "x402" },
+];
 
 export function AppSidebar() {
   const { state } = useSidebar();
@@ -54,6 +54,7 @@ export function AppSidebar() {
               {items.map((item) => {
                 const active =
                   item.url === "/" ? currentPath === "/" : currentPath.startsWith(item.url);
+                const Icon = item.icon;
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
@@ -61,8 +62,8 @@ export function AppSidebar() {
                       isActive={active}
                       className="rounded-none data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:border-l-2 data-[active=true]:border-primary h-auto py-3"
                     >
-                      <Link to={item.url} className="flex items-start gap-3 group hover-bounce-x">
-                        <item.icon className="h-5 w-5 shrink-0 mt-0.5 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[-6deg] group-data-[active=true]:scale-110" />
+                      <a href={item.url} className="flex items-start gap-3 group hover-bounce-x">
+                        <Icon className="h-5 w-5 shrink-0 mt-0.5 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[-6deg] group-data-[active=true]:scale-110" />
                         {!collapsed && (
                           <div className="flex flex-col leading-tight">
                             <span className="font-display uppercase tracking-wider text-[0.85rem]">
@@ -73,7 +74,7 @@ export function AppSidebar() {
                             </span>
                           </div>
                         )}
-                      </Link>
+                      </a>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 );

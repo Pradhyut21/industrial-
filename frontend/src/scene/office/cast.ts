@@ -1,10 +1,8 @@
-// The Office cast — roster metadata + sprite frames.
+// DeadMind Industrial Operations Cast — plant roster metadata + sprite frames.
 //
-// Both the static portraits (cards / picker) and the in-scene walking sprites are
-// now fully custom-drawn from the same per-character recipes in portraitArt.ts:
-// the scene sprite reuses the portrait's exact head/face/clothing and adds legs,
-// so an agent on the office floor looks identical to its card. The LimeZu base
-// sheets are no longer used for the cast. See assets/ATTRIBUTION.md.
+// Procedural portraits and walking sprites representing the multi-disciplinary
+// industrial engineering team across Operations, Reliability, Controls, Safety,
+// and Asset Management.
 
 import { Texture } from 'pixi.js';
 import { paintPortrait, sceneFrameBufs, SCENE_W, SCENE_H } from './portraitArt';
@@ -23,23 +21,23 @@ export interface CastMember {
   blurb: string;
 }
 
-/** Selectable roster, in display order. */
+/** Selectable plant engineering roster, in display order. */
 export const OFFICE_CAST: CastMember[] = [
-  { name: 'michael',  displayName: 'Michael',  shirt: '#5a6b8c', blurb: "World's best boss" },
-  { name: 'jim',      displayName: 'Jim',      shirt: '#6fa8dc', blurb: 'Salesman, prankster' },
-  { name: 'pam',      displayName: 'Pam',      shirt: '#9caf88', blurb: 'Receptionist, artist' },
-  { name: 'dwight',   displayName: 'Dwight',   shirt: '#b89b3e', blurb: 'Assistant (to the) RM' },
-  { name: 'kevin',    displayName: 'Kevin',    shirt: '#4a7ab5', blurb: 'Accounting' },
-  { name: 'angela',   displayName: 'Angela',   shirt: '#8a86a6', blurb: 'Head of accounting' },
-  { name: 'oscar',    displayName: 'Oscar',    shirt: '#7a4b6b', blurb: 'Accountant' },
-  { name: 'stanley',  displayName: 'Stanley',  shirt: '#8c5a4b', blurb: 'Sales, crossword' },
-  { name: 'phyllis',  displayName: 'Phyllis',  shirt: '#b08bbf', blurb: 'Sales' },
-  { name: 'andy',     displayName: 'Andy',     shirt: '#6fae6f', blurb: 'Cornell, a cappella' },
-  { name: 'kelly',    displayName: 'Kelly',    shirt: '#d16ba5', blurb: 'Customer service' },
-  { name: 'ryan',     displayName: 'Ryan',     shirt: '#3a3a44', blurb: 'The temp' },
-  { name: 'toby',     displayName: 'Toby',     shirt: '#9a8c5a', blurb: 'Human resources' },
-  { name: 'creed',    displayName: 'Creed',    shirt: '#6b7a4b', blurb: 'Quality assurance' },
-  { name: 'meredith', displayName: 'Meredith', shirt: '#b5544a', blurb: 'Supplier relations' },
+  { name: 'michael',  displayName: 'Marcus Vance',     shirt: '#5a6b8c', blurb: 'Plant Operations Superintendent' },
+  { name: 'jim',      displayName: 'Dev Sen',          shirt: '#6fa8dc', blurb: 'DCS & SCADA Lead Engineer' },
+  { name: 'pam',      displayName: 'Priya Nair',       shirt: '#9caf88', blurb: 'Asset Health & Telemetry Architect' },
+  { name: 'dwight',   displayName: 'Rajan Sharma',     shirt: '#b89b3e', blurb: 'Senior Boiler Lead Specialist' },
+  { name: 'kevin',    displayName: 'Kavita Rao',       shirt: '#4a7ab5', blurb: 'Process Safety & Relief Valves' },
+  { name: 'angela',   displayName: 'Ananya Deshmukh',  shirt: '#8a86a6', blurb: 'Chief Statutory Compliance Officer' },
+  { name: 'oscar',    displayName: 'Omar Farooq',      shirt: '#7a4b6b', blurb: 'Turbine Vibration & Modal Analyst' },
+  { name: 'stanley',  displayName: 'Sanjay Patel',     shirt: '#8c5a4b', blurb: 'Senior Combustion & Feedwater Lead' },
+  { name: 'phyllis',  displayName: 'Preeti Roy',       shirt: '#b08bbf', blurb: 'Plant Reliability Specialist' },
+  { name: 'andy',     displayName: 'Arjun Mehta',      shirt: '#6fae6f', blurb: 'Telemetry & Sensor Instrumentation' },
+  { name: 'kelly',    displayName: 'Kiran Verma',      shirt: '#d16ba5', blurb: 'Shift Dispatch & Comms Lead' },
+  { name: 'ryan',     displayName: 'Rohan Gupta',      shirt: '#3a3a44', blurb: 'Junior Automation & PLC Technician' },
+  { name: 'toby',     displayName: 'Tariq Al-Mansoor', shirt: '#9a8c5a', blurb: 'Industrial Safety & OISD Auditor' },
+  { name: 'creed',    displayName: 'Chirag Banerjee',  shirt: '#6b7a4b', blurb: 'Substation 6.6kV Power Specialist' },
+  { name: 'meredith', displayName: 'Meera Kulkarni',   shirt: '#b5544a', blurb: 'Spares & Critical Inventory Custodian' },
 ];
 
 export const CAST_BY_NAME: Record<OfficeCharacterName, CastMember> =

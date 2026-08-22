@@ -27,7 +27,7 @@
 * **Speaker Script:**
   > *"Every year in heavy industry, thousands of senior plant engineers retire. They don't just leave an empty desk — they take 30 years of unwritten diagnostic intuition, edge-case fixes, and tacit troubleshooting reflexes with them.
   > 
-  > McKinsey found that industrial teams waste 35% of their working day searching across 10 disconnected legacy silos, while BIS Research ties up to 22% of all unplanned plant outages directly to missing SOP context.
+  > Industry research shows industrial teams spend up to a third of their working day searching across 10 disconnected legacy silos, while heavy industry studies consistently identify knowledge gaps and SOP access failures as a top root cause of unplanned plant downtime.
   > 
   > Today, we present **DeadMind** — an Industrial Knowledge Intelligence platform that preserves the engineers, not just the documentation."*
 
@@ -141,7 +141,7 @@ HTTP/1.1 402 Payment Required
 content-type: application/json
 
 {
-  "x402Version": 1,
+  "x402Version": 2,
   "error": "X402 Payment Required",
   "accepts": [{
     "scheme": "exact",
@@ -199,7 +199,7 @@ Payment txn: <ALGORAND_TXN_ID>
 
 Verify the payment transaction on the explorer:
 ```
-https://testnet.explorer.perawallet.app/tx/<ALGORAND_TXN_ID>
+https://lora.algokit.io/testnet/transaction/<ALGORAND_TXN_ID>
 ```
 
 ---
@@ -226,13 +226,13 @@ curl -X POST http://localhost:8000/api/x402/verifier-payout \
   "amount_microalgo": 10000,
   "network": "testnet",
   "verifier_wallet_address": "<VERIFIER_ALGORAND_ADDRESS>",
-  "note": "Payout confirmed on-chain. Verify at https://testnet.explorer.perawallet.app/tx/<TXN_ID>"
+  "note": "Payout confirmed on-chain. Verify at https://lora.algokit.io/testnet/transaction/<TXN_ID>"
 }
 ```
 
 **Prove it to a judge — open the URL in the `note` field in any browser:**
 ```
-https://testnet.explorer.perawallet.app/tx/<ALGORAND_TXN_ID>
+https://lora.algokit.io/testnet/transaction/<ALGORAND_TXN_ID>
 ```
 The explorer shows the exact ALGO amount transferred from the platform's payout wallet to
 the verifier's wallet. This is the proof that money genuinely moved — not just a 200 OK.

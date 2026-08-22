@@ -231,12 +231,9 @@ def generate_expert_answer(query: str, engineer_name: str = None) -> dict:
     )
     
     # 2. Query Groq or generate cognitive-biased mock fallback
-    # Re-read key each request in case env var was set after startup
-    live_key = os.environ.get("GROQ_API_KEY", "") or APIConfig.key
+    live_key = APIConfig.get_key()
     if live_key:
         try:
-            old_key = APIConfig.key
-            APIConfig.key = live_key
             answer = get_groq_response(prompt, system_prompt)
             confidence = compute_calibrated_confidence(sources, answer)
         except Exception as e:

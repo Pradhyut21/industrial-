@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+﻿import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { api, type VulnNode, type CausalLink, type Counterfactual } from "@/lib/api";
@@ -33,9 +33,12 @@ import {
   ArrowRight,
   ExternalLink,
   ChevronRight,
+  CheckSquare,
+  Square,
 } from "lucide-react";
 import { toast } from "sonner";
 import { SpritePortrait } from "@/components/SpritePortrait";
+import type { OfficeCharacterName } from "@/scene/office/cast";
 
 const API =
   (import.meta.env.VITE_API_BASE_URL as string | undefined) ??
@@ -95,10 +98,10 @@ const PLANT_EMPLOYEES = [
       title: "PRJ-OPS-01: Secondary Superheater Pressure Bypass Calibration",
       branch: "feature/boiler-bypass-curve",
       targetAsset: "B-101 (Secondary Superheater)",
-      status: "In Flight · Sprint 4",
+      status: "In Flight Â· Sprint 4",
       description: "Tuning differential pressure trip threshold to prevent thermal shock during rapid cold-start bypass.",
       acceptanceCriteria: [
-        "1. Calibrate thermocouple response curve under 400°C.",
+        "1. Calibrate thermocouple response curve under 400Â°C.",
         "2. Validate against historical thermal incident logs from 2021 turnaround.",
         "3. Preserve step-by-step recovery guide into DeadMind vector store.",
       ],
@@ -106,15 +109,15 @@ const PLANT_EMPLOYEES = [
     meetings: [
       {
         id: "m1",
-        time: "09:00 AM – 09:30 AM",
+        time: "09:00 AM â€“ 09:30 AM",
         title: "Boiler Pod Daily Standup & Telemetry Sync",
-        room: "Control Pod A · Screen 2",
+        room: "Control Pod A Â· Screen 2",
         agenda: "Differential pressure curve checks on Steam Drum B-101 and monsoon temperature baseline tuning.",
         status: "Upcoming",
       },
       {
         id: "m2",
-        time: "02:30 PM – 03:15 PM",
+        time: "02:30 PM â€“ 03:15 PM",
         title: "Shift B Thermal Drift Review & Lab Sign-off",
         room: "Calibration Lab 2",
         agenda: "Reviewing 4-20mA positioner loop tolerances with QA Engineer Alex Mercer.",
@@ -122,7 +125,7 @@ const PLANT_EMPLOYEES = [
       },
       {
         id: "m3",
-        time: "05:00 PM – 05:30 PM",
+        time: "05:00 PM â€“ 05:30 PM",
         title: "Evening Shift Handover & Safety Briefing",
         room: "Unit Operations Deck",
         agenda: "Zero-loss handover sign-off and night-shift thermal monitor delegation.",
@@ -133,7 +136,7 @@ const PLANT_EMPLOYEES = [
       {
         id: "task-1",
         title: "PRJ-MGR-01: Tune Monsoon Zero-Span Calibration on Valve V-204",
-        assignedBy: "Michael Scott (Principal Operations Strategist)",
+        assignedBy: "Marcus Vance (Principal Operations Strategist)",
         priority: "Urgent",
         asset: "V-204",
         dueDate: "Today, 18:00 IST",
@@ -150,12 +153,12 @@ const PLANT_EMPLOYEES = [
         dueDate: "Tomorrow, 12:00 IST",
         credits: 50,
         done: false,
-        notes: "Automated regression assertion on thermocouple response under 400°C.",
+        notes: "Automated regression assertion on thermocouple response under 400Â°C.",
       },
       {
         id: "task-3",
         title: "PRJ-MGR-03: Vectorize Burner Igniter Differential Runbook v2.4",
-        assignedBy: "Angela Martin (Compliance Administrator)",
+        assignedBy: "Ananya Deshmukh (Compliance Administrator)",
         priority: "Normal",
         asset: "B-101",
         dueDate: "Friday, 17:00 IST",
@@ -181,7 +184,7 @@ const PLANT_EMPLOYEES = [
         instructor: "Alex Mercer (QA Lead)",
         sopCode: "SOP-TST-04",
         description: "Automating 500-cycle stress testing on industrial 4-20mA mechanical valve positioners.",
-        transcriptPreview: "Execute pytest tests/test_positioner.py with live Modbus simulator to assert ±0.05% deadband repeatability...",
+        transcriptPreview: "Execute pytest tests/test_positioner.py with live Modbus simulator to assert Â±0.05% deadband repeatability...",
       },
     ],
     benefits: {
@@ -193,7 +196,7 @@ const PLANT_EMPLOYEES = [
     },
     predecessorContinuity: {
       predecessorName: "S. Namboodiri",
-      predecessorRole: "Former Senior Boiler Chief (Retired November 2024 · 34 Yrs Exp)",
+      predecessorRole: "Former Senior Boiler Chief (Retired November 2024 Â· 34 Yrs Exp)",
       handoverDate: "November 2024",
       completedAssets: [
         "14 Baseline Boiler Startup & Cold-Start Curves",
@@ -206,12 +209,12 @@ const PLANT_EMPLOYEES = [
       continuityPlaybook: [
         "1. Check out open branch 'predecessor/s-namboodiri-v204-calibration' to inherit uncommitted sensor curves.",
         "2. Apply S. Namboodiri's 4.05mA offset parameter to the 4-20mA positioner loop.",
-        "3. Execute PyTest thermal regression assertion to verify zero drift under 400°C.",
+        "3. Execute PyTest thermal regression assertion to verify zero drift under 400Â°C.",
         "4. Click 'Submit Work to Plant Manager' to push PR and claim +50 Credit Bounty!",
       ],
       parameters: [
         { param: "Valve V-204 Zero-Span Setting", value: "4.05 mA (Monsoon Back-Pressure Compensated)" },
-        { param: "Max Permissible Steam Dump Delta", value: "±12.4 bar/min (Thermal Shock Limit)" },
+        { param: "Max Permissible Steam Dump Delta", value: "Â±12.4 bar/min (Thermal Shock Limit)" },
         { param: "Fast-Transfer Trip Interlock Delay", value: "< 45 ms (OISD-118 Section 4.2)" },
       ],
     },
@@ -229,7 +232,7 @@ const PLANT_EMPLOYEES = [
       title: "PRJ-ENG-04: 6.6kV Vacuum Breaker Fast-Transfer Interlock Tuning",
       branch: "feature/6.6kv-bus-transfer",
       targetAsset: "K-301 (6.6kV Bus-Tie Substation)",
-      status: "In Review · Sprint 4",
+      status: "In Review Â· Sprint 4",
       description: "Aligning vacuum circuit breaker bus transfer delay to under 80ms to eliminate arc-flash hazards.",
       acceptanceCriteria: [
         "1. Fast-transfer timing verified via oscilloscope telemetry.",
@@ -240,10 +243,10 @@ const PLANT_EMPLOYEES = [
     meetings: [
       {
         id: "m4",
-        time: "10:00 AM – 10:45 AM",
+        time: "10:00 AM â€“ 10:45 AM",
         title: "6.6kV Substation Arc-Flash Safety Audit",
         room: "Substation Control Room K-3",
-        agenda: "Reviewing fast-transfer relay trip timing with Safety Officer Dwight Schrute.",
+        agenda: "Reviewing fast-transfer relay trip timing with Safety Officer Rajan Sharma.",
         status: "Upcoming",
       },
     ],
@@ -251,7 +254,7 @@ const PLANT_EMPLOYEES = [
       {
         id: "task-4",
         title: "PRJ-MGR-04: Transformer Oil Dielectric Breakdown Assertion",
-        assignedBy: "Angela Martin (Chief Compliance Administrator)",
+        assignedBy: "Ananya Deshmukh (Chief Compliance Administrator)",
         priority: "High",
         asset: "K-301",
         dueDate: "Tomorrow, 16:00 IST",
@@ -280,7 +283,7 @@ const PLANT_EMPLOYEES = [
     },
     predecessorContinuity: {
       predecessorName: "V. Swaminathan",
-      predecessorRole: "Lead Electrical Specialist (Retired March 2025 · 32 Yrs Exp)",
+      predecessorRole: "Lead Electrical Specialist (Retired March 2025 Â· 32 Yrs Exp)",
       handoverDate: "March 2025",
       completedAssets: [
         "6.6kV Switchgear Protective Relay Coordination Schemes",
@@ -314,10 +317,10 @@ const PLANT_EMPLOYEES = [
       title: "PRJ-TEST-09: Automated Zero-Span Positioner PyTest Regression",
       branch: "test/positioner-zero-span",
       targetAsset: "B-101 (Valve Positioner Rig)",
-      status: "Active Testing · Sprint 4",
+      status: "Active Testing Â· Sprint 4",
       description: "Automated regression tests asserting zero-drift tolerances on 4-20mA mechanical positioners.",
       acceptanceCriteria: [
-        "1. 500-cycle stress test asserting ±0.05% deadband repeatability.",
+        "1. 500-cycle stress test asserting Â±0.05% deadband repeatability.",
         "2. PyTest assertions for OISD-118 Section 4.2 compliance.",
         "3. Automated CI/CD execution pipeline passing with zero errors.",
       ],
@@ -325,7 +328,7 @@ const PLANT_EMPLOYEES = [
     meetings: [
       {
         id: "m5",
-        time: "11:30 AM – 12:15 PM",
+        time: "11:30 AM â€“ 12:15 PM",
         title: "Automated QA & CI/CD Regression Sweep",
         room: "Reliability Engineering Lab 4",
         agenda: "Hardware fault injection harness verification.",
@@ -336,7 +339,7 @@ const PLANT_EMPLOYEES = [
       {
         id: "task-5",
         title: "PRJ-MGR-05: Stress-Test Thermal Sensor Injection Harness",
-        assignedBy: "Michael Scott (Principal Operations Strategist)",
+        assignedBy: "Marcus Vance (Principal Operations Strategist)",
         priority: "High",
         asset: "B-101",
         dueDate: "Today, 19:00 IST",
@@ -381,7 +384,7 @@ const PLANT_EMPLOYEES = [
         "3. Merge into Vault with +50 credit release.",
       ],
       parameters: [
-        { param: "Deadband Tolerance", value: "±0.05% Repeatability" },
+        { param: "Deadband Tolerance", value: "Â±0.05% Repeatability" },
         { param: "Stress Cycles", value: "500 Cycles Continuous" },
       ],
     },
@@ -399,10 +402,10 @@ const PLANT_EMPLOYEES = [
       title: "PRJ-OPS-03: Secondary Boiler Drum Level Thermal Differential Sweep",
       branch: "feature/drum-level-sweep",
       targetAsset: "B-101 (Boiler Steam Drum)",
-      status: "In Flight · Sprint 4",
+      status: "In Flight Â· Sprint 4",
       description: "Asserting water-column level transmitter calibration under variable 250 bar pressure.",
       acceptanceCriteria: [
-        "1. Verify differential pressure transmitter zero-drift under 400°C.",
+        "1. Verify differential pressure transmitter zero-drift under 400Â°C.",
         "2. Ensure water column blowdown sequence conforms to NFPA-85 standards.",
         "3. Synchronize live transmitter readings with DeadMind Digital Twin telemetry.",
       ],
@@ -410,15 +413,15 @@ const PLANT_EMPLOYEES = [
     meetings: [
       {
         id: "m-vik-1",
-        time: "09:00 AM – 09:30 AM",
+        time: "09:00 AM â€“ 09:30 AM",
         title: "Boiler Pod Daily Standup & Telemetry Sync",
-        room: "Control Pod A · Screen 2",
+        room: "Control Pod A Â· Screen 2",
         agenda: "Differential pressure curve checks on Steam Drum B-101 with Rajan Sharma.",
         status: "Upcoming",
       },
       {
         id: "m-vik-2",
-        time: "03:00 PM – 03:45 PM",
+        time: "03:00 PM â€“ 03:45 PM",
         title: "Steam Drum Transducer Calibration Walkthrough",
         room: "Thermal Lab 3",
         agenda: "Field verification of differential sensor deadband.",
@@ -457,7 +460,7 @@ const PLANT_EMPLOYEES = [
       knowledgeBounty: "₹36,000 Earned This Quarter (Preserved 31 SOPs).",
     },
     predecessorContinuity: {
-      predecessorName: "K. Narayanan (Former Steam Drum Specialist · Retired 2024)",
+      predecessorName: "K. Narayanan (Former Steam Drum Specialist Â· Retired 2024)",
       predecessorRole: "Senior Steam Drum Specialist (29 Yrs Exp)",
       handoverDate: "October 2024",
       completedAssets: [
@@ -474,14 +477,14 @@ const PLANT_EMPLOYEES = [
         "3. Submit Pull Request for +65 Credit release.",
       ],
       parameters: [
-        { param: "Transmitter Span Offset", value: "±0.15% FS Limit" },
-        { param: "Max Permissible Level Surge", value: "±50 mm Delta" },
+        { param: "Transmitter Span Offset", value: "Â±0.15% FS Limit" },
+        { param: "Max Permissible Level Surge", value: "Â±50 mm Delta" },
       ],
     },
   },
   {
     id: "stanley",
-    name: "Stanley Hudson",
+    name: "Sanjay Patel",
     role: "Substation Protection Relay Lead",
     pod: "Electrical Controls Pod",
     avatarChar: "stanley",
@@ -492,7 +495,7 @@ const PLANT_EMPLOYEES = [
       title: "PRJ-ENG-06: 6.6kV Bus-Tie Differential Protective Relay Coordination",
       branch: "feature/bus-tie-protection",
       targetAsset: "K-301 (6.6kV Substation)",
-      status: "In Flight · Sprint 4",
+      status: "In Flight Â· Sprint 4",
       description: "Configuring numerical relay trip curves for instantaneous overcurrent fault clearing under 40ms.",
       acceptanceCriteria: [
         "1. Numerical relay time-current characteristic curves verified.",
@@ -503,7 +506,7 @@ const PLANT_EMPLOYEES = [
     meetings: [
       {
         id: "m-st-1",
-        time: "10:00 AM – 10:45 AM",
+        time: "10:00 AM â€“ 10:45 AM",
         title: "6.6kV Substation Arc-Flash Safety Audit",
         room: "Substation Control Room K-3",
         agenda: "Reviewing numerical relay trip timing with K.V. Ramanathan.",
@@ -542,7 +545,7 @@ const PLANT_EMPLOYEES = [
       knowledgeBounty: "₹45,000 Earned This Quarter (Preserved 44 SOPs).",
     },
     predecessorContinuity: {
-      predecessorName: "V. Swaminathan (Lead Electrical Specialist · Retired 2025)",
+      predecessorName: "V. Swaminathan (Lead Electrical Specialist Â· Retired 2025)",
       predecessorRole: "Lead Electrical Specialist (32 Yrs Exp)",
       handoverDate: "March 2025",
       completedAssets: [
@@ -565,7 +568,7 @@ const PLANT_EMPLOYEES = [
   },
   {
     id: "jim",
-    name: "Jim Halpert",
+    name: "Dev Sen",
     role: "Automated CI/CD & Sensor Rig Lead",
     pod: "Testing & QA Pod",
     avatarChar: "jim",
@@ -576,7 +579,7 @@ const PLANT_EMPLOYEES = [
       title: "PRJ-TEST-12: SCADA Modbus Port 502 Automated Regression Daemon",
       branch: "feature/modbus-ci-daemon",
       targetAsset: "B-101 (Valve Positioner Rig)",
-      status: "In Flight · Sprint 4",
+      status: "In Flight Â· Sprint 4",
       description: "Continuous background daemon asserting 0-latency register polling across all 14 equipment nodes.",
       acceptanceCriteria: [
         "1. Sub-10ms Modbus polling response rate asserted across all registers.",
@@ -587,7 +590,7 @@ const PLANT_EMPLOYEES = [
     meetings: [
       {
         id: "m-jim-1",
-        time: "11:30 AM – 12:15 PM",
+        time: "11:30 AM â€“ 12:15 PM",
         title: "Automated QA & CI/CD Regression Sweep",
         room: "Reliability Lab 4",
         agenda: "Deploying automated Modbus test daemon with Alex Mercer.",
@@ -612,7 +615,7 @@ const PLANT_EMPLOYEES = [
         id: "v-jim-1",
         title: "Industrial Modbus TCP Automation & PyTest Integration",
         duration: "13:40 min",
-        instructor: "Jim Halpert (QA Automation Lead)",
+        instructor: "Dev Sen (QA Automation Lead)",
         sopCode: "SOP-QA-05",
         description: "How to construct high-throughput automated test fixtures for PLC registers.",
         transcriptPreview: "Initialize pymodbus client on port 502 with async timeout assertions...",
@@ -626,7 +629,7 @@ const PLANT_EMPLOYEES = [
       knowledgeBounty: "₹35,000 Earned This Quarter (Preserved 33 SOPs).",
     },
     predecessorContinuity: {
-      predecessorName: "David Wallace (Senior QA Principal · Reassigned 2025)",
+      predecessorName: "David Wallace (Senior QA Principal Â· Reassigned 2025)",
       predecessorRole: "Senior QA Principal",
       handoverDate: "January 2025",
       completedAssets: [
@@ -649,7 +652,7 @@ const PLANT_EMPLOYEES = [
   },
   {
     id: "angela",
-    name: "Angela Martin",
+    name: "Ananya Deshmukh",
     role: "Chief Compliance & Statutory Administrator",
     pod: "Compliance & Safety Pod",
     avatarChar: "angela",
@@ -660,7 +663,7 @@ const PLANT_EMPLOYEES = [
       title: "PRJ-COMP-01: OISD-118 & NFPA-85 Regulatory Clearance Verification",
       branch: "main/statutory-compliance",
       targetAsset: "Plant-Wide Statutory Architecture",
-      status: "In Review · Sprint 4",
+      status: "In Review Â· Sprint 4",
       description: "Ensuring 100% statutory compliance across all 58 plant runbooks and safety interlocks.",
       acceptanceCriteria: [
         "1. OISD-118 Section 4.2 emergency trip standards certified.",
@@ -671,10 +674,10 @@ const PLANT_EMPLOYEES = [
     meetings: [
       {
         id: "m-ang-1",
-        time: "02:00 PM – 02:45 PM",
+        time: "02:00 PM â€“ 02:45 PM",
         title: "Statutory Compliance & Audit Review",
         room: "Compliance Boardroom A",
-        agenda: "Reviewing OISD-118 compliance ledger with Safety Officer Dwight Schrute.",
+        agenda: "Reviewing OISD-118 compliance ledger with Safety Officer Rajan Sharma.",
         status: "Upcoming",
       },
     ],
@@ -682,7 +685,7 @@ const PLANT_EMPLOYEES = [
       {
         id: "task-ang-1",
         title: "PRJ-MGR-10: Statutory Audit Sign-off on Boiler Runbooks",
-        assignedBy: "Michael Scott (Principal Operations Strategist)",
+        assignedBy: "Marcus Vance (Principal Operations Strategist)",
         priority: "Urgent",
         asset: "Plant-Wide",
         dueDate: "Friday, 16:00 IST",
@@ -696,7 +699,7 @@ const PLANT_EMPLOYEES = [
         id: "v-ang-1",
         title: "OISD-118 & Industrial Plant Safety Compliance Master Class",
         duration: "22:10 min",
-        instructor: "Angela Martin (Chief Compliance Administrator)",
+        instructor: "Ananya Deshmukh (Chief Compliance Administrator)",
         sopCode: "SOP-COMP-01",
         description: "Statutory requirements for oil, gas, and power plant safety protocols.",
         transcriptPreview: "Under Section 4.2, all emergency bypass lines must maintain dual redundant trip solenoids...",
@@ -734,7 +737,7 @@ const PLANT_EMPLOYEES = [
   },
   {
     id: "michael",
-    name: "Michael Scott",
+    name: "Marcus Vance",
     role: "Principal Plant Operations Strategist",
     pod: "Executive Strategy Pod",
     avatarChar: "michael",
@@ -756,9 +759,9 @@ const PLANT_EMPLOYEES = [
     meetings: [
       {
         id: "m6",
-        time: "04:00 PM – 04:45 PM",
+        time: "04:00 PM â€“ 04:45 PM",
         title: "Executive Plant Board & CFO ROI Briefing",
-        room: "Boardroom 1 · Executive Twin Console",
+        room: "Boardroom 1 Â· Executive Twin Console",
         agenda: "Presentation on zero knowledge loss SLA and 10.86 Cr downtime mitigation.",
         status: "Upcoming",
       },
@@ -781,7 +784,7 @@ const PLANT_EMPLOYEES = [
         id: "v5",
         title: "Executive Digital Twin Continuity & CFO Risk Architecture",
         duration: "20:00 min",
-        instructor: "Michael Scott (Principal Strategist)",
+        instructor: "Marcus Vance (Principal Strategist)",
         sopCode: "SOP-EXEC-01",
         description: "Strategic ROI framework quantifying downtime risk reduction.",
         transcriptPreview: "By digitizing tacit operator instincts into continuous vector embeddings, we safeguard 10.86 Cr...",
@@ -905,7 +908,7 @@ function PlantMap() {
       if (res.ok) {
         queryClient.invalidateQueries({ queryKey: ["submissions"] });
         toast.success(
-          `🚀 Work Submitted: PR "${newPrTitle}" submitted to Plant Manager for review!`
+          `ðŸš€ Work Submitted: PR "${newPrTitle}" submitted to Plant Manager for review!`
         );
         setShowSubmitModal(false);
         setNewPrTitle("");
@@ -931,7 +934,7 @@ function PlantMap() {
       if (res.ok) {
         queryClient.invalidateQueries({ queryKey: ["submissions"] });
         toast.success(
-          "✅ Pull Request Approved: Merged into Plant Vault & +25 bonus credits awarded!"
+          "âœ… Pull Request Approved: Merged into Plant Vault & +25 bonus credits awarded!"
         );
       }
     } catch {
@@ -964,7 +967,7 @@ function PlantMap() {
     }));
 
     toast.success(
-      `📋 Task Assigned: "${assignedTaskTitle}" assigned to ${selectedProfile.name} (+${assignedTaskCredits} Credits)!`
+      `ðŸ“‹ Task Assigned: "${assignedTaskTitle}" assigned to ${selectedProfile.name} (+${assignedTaskCredits} Credits)!`
     );
     setShowAssignTaskModal(false);
     setAssignedTaskTitle("");
@@ -980,7 +983,7 @@ function PlantMap() {
       const targetTask = currentList.find((t) => t.id === taskId);
       if (targetTask && !targetTask.done) {
         toast.success(
-          `🎉 Task Completed: "${targetTask.title}" marked as complete (+${targetTask.credits} Credits added to employee wallet)!`
+          `ðŸŽ‰ Task Completed: "${targetTask.title}" marked as complete (+${targetTask.credits} Credits added to employee wallet)!`
         );
       }
       return { ...prev, [selectedProfile.id]: updated };
@@ -989,7 +992,7 @@ function PlantMap() {
 
   const handleAdoptPredecessorBranch = () => {
     toast.success(
-      `⚡ Predecessor Work Adopted: Checked out '${selectedProfile.predecessorContinuity.openBranch}'. Ready to calibrate and push PR!`
+      `âš¡ Predecessor Work Adopted: Checked out '${selectedProfile.predecessorContinuity.openBranch}'. Ready to calibrate and push PR!`
     );
   };
 
@@ -1024,8 +1027,8 @@ function PlantMap() {
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-display uppercase tracking-wider text-lg">Equipment Schematic Topology</h2>
             <div className="flex items-center gap-3 text-xs">
-              <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full" style={{ background: colorFill("green") }} /> ≥3 Custodians</span>
-              <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full" style={{ background: colorFill("yellow") }} /> 1–2 Custodians</span>
+              <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full" style={{ background: colorFill("green") }} /> â‰¥3 Custodians</span>
+              <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full" style={{ background: colorFill("yellow") }} /> 1â€“2 Custodians</span>
               <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full" style={{ background: colorFill("red") }} /> 0 Custodians (Unprotected)</span>
             </div>
           </div>
@@ -1100,16 +1103,16 @@ function PlantMap() {
         </div>
       )}
 
-      {/* ═════════════════════════════════════════════════════════════════════ */}
-      {/* 🌟 COMPREHENSIVE AUTHENTICATED EMPLOYEE WORKSTREAM & OPERATIONS HUB  */}
-      {/* ═════════════════════════════════════════════════════════════════════ */}
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+      {/* ðŸŒŸ COMPREHENSIVE AUTHENTICATED EMPLOYEE WORKSTREAM & OPERATIONS HUB  */}
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <div className="px-6 pb-10 space-y-5">
         {/* Header with Signed-in details & Switcher */}
         <div className="p-5 bg-card border border-border space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4">
             <div className="flex items-center gap-4">
               <div className="w-16 h-18 bg-[#18161d] border-2 border-primary flex items-end justify-center overflow-hidden shrink-0 shadow-lg">
-                <SpritePortrait character={selectedProfile.avatarChar} scale={1.5} />
+                <SpritePortrait character={selectedProfile.avatarChar as OfficeCharacterName} scale={1.5} />
               </div>
               <div>
                 <div className="flex items-center gap-2">
@@ -1127,7 +1130,7 @@ function PlantMap() {
                     {selectedProfile.knowledgePreserved}% Memory Preserved
                   </span>
                   <span className="text-muted-foreground">
-                    {selectedProfile.verifiedSops} Verified SOPs · {selectedProfile.commitsCount} Commits
+                    {selectedProfile.verifiedSops} Verified SOPs Â· {selectedProfile.commitsCount} Commits
                   </span>
                 </div>
               </div>
@@ -1247,9 +1250,9 @@ function PlantMap() {
             </button>
           </div>
 
-          {/* ───────────────────────────────────────────────────────────────── */}
+          {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
           {/* TAB 1: ACTIVE CURRENT WORKSTREAM                                  */}
-          {/* ───────────────────────────────────────────────────────────────── */}
+          {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
           {employeeSubTab === "workstream" && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs animate-in fade-in duration-150">
               {/* Current Active Sprint */}
@@ -1275,7 +1278,7 @@ function PlantMap() {
                     </span>
                     {selectedProfile.activeWork.acceptanceCriteria.map((ac, acIdx) => (
                       <div key={acIdx} className="text-[11px] text-foreground/90 flex items-start gap-1.5">
-                        <span className="text-primary font-bold">▸</span>
+                        <span className="text-primary font-bold">â–¸</span>
                         <span>{ac}</span>
                       </div>
                     ))}
@@ -1331,9 +1334,9 @@ function PlantMap() {
             </div>
           )}
 
-          {/* ───────────────────────────────────────────────────────────────── */}
+          {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
           {/* TAB 2: SHIFT MEETING SCHEDULE                                     */}
-          {/* ───────────────────────────────────────────────────────────────── */}
+          {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
           {employeeSubTab === "meetings" && (
             <div className="space-y-3 animate-in fade-in duration-150">
               <div className="flex items-center justify-between border-b border-border pb-2">
@@ -1376,9 +1379,9 @@ function PlantMap() {
             </div>
           )}
 
-          {/* ───────────────────────────────────────────────────────────────── */}
+          {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
           {/* TAB 3: MANAGER-ASSIGNED TASKS & LIVE QUEUE                        */}
-          {/* ───────────────────────────────────────────────────────────────── */}
+          {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
           {employeeSubTab === "managerTasks" && (
             <div className="space-y-3 animate-in fade-in duration-150">
               <div className="flex items-center justify-between border-b border-border pb-2">
@@ -1441,9 +1444,9 @@ function PlantMap() {
                         <p className="text-[11px] text-muted-foreground leading-snug">{t.notes}</p>
                         <div className="text-[10px] text-muted-foreground flex items-center gap-3">
                           <span>Assigned by: <strong className="text-foreground">{t.assignedBy}</strong></span>
-                          <span>·</span>
+                          <span>Â·</span>
                           <span>Due: <strong className="text-primary">{t.dueDate}</strong></span>
-                          <span>·</span>
+                          <span>Â·</span>
                           <span>Asset: <strong className="text-foreground">{t.asset}</strong></span>
                         </div>
                       </div>
@@ -1459,9 +1462,9 @@ function PlantMap() {
             </div>
           )}
 
-          {/* ───────────────────────────────────────────────────────────────── */}
+          {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
           {/* TAB 4: TECHNICAL TRAINING & SOP VIDEO GUIDES                      */}
-          {/* ───────────────────────────────────────────────────────────────── */}
+          {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
           {employeeSubTab === "videos" && (
             <div className="space-y-3 animate-in fade-in duration-150">
               <div className="flex items-center justify-between border-b border-border pb-2">
@@ -1514,9 +1517,9 @@ function PlantMap() {
             </div>
           )}
 
-          {/* ───────────────────────────────────────────────────────────────── */}
+          {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
           {/* TAB 5: EMPLOYEE WELFARE & BENEFITS PORTAL                         */}
-          {/* ───────────────────────────────────────────────────────────────── */}
+          {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
           {employeeSubTab === "benefits" && (
             <div className="space-y-4 animate-in fade-in duration-150">
               <div className="flex items-center justify-between border-b border-border pb-2">
@@ -1601,9 +1604,9 @@ function PlantMap() {
             </div>
           )}
 
-          {/* ───────────────────────────────────────────────────────────────── */}
+          {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
           {/* TAB 6: PREDECESSOR CONTINUITY PLAYBOOK & HOW TO CONTINUE WORK     */}
-          {/* ───────────────────────────────────────────────────────────────── */}
+          {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
           {employeeSubTab === "predecessor" && (
             <div className="space-y-4 animate-in fade-in duration-150">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-2">
@@ -1684,9 +1687,9 @@ function PlantMap() {
             </div>
           )}
 
-          {/* ───────────────────────────────────────────────────────────────── */}
+          {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
           {/* TAB 7: GIT PULL REQUESTS & MANAGER REVIEW QUEUE                   */}
-          {/* ───────────────────────────────────────────────────────────────── */}
+          {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
           {employeeSubTab === "prs" && (
             <div className="space-y-3 animate-in fade-in duration-150">
               <div className="flex items-center justify-between border-b border-border pb-2.5">
@@ -1726,9 +1729,9 @@ function PlantMap() {
                       </div>
                       <div className="text-[10px] text-muted-foreground flex items-center gap-3">
                         <span>Author: <strong className="text-foreground">{sub.user_name}</strong></span>
-                        <span>·</span>
+                        <span>Â·</span>
                         <span>Branch: <strong className="text-primary">{sub.branch || "main"}</strong></span>
-                        <span>·</span>
+                        <span>Â·</span>
                         <span>{sub.submitted_at}</span>
                       </div>
                       {sub.work_description && (
@@ -1760,7 +1763,7 @@ function PlantMap() {
         </div>
       </div>
 
-      {/* ── MODAL: ASSIGN TASK (MANAGER) ─────────────────────────────────── */}
+      {/* â”€â”€ MODAL: ASSIGN TASK (MANAGER) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       {showAssignTaskModal && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
           <div className="w-full max-w-lg bg-card border border-border shadow-2xl p-6 space-y-4 font-mono animate-in zoom-in-95 duration-200">
@@ -1890,7 +1893,7 @@ function PlantMap() {
         </div>
       )}
 
-      {/* ── MODAL: TECHNICAL VIDEO GUIDE PLAYER ──────────────────────────── */}
+      {/* â”€â”€ MODAL: TECHNICAL VIDEO GUIDE PLAYER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       {activeVideo && (
         <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
           <div className="w-full max-w-2xl bg-card border border-border shadow-2xl p-6 space-y-4 font-mono animate-in zoom-in-95 duration-200">
@@ -1914,7 +1917,7 @@ function PlantMap() {
             <div className="aspect-video bg-black border-2 border-primary/60 relative overflow-hidden flex flex-col justify-between p-4 shadow-2xl">
               <div className="flex items-center justify-between text-[10px] text-primary/80 font-mono">
                 <span className="px-2 py-0.5 bg-primary/20 border border-primary/40">
-                  {activeVideo.sopCode} · 1080p HD
+                  {activeVideo.sopCode} Â· 1080p HD
                 </span>
                 <span className="animate-pulse flex items-center gap-1 text-[#5ca97a]">
                   <span className="w-2 h-2 rounded-full bg-[#5ca97a]" /> Live SOP Player
@@ -1969,7 +1972,7 @@ function PlantMap() {
         </div>
       )}
 
-      {/* ── MODAL: SUBMIT WORK / PULL REQUEST TO MANAGER ─────────────────── */}
+      {/* â”€â”€ MODAL: SUBMIT WORK / PULL REQUEST TO MANAGER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       {showSubmitModal && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
           <div className="w-full max-w-lg bg-card border border-border shadow-2xl p-6 space-y-4 font-mono animate-in zoom-in-95 duration-200">
@@ -2089,7 +2092,7 @@ function PlantMap() {
         </div>
       )}
 
-      {/* ── MODAL: SIGN IN / SWITCH EMPLOYEE PROFILE ──────────────────────── */}
+      {/* â”€â”€ MODAL: SIGN IN / SWITCH EMPLOYEE PROFILE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       {showSignInModal && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
           <div className="w-full max-w-lg bg-card border border-border shadow-2xl p-6 space-y-4 font-mono animate-in zoom-in-95 duration-200">
@@ -2132,7 +2135,7 @@ function PlantMap() {
                     }`}
                   >
                     <div className="w-8 h-10 bg-[#18161d] border border-primary flex items-end justify-center overflow-hidden shrink-0 mt-0.5">
-                      <SpritePortrait character={emp.avatarChar} scale={1} />
+                      <SpritePortrait character={emp.avatarChar as OfficeCharacterName} scale={1} />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
@@ -2201,7 +2204,7 @@ function NodeDetailDrawer({ node, year, onClose }: { node: VulnNode; year: numbe
             <ul className="text-xs mt-1 space-y-0.5">
               {active.map((a) => (
                 <li key={a.name}>
-                  {a.name} <span className="text-muted-foreground">· retires {a.retirement_year}</span>
+                  {a.name} <span className="text-muted-foreground">Â· retires {a.retirement_year}</span>
                 </li>
               ))}
             </ul>
@@ -2211,7 +2214,7 @@ function NodeDetailDrawer({ node, year, onClose }: { node: VulnNode; year: numbe
               <div className="section-label mt-4">Retired</div>
               <ul className="text-xs mt-1 space-y-0.5 text-muted-foreground">
                 {retired.map((a) => (
-                  <li key={a.name}>{a.name} · {a.retirement_year}</li>
+                  <li key={a.name}>{a.name} Â· {a.retirement_year}</li>
                 ))}
               </ul>
             </>
@@ -2225,7 +2228,7 @@ function NodeDetailDrawer({ node, year, onClose }: { node: VulnNode; year: numbe
             <h3 className="font-display uppercase tracking-wider text-sm">Causal Timeline Trace</h3>
           </div>
           {causalQ.isLoading ? (
-            <div className="text-xs text-muted-foreground">Loading…</div>
+            <div className="text-xs text-muted-foreground">Loadingâ€¦</div>
           ) : (causalQ.data ?? []).length === 0 ? (
             <p className="text-xs text-muted-foreground">No causal chains recorded.</p>
           ) : (
@@ -2235,7 +2238,7 @@ function NodeDetailDrawer({ node, year, onClose }: { node: VulnNode; year: numbe
                   <span className="absolute -left-[5px] mt-1.5 w-2.5 h-2.5 rounded-full bg-primary" />
                   <div className="flex flex-wrap items-center gap-1 text-xs">
                     <span className="font-display">{c.parent_event}</span>
-                    <span className="text-muted-foreground">→</span>
+                    <span className="text-muted-foreground">â†’</span>
                     <span className="font-display text-primary">{c.child_event}</span>
                     {c.is_prediction ? (
                       <span className="text-[0.6rem] uppercase border border-accent text-accent px-1">prediction</span>
@@ -2255,7 +2258,7 @@ function NodeDetailDrawer({ node, year, onClose }: { node: VulnNode; year: numbe
             <h3 className="font-display uppercase tracking-wider text-sm">Counterfactual Simulator</h3>
           </div>
           {cfQ.isLoading ? (
-            <div className="text-xs text-muted-foreground">Loading…</div>
+            <div className="text-xs text-muted-foreground">Loadingâ€¦</div>
           ) : (cfQ.data ?? []).length === 0 ? (
             <p className="text-xs text-muted-foreground">No counterfactuals on file.</p>
           ) : (
@@ -2267,7 +2270,7 @@ function NodeDetailDrawer({ node, year, onClose }: { node: VulnNode; year: numbe
                   <ul className="mt-2 space-y-0.5">
                     {cf.consequences.split(";").map((c, i) => (
                       <li key={i} className="text-[0.7rem] flex gap-1">
-                        <span className="text-destructive">▸</span>
+                        <span className="text-destructive">â–¸</span>
                         <span>{c.trim()}</span>
                       </li>
                     ))}

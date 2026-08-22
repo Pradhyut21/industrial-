@@ -451,4 +451,3 @@ function DeveloperAnalyzerHub() {
   );
 }
 
-export default DeveloperAnalyzerHub;

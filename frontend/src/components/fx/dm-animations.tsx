@@ -1,5 +1,7 @@
 /**
- * Munder Difflin–style micro-animation React helpers.
+ * DeadMind micro-animation React helpers.
+ * Wrappers that attach data-dm-* animation attributes without
+ * requiring direct CSS class manipulation.
  *
  * - <SparkleEffect>   — 4-star burst when something completes
  * - <DustEffect>      — 3-dot arc when something arrives / ingests

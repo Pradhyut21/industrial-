@@ -1,18 +1,18 @@
 /**
  * Default MCP server catalog (Workstream 3). A dependency-free, importable-by-both
- * (main + renderer) registry of the MCP servers Munder Difflin can wire into each
+ * (main + renderer) registry of the MCP servers DeadMind can wire into each
  * agent's per-session `settings.json`. Keep it free of electron/UI/node imports.
  *
  * Tiers gate consent:
- *   - 'safe-readonly' → no secret, no destructive write OUTSIDE the agent cwd; shipped
+ *   - 'safe-readonly' â†’ no secret, no destructive write OUTSIDE the agent cwd; shipped
  *                       ON by default (`defaultEnabled:true`). `filesystem`/`git` are
  *                       scoped to the agent cwd at merge time (never whole-disk).
- *   - 'write'         → can mutate state beyond the workspace; OFF by default,
+ *   - 'write'         â†’ can mutate state beyond the workspace; OFF by default,
  *                       consent-gated.
- *   - 'secret'        → needs an API key / token / connection string; OFF by default,
+ *   - 'secret'        â†’ needs an API key / token / connection string; OFF by default,
  *                       consent-gated.
  *
- * The actual merge (catalog ∩ enabled, cwd-scoping of filesystem/git, id namespacing,
+ * The actual merge (catalog âˆ© enabled, cwd-scoping of filesystem/git, id namespacing,
  * non-fatal resolution) is Workstream 3's `buildDefaultMcpServers`/`hookSettings`
  * job — this module only declares the entries, their tiers, and the seed defaults.
  *
@@ -26,7 +26,7 @@ export type McpTier = 'safe-readonly' | 'write' | 'secret';
 
 export interface McpCatalogEntry {
   /** Stable catalog id (also the consent key in `config.mcpDefaults`). The merge
-   *  step namespaces the written server id (e.g. `munder-<id>`) to avoid clobbering
+   *  step namespaces the written server id (e.g. `deadmind-<id>`) to avoid clobbering
    *  a user's own `~/.claude` MCP server of the same name. */
   id: string;
   /** Human label for the consent UI. */
@@ -50,7 +50,7 @@ export interface McpCatalogEntry {
 /** The default MCP bundle. Safe/read-only servers are ON; anything that writes
  *  beyond the workspace or needs a secret is OFF until the user consents. */
 export const MCP_CATALOG: McpCatalogEntry[] = [
-  // ─── Safe, read-only, no-secret — shipped ON ──────────────────────────────
+  // â”€â”€â”€ Safe, read-only, no-secret — shipped ON â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   {
     id: 'sequential-thinking',
     label: 'Sequential Thinking',
@@ -106,7 +106,7 @@ export const MCP_CATALOG: McpCatalogEntry[] = [
     defaultEnabled: true
   },
 
-  // ─── Write / secret — shipped OFF, consent-gated ──────────────────────────
+  // â”€â”€â”€ Write / secret — shipped OFF, consent-gated â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   {
     id: 'github-token',
     label: 'GitHub',

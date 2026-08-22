@@ -174,7 +174,9 @@ def evaluate_retrieval(k=3):
         f.write(f"Keyword Retrieval  P@3: {summary['metrics']['keyword_p_at_3']:.1%}\n")
         f.write(f"Semantic Retrieval P@3: {summary['metrics']['semantic_p_at_3']:.1%}\n")
         f.write(f"Hybrid RRF + Cross-Encoder Reranker P@3: {summary['metrics']['hybrid_rrf_reranker_p_at_3']:.1%}\n")
-        f.write(f"Improvement: +{summary['metrics']['absolute_improvement_over_keyword']:.1%}\n\n")
+        improvement = summary['metrics']['absolute_improvement_over_keyword']
+        sign = "+" if improvement >= 0 else ""
+        f.write(f"Improvement over Keyword: {sign}{improvement:.1%}\n\n")
         f.write("Category Breakdown:\n")
         for cat, st in category_stats.items():
             f.write(f"  - {cat:18}: Keyword={st['keyword_hits']}/{st['total']} | Semantic={st['semantic_hits']}/{st['total']} | Hybrid={st['hybrid_hits']}/{st['total']}\n")
@@ -187,7 +189,9 @@ def evaluate_retrieval(k=3):
     print(f"Keyword Retrieval  P@3: {summary['metrics']['keyword_p_at_3']:.1%}")
     print(f"Semantic Retrieval P@3: {summary['metrics']['semantic_p_at_3']:.1%}")
     print(f"Hybrid RRF + Rerank P@3: {summary['metrics']['hybrid_rrf_reranker_p_at_3']:.1%}")
-    print(f"Absolute Gain over Keyword: +{summary['metrics']['absolute_improvement_over_keyword']:.1%}")
+    improvement = summary['metrics']['absolute_improvement_over_keyword']
+    sign = "+" if improvement >= 0 else ""
+    print(f"Absolute Gain over Keyword: {sign}{improvement:.1%}")
     print(f"{'='*60}")
     print(f"Saved Artifacts:")
     print(f"  - JSON: {json_path}")

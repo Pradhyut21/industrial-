@@ -12,27 +12,22 @@ import { toolIcon } from './ToolBubble';
 // consistently; the differences are the look (cloud + tail, light fill) and that
 // it stays put until the action changes (no auto-linger while the agent works).
 
-const PADDING_X = 6;
-const PADDING_Y = 3;
-const CORNER_RADIUS = 5;
-const MAX_WIDTH = 150;
-const FILL_COLOR = colors.cream[50];   // light cloud
-const OUTLINE_COLOR = colors.ink[900];
-const TEXT_COLOR = '#3d2e4a';           // ink-700
-const FONT_SIZE = 12;
+const PADDING_X = 10;
+const PADDING_Y = 6;
+const CORNER_RADIUS = 6;
+const MAX_WIDTH = 190;
+const FILL_COLOR = 0x121018;            // dark titanium glass
+const OUTLINE_COLOR = 0x5e5672;         // high-contrast crisp border
+const TEXT_COLOR = '#ffffff';           // ultra-crisp pure white
+const FONT_SIZE = 15;
 const RENDER_SCALE = 0.5;               // render at 2x, scale down for crispness
-const OFFSET_Y = -38;                   // a touch higher than the tool bubble
-const FADE_IN_DURATION = 0.15;
-const FADE_OUT_DURATION = 0.3;
-const LINGER_DURATION = 1.2;            // only used when hide() is requested
+const OFFSET_Y = -34;                   // positioned cleanly above head
+const FADE_IN_DURATION = 0.2;
+const FADE_OUT_DURATION = 0.35;
+const LINGER_DURATION = 4.5;            // linger cleanly
 const DOTS_CYCLE_SPEED = 0.45;
-// Word-wrap width in the inner (unscaled) space — the inner container renders at
-// RENDER_SCALE, so the on-screen cap is MAX_WIDTH. breakWords splits unbroken
-// tokens (long paths/hashes) that would otherwise still spill past the cloud.
 const WRAP_WIDTH = MAX_WIDTH / RENDER_SCALE - PADDING_X * 2;
-// Hard cap on raw characters so a pathological action string wraps to a few
-// lines instead of a runaway-tall cloud (~4 lines at this width).
-const MAX_CHARS = 160;
+const MAX_CHARS = 120;
 
 type BubbleState = 'hidden' | 'fading-in' | 'visible' | 'lingering' | 'fading-out';
 
@@ -50,18 +45,8 @@ export class ThoughtBubble {
   private isThinking = false;
   private dotsElapsed = 0;
   private dotsPhase = 0;
-  // Extra upward shift (px) applied on top of OFFSET_Y so two nearby bubbles can
-  // stack instead of overlapping. Set each frame by the scene's overlap pass.
   private extraLift = 0;
-  // Current camera zoom. The bubble lives inside the zoomed world container, so
-  // when the window shrinks (fit-to-screen zoom < 1) the text used to scale
-  // down with the map and turn into ragged mush. Counter-scale so the bubble
-  // never renders below its designed 1:1 screen size; at zoom ≥ 1 it keeps
-  // scaling with the world as before.
   private zoom = 1;
-  // World bounds (map size in px). An avatar near the map edge — Michael's CEO
-  // room sits in the top-left corner — would otherwise push its cloud out of
-  // the visible world. setPosition clamps the rect back inside, tooltip-style.
   private boundsW = 0;
   private boundsH = 0;
 
@@ -82,9 +67,9 @@ export class ThoughtBubble {
       text: '',
       style: {
         fontSize: FONT_SIZE,
-        fontWeight: 'bold',
+        fontWeight: '600',
         fill: TEXT_COLOR,
-        fontFamily: 'monospace',
+        fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
         align: 'left',
         wordWrap: true,
         wordWrapWidth: WRAP_WIDTH,
@@ -164,12 +149,13 @@ export class ThoughtBubble {
     const h = this.bgH * RENDER_SCALE * comp;
     let x = px - w / 2;
     let y = py + OFFSET_Y - h - this.extraLift;
+    const margin = 20;
     if (this.boundsW > 0) {
       // Clamp into the world, tooltip-style: slide horizontally, and a cloud
       // that would poke above the top edge slides down instead (it may then
       // cover the avatar's hat — better than being unreadable off-world).
-      x = Math.min(Math.max(x, 1), Math.max(1, this.boundsW - w - 1));
-      y = Math.min(Math.max(y, 1), Math.max(1, this.boundsH - h - 1));
+      x = Math.min(Math.max(x, margin), Math.max(margin, this.boundsW - w - margin));
+      y = Math.min(Math.max(y, margin), Math.max(margin, this.boundsH - h - margin));
     }
     this.container.x = Math.round(x);
     this.container.y = Math.round(y);
@@ -189,11 +175,12 @@ export class ThoughtBubble {
     const h = this.bgH * RENDER_SCALE * comp;
     let x = px - w / 2;
     let y = py + OFFSET_Y - h;
+    const margin = 20;
     if (this.boundsW > 0) {
       // Report the CLAMPED base rect so the overlap resolver stacks bubbles
       // where they actually render, not where they ideally would.
-      x = Math.min(Math.max(x, 1), Math.max(1, this.boundsW - w - 1));
-      y = Math.min(Math.max(y, 1), Math.max(1, this.boundsH - h - 1));
+      x = Math.min(Math.max(x, margin), Math.max(margin, this.boundsW - w - margin));
+      y = Math.min(Math.max(y, margin), Math.max(margin, this.boundsH - h - margin));
     }
     return { x, y, w, h };
   }
@@ -256,22 +243,21 @@ export class ThoughtBubble {
     // whenever the measurement overshot wordWrapWidth a touch (emoji glyphs,
     // fallback-font metrics) — on the dark map that read as "horizontally cut".
     // wordWrap already bounds the label, so the bg needs no clamp of its own.
-    this.bgW = this.label.width + PADDING_X * 2;
+    this.bgW = Math.max(48, this.label.width + PADDING_X * 2);
     this.bgH = this.label.height + PADDING_Y * 2;
 
     this.bg.clear();
     this.bg.roundRect(0, 0, this.bgW, this.bgH, CORNER_RADIUS);
-    this.bg.fill({ color: FILL_COLOR });
-    this.bg.stroke({ color: OUTLINE_COLOR, width: 1 });
+    this.bg.fill({ color: FILL_COLOR, alpha: 0.94 });
+    this.bg.stroke({ color: OUTLINE_COLOR, width: 1.5 });
 
-    // Thought-cloud tail: two shrinking puffs trailing down from the bubble's
-    // lower-left toward the head below — the cue that says "thinking", not "speech".
+    // Thought-cloud tail: two subtle rounded dots trailing down toward the character's head
     this.tail.clear();
-    const baseX = this.bgW * 0.32;
+    const baseX = Math.min(this.bgW * 0.32, 24);
     const puff = (cx: number, cy: number, r: number) => {
-      this.tail.circle(cx, cy, r).fill({ color: FILL_COLOR }).stroke({ color: OUTLINE_COLOR, width: 1 });
+      this.tail.circle(cx, cy, r).fill({ color: FILL_COLOR, alpha: 0.94 }).stroke({ color: OUTLINE_COLOR, width: 1.5 });
     };
     puff(baseX, this.bgH + 4, 3);
-    puff(baseX - 5, this.bgH + 9, 2);
+    puff(baseX - 4, this.bgH + 8, 2);
   }
 }

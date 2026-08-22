@@ -10,7 +10,7 @@ This document is your master playbook for pitching, demonstrating, and defending
 > *"When a senior power plant engineer with 30 years of experience retires, their unwritten instincts, edge-case fixes, and operational workarounds retire with them. Companies spend millions re-learning the same failures. DeadMind is an Industrial Knowledge Intelligence platform that preserves the cognitive reasoning fingerprints of engineers into role-aware digital twins. We turn decades of tacit tribal knowledge into interactive handoffs, shadow SOP audits, and real-time copilot twins before the knowledge cliff hits."*
 
 ### The 60-Second Deep Pitch
-> *"Heavy industry faces an imminent crisis: 25% of senior engineers are retiring this decade, and McKinsey reports workers lose 35% of their day hunting across 10 disconnected legacy silos. DeadMind solves this with a hybrid AI pipeline: we ingest multi-modal documentation, P&ID schematics, and verbal shift notes, resolve fragmented equipment aliases, and index them into a domain-specific knowledge graph.
+> *"Heavy industry faces an imminent crisis: 25% of senior engineers are retiring this decade, and industry research shows workers lose up to a third of their day hunting across 10 disconnected legacy silos. DeadMind solves this with a hybrid AI pipeline: we ingest multi-modal documentation, P&ID schematics, and verbal shift notes, resolve fragmented equipment aliases, and index them into a domain-specific knowledge graph.
 > 
 > Our platform serves 4 tailored persona portals: the CFO simulates retirement risk and financial exposure in ₹ Crores; the Field Technician gets step-by-step grounded troubleshooting via mobile; the Plant Head audits SOP compliance against real shift logs; and our new v2 Continuity Vault auto-synthesizes peer-verified handoff briefs, in-flight task flowcharts, and even a 3D Recovery Run simulation. It works 100% offline in zero-config demo mode and scales horizontally to enterprise Postgres and Redis clusters."*
 
@@ -88,7 +88,7 @@ Follow this precise route to deliver a high-energy demo:
 | :--- | :--- |
 | **💡 Innovation & Creativity** | Unique concept of preserving *cognitive reasoning fingerprints* and building *persona twins* rather than static documentation search. First platform with 3D context recovery gamification and multi-expert dissent synthesis. |
 | **⚙️ Technical Complexity** | Full-stack implementation: Multi-modal OCR & CV P&ID parser, spaCy NER, FAISS + BM25 RRF, Cross-encoder neural reranker, LLaMA 3.3 70B, React 19, TanStack Router, Three.js 3D engine, and Twilio telephony pipeline. |
-| **🎯 Real-World Feasibility** | Solves a documented $4.8B problem backed by McKinsey and BIS Research data. Addresses the actual heavy industry workforce demographic crisis with real ROI modeling. |
+| **🎯 Real-World Feasibility** | Solves a documented multi-billion dollar knowledge management problem in heavy industry. Addresses the actual heavy industry workforce demographic crisis with real ROI modeling. |
 | **🎨 UI / UX Polish** | Industrial dark terminal aesthetic, rich micro-animations, real-time SSE streaming, interactive Mermaid flowcharts, mobile responsiveness, and 3D spatial simulation. |
 | **🏢 Production & Engineering Rigor** | Multi-stage GitHub Actions CI, CodeQL security scanning, Dependabot configuration, 100% passing test suite, Docker containerization, and dual-mode production scaling path. |
 

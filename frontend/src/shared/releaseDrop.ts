@@ -1,4 +1,4 @@
-/**
+﻿/**
  * RELEASE DROPS — a full-bleed, authored "what's new" moment instead of a corner
  * toast with three clipped bullets.
  *
@@ -9,10 +9,10 @@
  * digest toast, so this is purely additive — no release has to change.
  *
  *   <!-- drop -->
- *   <section class="hero"> … any HTML/CSS, <img>, <video> … </section>
+ *   <section class="hero"> â€¦ any HTML/CSS, <img>, <video> â€¦ </section>
  *   <!-- /drop -->
  *
- * ── Why this file is paranoid ──────────────────────────────────────────────
+ * â”€â”€ Why this file is paranoid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
  * This renders REMOTE, AUTHOR-CONTROLLED markup inside the app. The renderer it
  * would otherwise land in has `window.cth` bridged onto it — spawnPty,
  * writeFileText, updateConfig. Script execution in that context is not a bug,
@@ -261,7 +261,7 @@ export const DEFAULT_DROP_HTML = `<style>
 
   <section class="page p1">
     <div class="content center">
-      <p class="kicker">Munder Difflin</p>
+      <p class="kicker">DeadMind</p>
       <h1 class="big">0.4.4</h1>
       <p class="lede" style="font-size:clamp(1.05rem,2.1vw,1.3rem);margin-top:.5em">
         The release where Windows finally joined the floor — and the first run

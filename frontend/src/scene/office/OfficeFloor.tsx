@@ -79,44 +79,42 @@ interface Runtime {
  *  reads like real work completed when none did. */
 const CHEER_MIN_BUSY_MS = 60_000;
 
-/** What an avatar mutters per errand, picked at random. */
 const ERRAND_THOUGHTS: Record<ErrandKind, readonly string[]> = {
-  water:     ['watering the plants 🌿', 'giving the plants a drink', 'they grow so fast'],
-  window:    ['letting some air in 🍃', 'a bit of fresh air', 'nice breeze today'],
-  dispenser: ['getting some water 💧', 'hydration break', 'staying sharp'],
-  fridge:    ['anything good in the fridge?', 'who took my yogurt?', 'just looking…'],
-  shelf:     ['checking out the shelf 📚', 'anything new in here?', 'so much good stuff'],
-  bin:       ['out with the scrap paper 🗑️', 'desk cleanup day', 'tidying up a little'],
-  smoke:     ['the floor runs itself 🚬', 'boss break.', 'thinking big thoughts 🚬', 'I DECLARE… a break']
+  water:     ['inspecting cooling tower misting', 'checking safety eyewash station', 'maintaining greenery'],
+  window:    ['observing flare stack draft', 'inspecting perimeter fence line', 'monitoring cooling plume'],
+  dispenser: ['getting fresh drinking water 💧', 'hydration break between unit rounds', 'shift hydration'],
+  fridge:    ['grabbing a quick cold drink', 'checking shift lunchbox', 'quick refreshment'],
+  shelf:     ['reviewing OISD-118 compliance manual 📚', 'checking SOP binder revisions', 'looking up P&ID drawings'],
+  bin:       ['disposing calibration test logs 🗑️', 'clearing shift scrap notes', 'tidying workstation'],
+  smoke:     ['monitoring unit flare header', 'reviewing turnaround schedule', 'supervising operations floor']
 };
 
-/** What workers blurt out when the boss walks by — performative excellence.
- *  `{done}` is replaced with that worker's REAL done-task count. */
+/** What engineers report when the Superintendent walks by — status briefings. */
 const SUCK_UP_LINES = [
-  'already shipped {done} tasks, Michael. raise? 🥺',
-  '{done} tasks done this week, boss!',
-  'great vision as always, boss!',
-  'I was JUST about to do exactly that!',
-  'love the tie today, Michael',
-  'working hard, boss! 💪',
-  'best boss ever. genuinely.'
+  'calibrated {done} positioners this morning, Superintendent.',
+  '{done} safety SOPs verified and sealed in DeadMind, Marcus!',
+  'Unit 2 differential pressure is locked on setpoint, boss.',
+  'just finished the 6.6kV relay trip timing check!',
+  'DCS telemetry is streaming nominal at 60 Hz.',
+  'all statutory safety interlocks green, Superintendent. 💪',
+  'Operations continuity readiness is at 94% today.'
 ] as const;
 
-/** What they actually say once he's out of earshot. */
+/** Technical observations shared between engineers out of briefing earshot. */
 const GOSSIP_LINES = [
-  'has he ever actually written code?',
-  "another 'quick sync' that took an hour…",
-  "'world's best boss' — he bought that mug himself",
-  'he pinned MY task as his idea',
-  'the cigar smell, honestly…',
-  'he watered the plant. ONE plant. his own.',
-  "did you hear him? 'I DECLARE… a break'"
+  'did you check the vibration telemetry on Turbine 3?',
+  'that morning shift briefing ran 40 minutes over…',
+  'hope the 6.6kV fast-bus transfer test stays on schedule',
+  'Control Room B coffee machine needs a fresh bean refill',
+  'SOP compliance score hit 98% on the latest audit',
+  'Unit 1 bypass valve is holding steady within 0.1 bar',
+  'the digital twin model predicted that feed pump wear accurately'
 ] as const;
 
-/** Lines an avatar throws over its shoulder right after finishing a task. */
+/** Lines an engineer logs right after completing a critical task. */
 const CHEER_LINES = [
-  'done! ✔', 'nailed it', "that's a wrap", 'ship it 🚀', 'another one done',
-  'crushed it', 'in the books'
+  'verified! ✔', 'SOP sealed in vault', 'calibrated and green', 'signed off 🚀', 'procedure archived',
+  'benchmark passed', 'logged to ledger'
 ] as const;
 
 /** Load a texture via an <img> element. Unlike Pixi's Assets.load(), this
@@ -194,7 +192,7 @@ export function OfficeFloor() {
   // than teleporting every character across the map.
   const fullscreenAgentId = useStore((s) => s.fullscreenAgentId);
   const fullscreenFilePath = useStore((s) => s.fullscreenFilePath);
-  const [docHidden, setDocHidden] = useState(() => document.hidden);
+  const [docHidden, setDocHidden] = useState(() => (typeof document !== 'undefined' ? document.hidden : false));
   useEffect(() => {
     const onVis = () => setDocHidden(document.hidden);
     document.addEventListener('visibilitychange', onVis);
@@ -1554,9 +1552,6 @@ export function OfficeFloor() {
             c.showThought(liveActivity(agent), agent.carrying);
             break;
           case 'waiting':
-            // Parked at the desk awaiting god / another agent — not actively
-            // working (no focus glow) and NOT at the door (that's reserved for
-            // agents that need the human).
             c.setStatusGlyph('none');
             c.sitAtDesk(false);
             c.showThought(liveActivity(agent, 'waiting'), agent.carrying);
@@ -1567,15 +1562,11 @@ export function OfficeFloor() {
             c.walkToTile(rt.waitTile);
             break;
           case 'compacting':
-            // #5C — mid-/compact: stay put at the desk, "boxing up" glyph + thought,
-            // so an agent compacting context reads as busy rather than frozen.
             c.setStatusGlyph('compacting');
             c.sitAtDesk(true);
             c.showThought(liveActivity(agent, 'compacting context'));
             break;
           case 'looping':
-            // #5C — circuit-breaker armed (#6): hold position with the spinning
-            // warning glyph so a runaway agent is visible on the floor.
             c.setStatusGlyph('looping');
             c.sitAtDesk(false);
             c.showThought(liveActivity(agent, 'looping — breaker armed'));
@@ -1599,15 +1590,13 @@ export function OfficeFloor() {
           case 'idle':
           default:
             c.setStatusGlyph('none');
-            // The god runs the floor from its desk; everyone else wanders when idle.
-            if (agent.isGod) { c.sitAtDesk(true); c.showThought(liveActivity(agent, 'running the floor')); }
+            if (agent.isGod) { c.sitAtDesk(true); }
             else if (finishedWork) {
-              // Task done → a quick cheer on the spot, then back to roaming.
               c.startWandering();
               c.cheer();
               c.showThought(CHEER_LINES[Math.floor(Math.random() * CHEER_LINES.length)]);
             }
-            else { c.startWandering(); c.showThought(liveActivity(agent, 'idle')); }
+            else { c.startWandering(); }
             break;
         }
       };

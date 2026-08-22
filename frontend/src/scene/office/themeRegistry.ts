@@ -1,16 +1,8 @@
-// Theme registry — the pluggable "office theme" contract.
+// DeadMind Plant Operations Theme Registry
 //
-// Phase 0 of the TV-show-offices feature (card tvshow-phase0-abstraction):
-// extract the ~40% of constants that were hard-coded inside OfficeFloor.tsx
-// (errand spots, coffee-economy tile coords, prop anchors, seat names, tileset
-// URLs, palette, monitor gids) into a ThemeConfig so the scene becomes
-// swappable per show. This phase ships the EXISTING office unchanged as
-// `theme: 'office'`: every value below is copied byte-for-byte from the old
-// in-file literals, so the office renders and behaves identically.
-//
-// The engine (TiledMapRenderer / BFS pathfinding / Camera / sprite animation)
-// is already fully generic and needs no change. cast.ts is read-only here
-// (uncommitted human WIP) — the office theme references its existing exports.
+// Layout constants for plant control room and floor simulation:
+// errand spots, break area coordinates, prop anchors, seat identifiers,
+// tileset atlases, and monitor overlays.
 
 import type { Texture } from 'pixi.js';
 import { colors } from '@/design/tokens';
@@ -29,15 +21,10 @@ import interiorsUrl from '@/assets/tilesets/interiors.png?url';
 import officeMapRaw from '@/assets/maps/office.tmj?raw';
 import brooklyn99MapRaw from '@/assets/maps/brooklyn99.tmj?raw';
 
-/** Theme identifiers. Only `office` exists in Phase 0; the five TV-show themes
- *  (friends, brooklyn99, siliconvalley, got, hogwarts) land in later phases. */
+/** Plant layout theme identifiers. */
 export type ThemeId =
   | 'office'
-  | 'friends'
-  | 'brooklyn99'
-  | 'siliconvalley'
-  | 'got'
-  | 'hogwarts';
+  | 'refinery';
 
 export interface Tile { x: number; y: number; }
 export type Facing = 'up' | 'down' | 'left' | 'right';
@@ -225,16 +212,15 @@ export const OFFICE_THEME: ThemeConfig = {
  *  Pam's license-clean B99 tileset + cast likenesses (§C/§D) drop into those
  *  same seams later. Only the layout-bound anchors (seats, café, coffee, props,
  *  errands) are authored to brooklyn99.tmj's own coordinates. */
-export const BROOKLYN99_THEME: ThemeConfig = {
-  id: 'brooklyn99',
+/** Refinery Control Station Layout — open operations floor configuration. */
+export const REFINERY_THEME: ThemeConfig = {
+  id: 'refinery',
   mapRaw: brooklyn99MapRaw,
-  // PLACEHOLDER: brooklyn99.tmj uses the office gid space, so the same atlases
-  // (office-tileset embedded @1, a5 @513, interiors @1025) resolve every tile.
   tilesets: OFFICE_THEME.tilesets,
   primarySeatNames: [
-    'desk-ceo',                                            // Captain Holt's glass office
-    'pc-1', 'pc-2', 'pc-3', 'pc-4',                        // bullpen — front row
-    'pc-5', 'pc-6', 'pc-7', 'pc-8',                        // bullpen — back row
+    'desk-ceo',                                            // Superintendent Glass Office
+    'pc-1', 'pc-2', 'pc-3', 'pc-4',                        // Operations Floor — Front Row
+    'pc-5', 'pc-6', 'pc-7', 'pc-8',                        // Operations Floor — Back Row
   ],
   cafeSeatNames: ['cafe-seat-1', 'cafe-seat-2', 'cafe-seat-3', 'cafe-seat-4'],
   cafeStands: [
@@ -250,50 +236,37 @@ export const BROOKLYN99_THEME: ThemeConfig = {
     maxCups: 4,
   },
   anchors: {
-    calendar: { x: 4, y: 1 },   // briefing-room top wall → TRIGGERS
-    boards: { x: 14, y: 1 },    // over the bullpen → TASKS
-    clock: { x: 1, y: 1 },      // top-left corner → CLOSING TIME
+    calendar: { x: 4, y: 1 },   // Briefing room top wall → TRIGGERS
+    boards: { x: 14, y: 1 },    // Operations floor board → TASKS
+    clock: { x: 1, y: 1 },      // Shift turnover clock
   },
-  // Placeholder errand anchors authored to brooklyn99.tmj's open floor (verified
-  // walkable against the map's collision layer + desk stamps). The godOnly spots
-  // sit inside Holt's glass office.
   errandSpots: [
-    // public plants around the bullpen
     { kind: 'water', stand: { x: 2, y: 13 }, facing: 'left', fx: { x: 1, y: 13 }, duration: 4.5 },
     { kind: 'water', stand: { x: 24, y: 15 }, facing: 'right', fx: { x: 25, y: 15 }, duration: 4.5 },
     { kind: 'water', stand: { x: 13, y: 15 }, facing: 'down', fx: { x: 13, y: 16 }, duration: 4.5 },
-    // Captain Holt's glass office — god's domain (plant + cigar at the window)
     { kind: 'water', stand: { x: 28, y: 6 }, facing: 'up', fx: { x: 28, y: 5 }, duration: 4.5, godOnly: true },
     { kind: 'smoke', stand: { x: 34, y: 2 }, facing: 'up', fx: { x: 34, y: 0 }, duration: 18, godOnly: true },
-    // public windows on the north wall — wind streaks drift in
     { kind: 'window', stand: { x: 14, y: 1 }, facing: 'up', fx: { x: 14, y: 0 }, duration: 5 },
     { kind: 'window', stand: { x: 22, y: 1 }, facing: 'up', fx: { x: 22, y: 0 }, duration: 5 },
-    // water dispensers (bullpen + entrance corridor)
     { kind: 'dispenser', stand: { x: 8, y: 15 }, facing: 'down', fx: { x: 8, y: 16 }, duration: 3.5 },
     { kind: 'dispenser', stand: { x: 17, y: 20 }, facing: 'down', fx: { x: 17, y: 21 }, duration: 3.5 },
-    // break-room fridge + shelf (by the coffee economy)
     { kind: 'fridge', stand: { x: 29, y: 21 }, facing: 'up', fx: { x: 29, y: 20 }, duration: 3.2 },
     { kind: 'shelf', stand: { x: 34, y: 18 }, facing: 'up', fx: { x: 34, y: 17 }, duration: 4 },
-    // garbage bins (entrance + break room)
     { kind: 'bin', stand: { x: 19, y: 20 }, facing: 'left', fx: { x: 18, y: 20 }, duration: 2.6 },
     { kind: 'bin', stand: { x: 34, y: 15 }, facing: 'up', fx: { x: 34, y: 14 }, duration: 2.6 },
   ],
-  // PLACEHOLDER: brooklyn99.tmj paints the office desk stamp (monitor gid 365).
   monitor: OFFICE_THEME.monitor,
-  // PLACEHOLDER: office palette + cast until Pam's B99 art (§C/§D) lands.
   palette: OFFICE_THEME.palette,
   cast: OFFICE_THEME.cast,
 };
 
-/** All registered themes. Phase 0 ships only the office; show themes register
- *  here as their content lands (Phase 2). */
+/** All registered plant themes. */
 export const THEMES: Partial<Record<ThemeId, ThemeConfig>> = {
   office: OFFICE_THEME,
-  brooklyn99: BROOKLYN99_THEME,
+  refinery: REFINERY_THEME,
 };
 
-/** Look up a theme by id, falling back to the office theme if unknown/missing
- *  (a bad/absent show bundle must never break the floor — see report §E). */
+/** Look up a theme by id, falling back to the default office theme if unknown. */
 export function getTheme(id: ThemeId): ThemeConfig {
   return THEMES[id] ?? OFFICE_THEME;
 }

@@ -10,7 +10,7 @@ let liveDown = MOCK_ONLY;
 
 async function tryFetch<T>(path: string, init?: RequestInit): Promise<T> {
   const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), 2000);
+  const timer = setTimeout(() => ctrl.abort(), 15000);
   try {
     const res = await fetch(`${BASE}${path}`, {
       ...init,

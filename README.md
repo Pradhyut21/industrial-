@@ -4,8 +4,8 @@
 ### Industrial Knowledge Intelligence & Cognitive Continuity Platform
 **"Preserve the engineers, not just the docs."**
 
-[![CI / CD Pipeline](https://github.com/deadmind-ai/DeadMind/actions/workflows/ci.yml/badge.svg)](https://github.com/deadmind-ai/DeadMind/actions/workflows/ci.yml)
-[![CodeQL Security Scan](https://github.com/deadmind-ai/DeadMind/actions/workflows/codeql.yml/badge.svg)](https://github.com/deadmind-ai/DeadMind/actions/workflows/codeql.yml)
+[![CI / CD Pipeline](https://github.com/Pradhyut21/DeadMind/actions/workflows/ci.yml/badge.svg)](https://github.com/Pradhyut21/DeadMind/actions/workflows/ci.yml)
+[![CodeQL Security Scan](https://github.com/Pradhyut21/DeadMind/actions/workflows/codeql.yml/badge.svg)](https://github.com/Pradhyut21/DeadMind/actions/workflows/codeql.yml)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![React 19](https://img.shields.io/badge/React-19-61dafb.svg)](https://react.dev/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.111.0-009688.svg)](https://fastapi.tiangolo.com/)
@@ -24,8 +24,8 @@
 
 Heavy industry (Power, Oil & Gas, Chemicals, and Advanced Manufacturing) is confronting an unprecedented **Knowledge Cliff**:
 * 📉 **The Retirement Wave:** Over **25% of senior industrial domain experts are retiring within this decade**, taking 30+ years of unwritten diagnostic instincts, undocumented operational workarounds, and tacit troubleshooting intuition with them.
-* ⏳ **Massive Search Friction:** According to **McKinsey**, frontline industrial workers waste up to **35% of their working hours** hunting for fragmented knowledge trapped across 7 to 12 disconnected software silos (ERP, SCADA, CMMS, shift logs, historical spreadsheets).
-* ⚠️ **Catastrophic Unplanned Downtime:** Research by **BIS Research** indicates that **18% to 22% of all unplanned plant outages** stem directly from knowledge gaps and lack of immediate access to standard operating procedures (SOPs).
+* ⏳ **Massive Search Friction:** Industry research consistently shows frontline industrial workers spend up to **a third of their working hours** hunting for fragmented knowledge trapped across 7 to 12 disconnected software silos (ERP, SCADA, CMMS, shift logs, historical spreadsheets).
+* ⚠️ **Catastrophic Unplanned Downtime:** Heavy industry studies identify knowledge gaps and SOP access failures as a **top-three root cause** of unplanned plant outages — with some sector analyses placing the share at **18% to 22%** of all downtime events.
 
 **DeadMind** is an enterprise-grade Industrial Knowledge Intelligence and Cognitive Continuity platform that captures, preserves, models, and grounds the reasoning fingerprints of retiring engineers into interactive, role-aware digital twins before they depart.
 
@@ -69,7 +69,7 @@ DeadMind organizes heavy industry operational workflows into **4 purpose-built p
 ### 1. 👔 CFO View: Plant Knowledge Map & Liability Simulator (`/`)
 * **Retirement Year Slider (2026–2035):** Real-time dynamic simulation modeling the financial impact of imminent retirements. Nodes shift dynamically from Green → Yellow → Red as lead engineers retire.
 * **Quantified Financial Exposure:** Live exposure calculations in ₹ Crores based on equipment downtime criticality.
-* **ROI Impact Card:** Direct savings projections backed by McKinsey and BIS Research heavy industry benchmarks.
+* **ROI Impact Card:** Direct savings projections backed by heavy industry workforce and downtime benchmarks.
 
 ### 2. 🛠️ Field Technician View: Cognitive Expert Copilot (`/copilot`)
 * **Grounded Conversational Copilot:** Interrogate digital twins of expert engineers (e.g. *R. Nayar*, *Rajan Sharma*). Every response includes verifiable source manual citations and equipment tags.
@@ -159,19 +159,28 @@ All evaluation runs generate real, machine-readable artifacts saved directly in 
 * ⚡ **Load Test Data:** [`backend/evals/results/load_test_results.json`](backend/evals/results/load_test_results.json) *(50-user concurrent stress test metrics)*
 
 ### 1. Retrieval Accuracy Benchmark (50 Golden Industrial Queries)
-Evaluated against 50 real-world industrial queries (exact equipment codes, colloquial paraphrases, field typos, multi-hop reasoning, and negative controls):
+Evaluated against 50 real-world industrial queries (exact equipment codes, colloquial paraphrases, field typos, multi-hop reasoning, and out-of-domain negative controls):
 
 ```text
-+-------------------------------------------------------------+
-| Retrieval Strategy            | Precision @ 3               |
-+-------------------------------+-----------------------------+
-| Legacy Keyword Search (BM25)  | 58.0%                       |
-| Dense Semantic Search (FAISS) | 62.0%                       |
-| DeadMind Hybrid RRF + Reranker| 66.0% (+8.0% Absolute Gain) |
-+-------------------------------------------------------------+
++----------------------------------------------------------+
+| Retrieval Strategy             | P@3   | vs Keyword      |
++--------------------------------+-------+-----------------+
+| Keyword BM25                   | 78.0% | baseline        |
+| Dense Semantic (FAISS)         | 78.0% | tied            |
+| DeadMind Hybrid RRF + Reranker | 84.0% | +6.0% gain      |
++----------------------------------------------------------+
+
+Category breakdown (50 queries, P@3):
+  exact_match     : Hybrid=9/10  Keyword=9/10   (tied)
+  paraphrase      : Hybrid=6/10  Keyword=5/10   (+1 Hybrid wins)
+  informal_typo   : Hybrid=9/10  Keyword=6/10   (+3 Hybrid wins)
+  multi_hop       : Hybrid=9/10  Keyword=9/10   (tied)
+  negative_control: Hybrid=9/10  Keyword=10/10  (near-parity)
 ```
 
-Run the benchmark yourself (offline sandbox compatible — automatically uses deterministic fallback if Hugging Face is unreachable):
+Full results: [`backend/evals/results/eval_report.log`](backend/evals/results/eval_report.log) *(run: 2026-08-21)*
+
+Run the benchmark yourself:
 ```bash
 python -m backend.evals.eval_retrieval
 ```
@@ -201,7 +210,7 @@ Benchmarked against the local demo server (`python -m backend.evals.load_test_co
 ### Option 1: Docker Compose (Fastest — One Line)
 ```bash
 # Clone the repository
-git clone https://github.com/deadmind-ai/DeadMind.git
+git clone https://github.com/Pradhyut21/DeadMind.git
 cd DeadMind
 
 # Launch frontend and backend in isolated containers
@@ -279,7 +288,7 @@ npm run dev
 | :--- | :--- |
 | **💡 Innovation & Originality** | Instead of generic document search, DeadMind builds **cognitive expert twins** that preserve tacit troubleshooting intuition, dissent reasoning, and role-adapted communication. |
 | **🛠️ Technical Depth** | Multi-modal pipeline combining OCR + OpenCV P&ID localization, spaCy entity coreference, BM25+FAISS Reciprocal Rank Fusion, ms-marco Cross-Encoder reranking, and LLaMA 3.3 70B reasoning. |
-| **📈 Real-World Business Value** | Direct addressable market across Heavy Industry ($4.8B market), targeting 18-22% downtime reduction and eliminating 3-6 month replacement onboarding delays. |
+| **📈 Real-World Business Value** | Direct addressable market across Heavy Industry (multi-billion dollar knowledge management segment), targeting top-tier unplanned downtime reduction and eliminating 3–6 month replacement onboarding delays. |
 | **✨ UI / UX Craftsmanship** | Sleek dark terminal industrial aesthetic, interactive 3D spatial Recovery Run simulation (Three.js/Fiber), dynamic Mermaid flowcharts, and mobile-ready technician layout. |
 | **🏢 Enterprise Readiness** | Dual-mode architecture (Zero-config SQLite demo vs Horizontally scalable Postgres+pgvector/Redis/Celery cluster), comprehensive CI/CD pipeline, and CodeQL security verification. |
 

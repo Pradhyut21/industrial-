@@ -1,5 +1,5 @@
 /**
- * MunderOfficeView — Full-Screen Authentic Munder Difflin Office Simulation
+ * DeadMindOfficeView — Full-Screen DeadMind Industrial Office Simulation
  *
  * Implements:
  * 1. Full Pixi.js Canvas rendering with authentic tileset maps, isometric desks, and character sprites
@@ -43,8 +43,8 @@ import {
 import { OfficeFloor } from '@/scene/office/OfficeFloor';
 import { useStore, type Agent } from '@/store/store';
 import { SpritePortrait } from '@/components/SpritePortrait';
-import '@/styles/munder/tokens.css';
-import '@/styles/munder/global.css';
+import '@/styles/office/tokens.css';
+import '@/styles/office/global.css';
 
 const API =
   (import.meta.env.VITE_API_BASE_URL as string | undefined) ??
@@ -52,7 +52,7 @@ const API =
     ? `http://${window.location.hostname}:8000`
     : "");
 
-// ── Department / Team Pods ──────────────────────────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬ Department / Team Pods Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 export interface TeamPod {
   id: 'testing' | 'operations' | 'engineering';
   name: string;
@@ -199,7 +199,7 @@ const CANONICAL_OFFICE_AGENTS: Agent[] = [
   } as unknown as Agent,
   {
     id: "4",
-    name: "Stanley Hudson",
+    name: "Sanjay Patel",
     character: "stanley",
     accent: "coral",
     description: "Substation Protection Relay Lead",
@@ -233,7 +233,7 @@ const CANONICAL_OFFICE_AGENTS: Agent[] = [
   } as unknown as Agent,
   {
     id: "6",
-    name: "Jim Halpert",
+    name: "Dev Sen",
     character: "jim",
     accent: "mint",
     description: "Automated CI/CD Test Engineer",
@@ -250,7 +250,7 @@ const CANONICAL_OFFICE_AGENTS: Agent[] = [
   } as unknown as Agent,
   {
     id: "7",
-    name: "Angela Martin",
+    name: "Ananya Deshmukh",
     character: "angela",
     accent: "mint",
     description: "Chief Compliance Administrator",
@@ -267,7 +267,7 @@ const CANONICAL_OFFICE_AGENTS: Agent[] = [
   } as unknown as Agent,
   {
     id: "8",
-    name: "Michael Scott",
+    name: "Marcus Vance",
     character: "michael",
     accent: "coral",
     description: "Principal Operations Strategist",
@@ -284,7 +284,7 @@ const CANONICAL_OFFICE_AGENTS: Agent[] = [
   } as unknown as Agent,
   {
     id: "9",
-    name: "Pam Beesly",
+    name: "Priya Nair",
     character: "pam",
     accent: "mint",
     description: "Digital Twin UX & Operations Liaison",
@@ -301,7 +301,7 @@ const CANONICAL_OFFICE_AGENTS: Agent[] = [
   } as unknown as Agent,
   {
     id: "10",
-    name: "Dwight Schrute",
+    name: "Rajan Sharma",
     character: "dwight",
     accent: "coral",
     description: "Industrial Safety & Standards Officer",
@@ -326,7 +326,7 @@ interface ChatMessage {
   citations?: string[];
 }
 
-export function MunderOfficeView() {
+export function DeadMindOfficeView() {
   const navigate = useNavigate();
   const [selectedPod, setSelectedPod] = useState<string>('all');
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
@@ -355,14 +355,14 @@ export function MunderOfficeView() {
     }
   };
 
-  // Seed canonical personnel if store is empty or has generic test placeholders
+  // Seed canonical personnel if store is empty or has fewer agents or generic test placeholders
   useEffect(() => {
-    if (agents.length === 0 || agents.some((a) => a.name.includes("Test Engineer"))) {
+    if (agents.length < CANONICAL_OFFICE_AGENTS.length || agents.some((a) => a.name.includes("Test Engineer"))) {
       setAgents(CANONICAL_OFFICE_AGENTS);
     }
-  }, [agents, setAgents]);
+  }, [agents.length, setAgents]);
 
-  const displayedAgents = agents.length > 0 ? agents : CANONICAL_OFFICE_AGENTS;
+  const displayedAgents = agents.length >= CANONICAL_OFFICE_AGENTS.length ? agents : CANONICAL_OFFICE_AGENTS;
 
   const filteredAgents = useMemo(() => {
     return displayedAgents.filter((a) => {
@@ -478,7 +478,7 @@ export function MunderOfficeView() {
     {
       id: 'init-1',
       sender: 'bot',
-      text: "👋 Welcome to DeadMind Plant Operations! I am your AI Onboarding & Plant Mentor.\n\nWhether you are a new intern learning the 3 team pods or an operator looking for emergency boiler SOPs, ask me anything!",
+      text: "👋 Welcome to DeadMind Plant Operations! I am your AI Onboarding & Plant Mentor.\n\nWhether you need the live status and active work of any engineer or emergency boiler SOPs, ask me anything!",
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       citations: ['DeadMind_Onboarding_Handbook_2026'],
     },
@@ -489,6 +489,62 @@ export function MunderOfficeView() {
   useEffect(() => {
     assistantEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [assistantMessages, showAssistantBot]);
+
+  function getEmployeeStatusResponse(queryText: string): { reply: string; citations: string[] } | null {
+    const q = queryText.toLowerCase();
+    
+    // Check specific engineer name
+    const matchedAgent = CANONICAL_OFFICE_AGENTS.find((a) => {
+      const parts = a.name.toLowerCase().split(' ');
+      return parts.some((p) => p.length > 2 && q.includes(p)) || q.includes(a.name.toLowerCase());
+    });
+
+    if (matchedAgent) {
+      const podId = (matchedAgent as any).podId || 'operations';
+      const pod = Object.values(TEAM_PODS).find((p) => p.id === podId);
+      const reply = `👷 **Personnel Profile & Live Status: ${matchedAgent.name}**\n\n` +
+        `• **Role / Title:** ${matchedAgent.description}\n` +
+        `• **Assigned Pod:** ${pod?.name || 'Operations'} (${pod?.badge || 'PLANT'})\n` +
+        `• **Current Live Action:** ${matchedAgent.action || 'Monitoring plant telemetry'}\n` +
+        `• **Active Project:** ${matchedAgent.project} — ${matchedAgent.progress || 90}% Complete\n` +
+        `• **Continuity Knowledge:** Preserved ${(matchedAgent as any).preservedDocs || 32}+ digitized procedures in DeadMind Vault.\n` +
+        `• **Live Shift Pose:** Seated at Unit Station | Telemetry nominal at 60Hz.`;
+      return {
+        reply,
+        citations: [`Personnel_Record_${matchedAgent.name.replace(/\s+/g, '_')}.pdf`, 'Shift_Roster_2026', pod?.project.code || 'Vault_SOP']
+      };
+    }
+
+    // Check general employee / status query
+    if (
+      q.includes('employee') ||
+      q.includes('status') ||
+      q.includes('who is') ||
+      q.includes('personnel') ||
+      q.includes('engineer') ||
+      q.includes('work') ||
+      q.includes('everyone') ||
+      q.includes('all') ||
+      q.includes('list')
+    ) {
+      let reply = `📋 **Live Personnel Status & Active Tasks (All 10 Engineers):**\n\n`;
+      CANONICAL_OFFICE_AGENTS.forEach((a, i) => {
+        const podId = (a as any).podId || 'operations';
+        const pod = Object.values(TEAM_PODS).find((p) => p.id === podId);
+        const icon = podId === 'testing' ? '🔴' : podId === 'operations' ? '🟡' : '🟣';
+        reply += `${i + 1}. ${icon} **${a.name}** [${pod?.badge || 'PLANT'}]:\n`;
+        reply += `   ↳ *Live Action:* ${a.action || 'Monitoring plant telemetry'}\n`;
+        reply += `   ↳ *Project:* ${a.project} (${a.progress || 90}%)\n\n`;
+      });
+      reply += `💡 *Tip: Click on any engineer's desk on the office canvas to view their full pixel portrait, step-by-step project stages, and AI chat terminal.*`;
+      return {
+        reply,
+        citations: ['Live_Plant_Operations_Roster_2026.pdf', 'Continuity_Vault_Manifest']
+      };
+    }
+
+    return null;
+  }
 
   async function handleSendAssistant(promptText?: string) {
     const query = (promptText || assistantInput).trim();
@@ -504,6 +560,25 @@ export function MunderOfficeView() {
     setAssistantMessages((prev) => [...prev, userMsg]);
     setAssistantInput('');
     setIsAssistantLoading(true);
+
+    // 1. Check local rich employee knowledge first
+    const localEmployeeInfo = getEmployeeStatusResponse(query);
+    if (localEmployeeInfo) {
+      setTimeout(() => {
+        setAssistantMessages((prev) => [
+          ...prev,
+          {
+            id: `bot-msg-${Date.now()}-bot`,
+            sender: 'bot',
+            text: localEmployeeInfo.reply,
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            citations: localEmployeeInfo.citations,
+          },
+        ]);
+        setIsAssistantLoading(false);
+      }, 300);
+      return;
+    }
 
     try {
       const res = await fetch(`${API}/vault/query`, {
@@ -530,7 +605,7 @@ export function MunderOfficeView() {
           reply = `🎓 **Plant Pod Overview for Interns:**\n\n1. 🔴 **Testing & QA Pod (Alex Mercer - Lead):** Manages automated SOP verification (PRJ-TEST-09) and tests zero-span positioners.\n2. 🟡 **Plant Operations & SRE Pod (Rajan Sharma - Senior Lead):** Preserves 28 years of institutional boiler start-up and drum level trip tribal knowledge (PRJ-OPS-01).\n3. 🟣 **Core Engineering & Controls (K.V. Ramanathan - Lead):** Supervises 6.6kV switchgear interlocking firmware and SCADA telemetry (PRJ-ENG-04).`;
           citations = ['Plant_Org_Hierarchy_2026.pdf', 'Pod_Clearance_Matrix'];
         } else if (query.toLowerCase().includes('boiler') || query.toLowerCase().includes('bypass')) {
-          reply = `⚙️ **Boiler Emergency Startup Protocol (SOP-BLR-04):**\n\n1. Verify drum level transmitter differential pressure within ±15mm.\n2. Engage secondary superheater temperature spike bypass before ramping firing rate past 45%.\n3. Continuous purge cycle must maintain 5 volume air changes prior to ignition.\n\n*Source: Rajan Sharma (28 Years Preserved Tribal Knowledge)*`;
+          reply = `⚙️  **Boiler Emergency Startup Protocol (SOP-BLR-04):**\n\n1. Verify drum level transmitter differential pressure within ±15mm.\n2. Engage secondary superheater temperature spike bypass before ramping firing rate past 45%.\n3. Continuous purge cycle must maintain 5 volume air changes prior to ignition.\n\n*Source: Rajan Sharma (28 Years Preserved Tribal Knowledge)*`;
           citations = ['Boiler_SOP_BLR_04.pdf', 'Drum_Level_Recovery_Runbook'];
         } else {
           reply = `🤖 **DeadMind AI Guidance:**\n\nFor "${query}": Please review the active procedures preserved in the Continuity Vault. You can click on any engineer's desk on the office floor to inspect their specific project stages or dispatch a cross-pod briefing.`;
@@ -564,41 +639,41 @@ export function MunderOfficeView() {
   }
 
   return (
-    <div className="munder-office-root munder-theme fixed inset-0 z-50 w-screen h-screen bg-[#18161d] text-[#fdf6e3] font-mono overflow-hidden flex flex-col select-none">
-      {/* ── Top Pixel HUD Bar ────────────────────────────────────────────── */}
-      <div className="h-14 bg-[#141218] border-b border-[#2d2838] px-4 flex items-center justify-between z-20 shadow-xl shrink-0">
-        <div className="flex items-center gap-3">
+    <div className="deadmind-office-root deadmind-theme fixed inset-0 z-50 w-screen h-screen bg-[#14121a] text-[#ffffff] font-mono overflow-hidden flex flex-col select-none">
+      {/* ── Top Modern Industrial HUD Bar ──────────────────────────────────── */}
+      <div className="h-14 bg-[#14121a] border-b border-[#2d2838] px-4 flex items-center justify-between z-20 shadow-2xl shrink-0">
+        <div className="flex items-center gap-3 shrink-0">
           {/* Close / Return Button */}
           <button
             type="button"
             onClick={() => navigate({ to: '/' })}
-            className="flex items-center gap-2 px-3.5 py-2 text-xs font-mono font-bold bg-[#6e1e24] hover:bg-[#a82c36] text-[#ffffff] border border-[#e57373] transition-all cursor-pointer shadow-md group rounded-none"
+            className="flex items-center gap-2 px-3 py-1.5 text-xs font-mono font-semibold bg-[#221f2d] hover:bg-rose-950/70 text-white hover:text-rose-300 border border-[#3e384e] hover:border-rose-500/70 transition-all cursor-pointer shadow-sm rounded-sm"
             title="Exit Fullscreen Simulation and Return to Plant Dashboard"
           >
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
-            <span className="font-bold tracking-wide">Exit to Dashboard</span>
+            <ArrowLeft className="w-3.5 h-3.5 text-rose-400" />
+            <span className="text-white font-semibold">Exit to Dashboard</span>
           </button>
 
-          <div className="hidden md:flex items-center gap-2.5 border-l border-[#2d2838] pl-3.5">
-            <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#52b788] animate-pulse" />
-            <span className="text-xs font-bold tracking-wider text-[#ffe066]">
-              MUNDER DIFFLIN
+          <div className="hidden md:flex items-center gap-2 border-l border-[#2d2838] pl-3">
+            <span className="inline-block w-2 h-2 rounded-full bg-[#52b788] shadow-[0_0_8px_#52b788] animate-pulse" />
+            <span className="text-xs font-bold tracking-widest text-[#ffe066] font-display uppercase whitespace-nowrap">
+              DEADMIND OPERATIONS
             </span>
-            <span className="text-xs font-mono text-[#b3a8c2]">
-              / OFFICE SIMULATION
+            <span className="text-[11px] font-mono text-[#a49bb5] whitespace-nowrap">
+              / MULTI-AGENT FLOOR
             </span>
           </div>
         </div>
 
         {/* Pod Filter Buttons */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <button
             type="button"
             onClick={() => setSelectedPod('all')}
-            className={`px-3 py-1.5 text-xs font-mono border transition-all cursor-pointer ${
+            className={`px-3 py-1.5 text-xs font-mono rounded-sm transition-all cursor-pointer ${
               selectedPod === 'all'
-                ? 'bg-[#ffe066] text-[#141218] border-[#ffe066] shadow-md font-bold'
-                : 'bg-[#1e1c24] text-[#cfc7d9] border-[#383344] hover:bg-[#282430] hover:text-white'
+                ? 'bg-[#ffe066] text-[#121016] border border-[#ffe066] font-bold shadow-md'
+                : 'bg-[#1c1a24] text-white border border-[#3a3547] hover:bg-[#282433] hover:text-[#ffe066] font-medium'
             }`}
           >
             All Pods
@@ -608,58 +683,58 @@ export function MunderOfficeView() {
               key={pod.id}
               type="button"
               onClick={() => setSelectedPod(pod.id)}
-              className={`px-3 py-1.5 text-xs font-mono border transition-all cursor-pointer flex items-center gap-2 ${
+              className={`px-3 py-1.5 text-xs font-mono rounded-sm transition-all cursor-pointer flex items-center gap-2 ${
                 selectedPod === pod.id
-                  ? 'bg-[#ffe066] text-[#141218] border-[#ffe066] shadow-md font-bold'
-                  : 'bg-[#1e1c24] text-[#cfc7d9] border-[#383344] hover:bg-[#282430] hover:text-white'
+                  ? 'bg-[#ffe066] text-[#121016] border border-[#ffe066] font-bold shadow-md'
+                  : 'bg-[#1c1a24] text-white border border-[#3a3547] hover:bg-[#282433] hover:text-[#ffe066] font-semibold'
               }`}
             >
-              <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: pod.color }} />
-              <span className="font-bold">{pod.badge}</span>
+              <span className="w-2.5 h-2.5 rounded-full shrink-0 shadow-sm" style={{ backgroundColor: pod.color }} />
+              <span className="text-white">{pod.badge}</span>
             </button>
           ))}
         </div>
 
         {/* Stats, Fullscreen Toggle, Drawer Toggle & Exit Button */}
-        <div className="flex items-center gap-2.5 text-xs font-mono">
-          <div className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 bg-[#1e1c24] border border-[#383344] text-xs text-[#cfc7d9]">
+        <div className="flex items-center gap-2.5 text-xs font-mono shrink-0">
+          <div className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 bg-[#1c1a24] border border-[#3a3547] text-xs rounded-sm">
             <Send className="w-3.5 h-3.5 text-[#4ea8de]" />
-            <span>Transfers: <strong className="text-white font-bold">{envelopeCount}</strong></span>
+            <span className="text-white">Transfers: <strong className="text-[#ffe066] font-bold">{envelopeCount}</strong></span>
           </div>
 
           {/* AI Onboarding & Assistant Bot Toggle */}
           <button
             type="button"
             onClick={() => setShowAssistantBot((v) => !v)}
-            className={`px-3 py-1.5 text-xs font-mono border flex items-center gap-1.5 transition-all cursor-pointer ${
+            className={`px-3 py-1.5 text-xs font-mono rounded-sm border flex items-center gap-1.5 transition-all cursor-pointer ${
               showAssistantBot
-                ? 'bg-[#ffe066] text-[#141218] border-[#ffe066] font-bold shadow-md'
-                : 'bg-[#16382b] border-[#52b788] text-[#74c69d] hover:bg-[#204e3c]'
+                ? 'bg-[#52b788] text-[#121016] border-[#52b788] font-bold shadow-md'
+                : 'bg-[#143224] border border-[#52b788] text-[#74c69d] hover:bg-[#1b4332] font-bold'
             }`}
             title="Open AI Onboarding & Intern Assistant Chatbot"
           >
             <Bot className="w-4 h-4" />
-            <span className="font-bold">AI Intern Assistant</span>
+            <span>AI Intern Assistant</span>
           </button>
 
           <button
             type="button"
             onClick={() => setShowRoster((v) => !v)}
-            className={`px-3 py-1.5 text-xs font-mono border flex items-center gap-1.5 transition-all cursor-pointer ${
+            className={`px-3 py-1.5 text-xs font-mono rounded-sm border flex items-center gap-1.5 transition-all cursor-pointer ${
               showRoster
                 ? 'bg-[#2b2734] border-[#ffe066] text-[#ffe066] font-bold shadow-md'
-                : 'bg-[#1e1c24] border-[#383344] text-[#cfc7d9] hover:bg-[#282430] hover:text-white'
+                : 'bg-[#1c1a24] text-white border border-[#3a3547] hover:bg-[#282433] font-semibold'
             }`}
           >
             <Users className="w-4 h-4 text-[#52b788]" />
-            <span className="font-bold">{showRoster ? 'Hide Personnel' : 'Show Personnel'}</span>
+            <span>{showRoster ? 'Hide Personnel' : 'Show Personnel'}</span>
           </button>
 
           {/* Browser / Canvas Fullscreen Toggle */}
           <button
             type="button"
             onClick={toggleBrowserFullscreen}
-            className="p-2 border border-[#383344] bg-[#1e1c24] hover:bg-[#282430] text-[#cfc7d9] hover:text-white transition-all cursor-pointer"
+            className="p-2 border border-[#3a3547] bg-[#1c1a24] hover:bg-[#282433] text-white transition-all cursor-pointer rounded-sm"
             title="Toggle Native Browser Fullscreen (F11)"
           >
             <Minimize2 className="w-4 h-4" />
@@ -669,15 +744,15 @@ export function MunderOfficeView() {
           <button
             type="button"
             onClick={() => navigate({ to: '/' })}
-            className="p-2 bg-[#6e1e24] hover:bg-[#a82c36] text-white border border-[#e57373] transition-all cursor-pointer shadow-md"
+            className="p-2 bg-[#221f2d] hover:bg-rose-950/70 text-white border border-[#3e384e] hover:border-rose-500/70 transition-all cursor-pointer shadow-sm rounded-sm"
             title="Close Window (Return to Plant Map)"
           >
-            <X className="w-4 h-4" />
+            <X className="w-4 h-4 text-rose-400" />
           </button>
         </div>
       </div>
 
-      {/* ── Main Viewport: Canvas Office Floor ───────────────────────────── */}
+      {/* ── Main Viewport: Canvas Office Floor ─────────────────────────────── */}
       <div className="relative flex-1 w-full h-full bg-[#18161d] overflow-hidden">
         <OfficeFloor />
 
@@ -687,10 +762,11 @@ export function MunderOfficeView() {
             <button
               type="button"
               onClick={() => setShowPodLegend((v) => !v)}
-              className="px-3 py-1.5 bg-[#141218]/95 backdrop-blur-md border border-[#383344] hover:border-[#ffe066] text-xs font-mono text-[#cfc7d9] hover:text-[#ffffff] transition-all flex items-center gap-2 cursor-pointer shadow-lg"
+              className="px-3 py-1.5 bg-[#121016]/95 backdrop-blur-xl border border-[#342f40] hover:border-primary text-xs font-mono text-[#cfc7d9] hover:text-[#ffffff] transition-all flex items-center gap-2 cursor-pointer shadow-2xl"
             >
-              <Shield className="w-3.5 h-3.5 text-[#ffe066]" />
-              <span className="font-bold">{showPodLegend ? 'Pod Boundaries ▾' : 'Pod Boundaries ▸'}</span>
+              <Shield className="w-3.5 h-3.5 text-primary" />
+              <span className="font-bold">Pod Boundaries</span>
+              <ChevronRight className={`w-3.5 h-3.5 text-muted-foreground transition-transform duration-200 ${showPodLegend ? 'rotate-90 text-primary' : ''}`} />
             </button>
           </div>
 
@@ -699,14 +775,14 @@ export function MunderOfficeView() {
               {Object.values(TEAM_PODS).map((pod) => (
                 <div
                   key={pod.id}
-                  className="bg-[#141218]/95 backdrop-blur-md border border-[#383344] px-3.5 py-2 shadow-lg text-xs font-mono flex items-center justify-between gap-3 pointer-events-auto cursor-pointer hover:border-[#ffe066] transition-all"
+                  className="bg-[#121016]/95 backdrop-blur-xl border border-[#342f40] px-3.5 py-2 shadow-2xl text-xs font-mono flex items-center justify-between gap-3 pointer-events-auto cursor-pointer hover:border-primary transition-all"
                   onClick={() => setSelectedPod(pod.id)}
                 >
                   <div className="flex items-center gap-2.5">
-                    <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: pod.color }} />
+                    <span className="w-3 h-3 rounded-full shrink-0 shadow-sm" style={{ backgroundColor: pod.color }} />
                     <span className="font-bold text-white text-xs">{pod.name}</span>
                   </div>
-                  <span className="text-[10px] text-[#cfc7d9] bg-[#1e1c24] px-2 py-0.5 border border-[#383344] font-bold">
+                  <span className="text-[10px] text-[#cfc7d9] bg-[#1c1924] px-2 py-0.5 border border-[#342f40] font-bold">
                     {pod.project.code}
                   </span>
                 </div>
@@ -717,13 +793,13 @@ export function MunderOfficeView() {
 
         {/* Active Toast for Flying Envelope */}
         {lastEnvelopeNote && (
-          <div className="absolute top-4 right-4 z-30 bg-[#141218] text-[#ffffff] px-4 py-2.5 text-xs font-mono shadow-2xl border-2 border-[#4ea8de] flex items-center gap-2 animate-bounce">
+          <div className="absolute top-4 right-4 z-30 bg-[#121016]/95 backdrop-blur-xl text-[#ffffff] px-4 py-2.5 text-xs font-mono shadow-2xl border border-[#4ea8de] flex items-center gap-2 animate-bounce">
             <Send className="w-4 h-4 text-[#4ea8de]" />
             <span className="font-bold">{lastEnvelopeNote}</span>
           </div>
         )}
 
-        {/* ── Floating AI Onboarding & Intern Assistant Chatbot ────────── */}
+        {/* Ã¢â€â‚¬Ã¢â€â‚¬ Floating AI Onboarding & Intern Assistant Chatbot Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */}
         {showAssistantBot && (
           <div className="absolute left-4 bottom-4 w-96 max-h-[540px] h-[500px] bg-[#141218]/95 backdrop-blur-md border-2 border-[#52b788] shadow-2xl z-30 flex flex-col p-4 animate-in slide-in-from-bottom-5 duration-200">
             {/* Header */}
@@ -785,7 +861,7 @@ export function MunderOfficeView() {
                     : 'bg-[#1e1c24] text-[#cfc7d9] border-[#383344] hover:bg-[#282430]'
                 }`}
               >
-                🛡️ Safety Rules
+                🛡️ Safety Rules
               </button>
             </div>
 
@@ -793,17 +869,38 @@ export function MunderOfficeView() {
             <div className="flex gap-1.5 overflow-x-auto pb-1 mb-2.5 scrollbar-thin shrink-0">
               <button
                 type="button"
-                onClick={() => handleSendAssistant("I'm a new intern: What is the 3-pod plant structure?")}
-                className="px-2.5 py-1 bg-[#1e1c24] hover:bg-[#282430] border border-[#383344] text-[10px] font-mono text-white shrink-0 cursor-pointer"
+                onClick={() => handleSendAssistant("What is the live status and current work of all employees?")}
+                className="px-2.5 py-1 bg-[#1e1c24] hover:bg-[#282430] border border-[#ffe066]/70 text-[10px] font-mono text-[#ffe066] shrink-0 cursor-pointer font-bold"
               >
-                🔰 Intern Pod Tour
+                👷 All Engineers Status
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSendAssistant("What is Rajan Sharma working on?")}
+                className="px-2.5 py-1 bg-[#1e1c24] hover:bg-[#282430] border border-[#e3b341]/70 text-[10px] font-mono text-[#ffe066] shrink-0 cursor-pointer"
+              >
+                🟡 Rajan (Ops)
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSendAssistant("What is Alex Mercer's current task?")}
+                className="px-2.5 py-1 bg-[#1e1c24] hover:bg-[#282430] border border-[#ff7b72]/70 text-[10px] font-mono text-[#ff7b72] shrink-0 cursor-pointer"
+              >
+                🔴 Alex (QA)
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSendAssistant("What is K. V. Ramanathan's status?")}
+                className="px-2.5 py-1 bg-[#1e1c24] hover:bg-[#282430] border border-[#d2a8ff]/70 text-[10px] font-mono text-[#d2a8ff] shrink-0 cursor-pointer"
+              >
+                🟣 K.V. (Controls)
               </button>
               <button
                 type="button"
                 onClick={() => handleSendAssistant('Explain the Boiler emergency bypass sequence.')}
                 className="px-2.5 py-1 bg-[#1e1c24] hover:bg-[#282430] border border-[#383344] text-[10px] font-mono text-white shrink-0 cursor-pointer"
               >
-                ⚙️ Boiler Bypass SOP
+                ⚙️ Boiler SOP
               </button>
               <button
                 type="button"
@@ -878,14 +975,14 @@ export function MunderOfficeView() {
           </div>
         )}
 
-        {/* ── Side Roster / Full Employee Dossier & AI Chat Drawer ────────── */}
+        {/* Ã¢â€â‚¬Ã¢â€â‚¬ Side Roster / Full Employee Dossier & AI Chat Drawer Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */}
         {showRoster && (
           <div className="absolute right-4 bottom-4 top-4 w-[420px] bg-[#141218]/95 backdrop-blur-md border border-[#383344] shadow-2xl z-20 flex flex-col p-4 overflow-hidden animate-in slide-in-from-right duration-200">
             {/* Top Bar of Drawer */}
             <div className="border-b border-[#2d2838] pb-3 mb-2.5 shrink-0">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-[#ffe066] uppercase tracking-wider">
-                  {selectedAgent ? 'Employee Dossier & Desk Terminal' : `Pod Personnel (${displayedAgents.length} Engineers)`}
+                  {selectedAgent ? 'Employee Dossier & Desk Terminal' : `Pod Personnel (${CANONICAL_OFFICE_AGENTS.length} Engineers)`}
                 </span>
                 <div className="flex items-center gap-1.5">
                   <span className="text-[10px] font-mono bg-[#16382b] text-[#52b788] px-2 py-0.5 border border-[#52b788] font-bold">
@@ -921,7 +1018,7 @@ export function MunderOfficeView() {
                           ? 'border-[#ffe066] bg-[#2b2734] ring-1 ring-[#ffe066] shadow-md'
                           : 'border-[#383344] bg-[#1e1c24] hover:bg-[#282430]'
                       }`}
-                      title={`${a.name} — ${pod?.name || 'Operations'}`}
+                      title={`${a.name} — ${pod?.name || 'Operations'}`}
                     >
                       <div className="w-8 h-10 overflow-hidden flex items-end justify-center bg-[#18161d]/80 border border-[#2d2838]">
                         <SpritePortrait character={(a as any).character || 'jim'} scale={1.1} />
@@ -978,7 +1075,7 @@ export function MunderOfficeView() {
                   </button>
                 </div>
 
-                {/* ── TAB 1: EMPLOYEE DOSSIER & PHOTO ──────────────────────── */}
+                {/* Ã¢â€â‚¬Ã¢â€â‚¬ TAB 1: EMPLOYEE DOSSIER & PHOTO Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */}
                 {activeTab === 'dossier' && (
                   <div className="flex-1 overflow-y-auto space-y-3 pr-1 font-mono text-xs">
                     {/* Header with Pixel Bust Photo */}
@@ -1024,7 +1121,7 @@ export function MunderOfficeView() {
                     {/* Assigned Project Box */}
                     <div className="p-3 bg-[#1e1c24] border border-[#383344] space-y-2">
                       <div className="text-[10px] uppercase font-bold text-[#ffe066]">
-                        📁 Active Project: {activePodInfo.project.code}
+                        📌 Active Project: {activePodInfo.project.code}
                       </div>
                       <div className="text-xs font-bold text-white">
                         {activePodInfo.project.title}
@@ -1056,7 +1153,7 @@ export function MunderOfficeView() {
                   </div>
                 )}
 
-                {/* ── TAB 2: PROJECT STAGES ────────────────────────────────── */}
+                {/* Ã¢â€â‚¬Ã¢â€â‚¬ TAB 2: PROJECT STAGES Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */}
                 {activeTab === 'stages' && (
                   <div className="flex-1 overflow-y-auto space-y-2.5 pr-1 font-mono text-xs">
                     <div className="text-xs font-bold text-white uppercase flex items-center justify-between border-b border-[#2d2838] pb-1.5">
@@ -1089,7 +1186,7 @@ export function MunderOfficeView() {
                   </div>
                 )}
 
-                {/* ── TAB 3: AI CHAT DESK TERMINAL ─────────────────────────── */}
+                {/* Ã¢â€â‚¬Ã¢â€â‚¬ TAB 3: AI CHAT DESK TERMINAL Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */}
                 {activeTab === 'chat' && (
                   <div className="flex-1 flex flex-col min-h-0 font-mono text-xs">
                     {/* Chat Messages */}

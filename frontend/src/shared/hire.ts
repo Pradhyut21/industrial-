@@ -4,7 +4,7 @@
  * A hire manifest is a small JSON document that describes a role-configured
  * agent (name, provider, model, flags, goal, budget) so it can be shared as a
  * file or hosted in a community gallery and imported with one click via the
- * `munderdifflin://hire?src=<https-url>` deep link or an in-app file picker.
+ * `deadmind://hire?src=<https-url>` deep link or an in-app file picker.
  *
  * SECURITY MODEL — a manifest is untrusted input:
  *   - It can NEVER auto-spawn an agent. Importing only pre-fills the Add-Agent
@@ -23,7 +23,7 @@
 
 import { mcpCatalogEntry } from './mcpCatalog';
 
-export const HIRE_SPEC_V1 = 'munder-difflin/hire@1';
+export const HIRE_SPEC_V1 = 'deadmind/hire@1';
 
 /** Skill ids bundled in app resources (the only values a hire manifest may request
  *  in the `skills` field). A manifest can never name an arbitrary skill path —
@@ -40,7 +40,7 @@ export const BUNDLED_SKILL_IDS: ReadonlySet<string> = new Set([
 export type HireProvider = 'claude' | 'antigravity' | 'codex';
 
 export interface HireManifest {
-  /** Spec tag; exactly `munder-difflin/hire@1` for this version. */
+  /** Spec tag; exactly `deadmind/hire@1` for this version. */
   spec: typeof HIRE_SPEC_V1;
   /** Agent display name (also seeds the hive id). Required. */
   name: string;
@@ -115,7 +115,7 @@ const MODEL_RE = /^[A-Za-z0-9 ._()[\]\/:@+-]{1,80}$/;
  *  WHY AN ALLOWLIST: a manifest's `provider` is attacker-chosen and each CLI keeps
  *  adding flags, so a denylist of "dangerous" flags drifts and leaks (three rounds
  *  of re-review each found one more spelling that escaped — codex `-a`/`-s`, then
- *  `-c model_providers.*.base_url=…` backend-redirect credential exfil, then
+ *  `-c model_providers.*.base_url=â€¦` backend-redirect credential exfil, then
  *  `--provider`). Default-deny closes the CLASS: only flags that PROVABLY cannot
  *  escalate permissions, redirect the backend / exfil credentials, read/write
  *  arbitrary files, inject prompt/config/MCP, or run commands may pass; every
@@ -128,7 +128,7 @@ const MODEL_RE = /^[A-Za-z0-9 ._()[\]\/:@+-]{1,80}$/;
  *  exotic flag can add it by hand. Each is behavioral / output / a safety-cap
  *  only, with a single non-escalating value (or none):
  *    --model          select the model id           (claude/codex/agy modelFlag)
- *    --max-turns      cap agentic turns (runaway guard, strictly safety-↑)
+ *    --max-turns      cap agentic turns (runaway guard, strictly safety-â†‘)
  *    --output-format  headless output shape: text / json / stream-json
  *    --verbose        logging verbosity only
  *  Matched case-insensitively against the flag NAME (part before any `=`), so both
@@ -316,13 +316,13 @@ export function validateHireManifest(raw: unknown): HireValidation {
   };
 }
 
-/** Parse a `munderdifflin://hire?src=<https-url>` deep link. Returns the https
+/** Parse a `deadmind://hire?src=<https-url>` deep link. Returns the https
  *  manifest URL, or null if the link is not a well-formed hire link. */
 export function parseHireDeepLink(link: string): string | null {
   let u: URL;
   try { u = new URL(link); } catch { return null; }
-  if (u.protocol !== 'munderdifflin:') return null;
-  // Both munderdifflin://hire?src= (host) and munderdifflin:hire?src= (path).
+  if (u.protocol !== 'deadmind:') return null;
+  // Both deadmind://hire?src= (host) and deadmind:hire?src= (path).
   const action = (u.host || u.pathname.replace(/^\/+/, '')).toLowerCase();
   if (action !== 'hire') return null;
   const src = u.searchParams.get('src');

@@ -1,25 +1,25 @@
 {
-  "timestamp": "2026-08-19T17:30:24.112163+00:00",
+  "timestamp": "2026-08-21T12:11:40.625040+00:00",
   "total_queries": 50,
-  "evaluation_duration_seconds": 30.47,
+  "evaluation_duration_seconds": 32.679,
   "metrics": {
     "keyword_p_at_3": 0.78,
-    "semantic_p_at_3": 0.62,
-    "hybrid_rrf_reranker_p_at_3": 0.66,
-    "absolute_improvement_over_keyword": -0.12
+    "semantic_p_at_3": 0.78,
+    "hybrid_rrf_reranker_p_at_3": 0.84,
+    "absolute_improvement_over_keyword": 0.06
   },
   "category_breakdown": {
     "exact_match": {
       "total": 10,
       "keyword_hits": 9,
       "semantic_hits": 9,
-      "hybrid_hits": 8
+      "hybrid_hits": 9
     },
     "paraphrase": {
       "total": 10,
       "keyword_hits": 5,
-      "semantic_hits": 7,
-      "hybrid_hits": 7
+      "semantic_hits": 6,
+      "hybrid_hits": 6
     },
     "informal_typo": {
       "total": 10,
@@ -36,8 +36,8 @@
     "negative_control": {
       "total": 10,
       "keyword_hits": 10,
-      "semantic_hits": 0,
-      "hybrid_hits": 0
+      "semantic_hits": 9,
+      "hybrid_hits": 9
     }
   },
   "queries": [
@@ -47,11 +47,11 @@
       "category": "exact_match",
       "keyword_hit": true,
       "semantic_hit": true,
-      "hybrid_hit": false,
+      "hybrid_hit": true,
       "top_hybrid_tags": [
         "C-104",
         "C-104",
-        "C-104"
+        "P-302"
       ]
     },
     {
@@ -242,7 +242,7 @@
       "top_hybrid_tags": [
         "P-302",
         "P-302",
-        "B-101"
+        "P-302"
       ]
     },
     {
@@ -263,13 +263,9 @@
       "expected_tag": "C-104",
       "category": "paraphrase",
       "keyword_hit": false,
-      "semantic_hit": true,
-      "hybrid_hit": true,
-      "top_hybrid_tags": [
-        "C-104",
-        "C-104",
-        "C-104"
-      ]
+      "semantic_hit": false,
+      "hybrid_hit": false,
+      "top_hybrid_tags": []
     },
     {
       "query": "main spark panel getting way too hot",
@@ -291,8 +287,8 @@
       "hybrid_hit": true,
       "top_hybrid_tags": [
         "P-302",
-        "F-402",
-        "C-104"
+        "P-302",
+        "F-402"
       ]
     },
     {
@@ -375,6 +371,7 @@
       "hybrid_hit": true,
       "top_hybrid_tags": [
         "P-302",
+        "P-302",
         "P-302"
       ]
     },
@@ -410,8 +407,8 @@
       "hybrid_hit": true,
       "top_hybrid_tags": [
         "P-302",
-        "F-402",
-        "V-205"
+        "P-302",
+        "F-402"
       ]
     },
     {
@@ -508,7 +505,7 @@
       "top_hybrid_tags": [
         "P-302",
         "B-101",
-        "B-101"
+        "P-302"
       ]
     },
     {
@@ -527,52 +524,36 @@
       "expected_tag": "NONE",
       "category": "negative_control",
       "keyword_hit": true,
-      "semantic_hit": false,
-      "hybrid_hit": false,
-      "top_hybrid_tags": [
-        "S-501",
-        "C-104",
-        "B-101"
-      ]
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": []
     },
     {
       "query": "how many vacation days do I have left",
       "expected_tag": "NONE",
       "category": "negative_control",
       "keyword_hit": true,
-      "semantic_hit": false,
-      "hybrid_hit": false,
-      "top_hybrid_tags": [
-        "B-101",
-        "C-104",
-        "S-501"
-      ]
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": []
     },
     {
       "query": "who is the CEO of the company",
       "expected_tag": "NONE",
       "category": "negative_control",
       "keyword_hit": true,
-      "semantic_hit": false,
-      "hybrid_hit": false,
-      "top_hybrid_tags": [
-        "P-302",
-        "C-104",
-        "B-101"
-      ]
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": []
     },
     {
       "query": "how to connect to the guest wifi",
       "expected_tag": "NONE",
       "category": "negative_control",
       "keyword_hit": true,
-      "semantic_hit": false,
-      "hybrid_hit": false,
-      "top_hybrid_tags": [
-        "S-501",
-        "V-205",
-        "V-205"
-      ]
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": []
     },
     {
       "query": "what time does the morning shift start",
@@ -592,65 +573,45 @@
       "expected_tag": "NONE",
       "category": "negative_control",
       "keyword_hit": true,
-      "semantic_hit": false,
-      "hybrid_hit": false,
-      "top_hybrid_tags": [
-        "P-302",
-        "C-104",
-        "Unassigned"
-      ]
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": []
     },
     {
       "query": "is there a holiday party this year",
       "expected_tag": "NONE",
       "category": "negative_control",
       "keyword_hit": true,
-      "semantic_hit": false,
-      "hybrid_hit": false,
-      "top_hybrid_tags": [
-        "S-501",
-        "B-101",
-        "V-205"
-      ]
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": []
     },
     {
       "query": "how to reset my email password",
       "expected_tag": "NONE",
       "category": "negative_control",
       "keyword_hit": true,
-      "semantic_hit": false,
-      "hybrid_hit": false,
-      "top_hybrid_tags": [
-        "S-501",
-        "C-104",
-        "V-205"
-      ]
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": []
     },
     {
       "query": "where is the nearest fire extinguisher",
       "expected_tag": "NONE",
       "category": "negative_control",
       "keyword_hit": true,
-      "semantic_hit": false,
-      "hybrid_hit": false,
-      "top_hybrid_tags": [
-        "S-501",
-        "P-302",
-        "C-104"
-      ]
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": []
     },
     {
       "query": "can I park in the visitor lot",
       "expected_tag": "NONE",
       "category": "negative_control",
       "keyword_hit": true,
-      "semantic_hit": false,
-      "hybrid_hit": false,
-      "top_hybrid_tags": [
-        "B-101",
-        "TURBINE-04",
-        "B-101"
-      ]
+      "semantic_hit": true,
+      "hybrid_hit": true,
+      "top_hybrid_tags": []
     }
   ]
 }

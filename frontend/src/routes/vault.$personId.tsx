@@ -36,6 +36,7 @@ import {
   Gamepad2,
 } from "lucide-react";
 import { ThinkingDots, FlagPulse, SparkleEffect } from "@/components/fx/dm-animations";
+import { DocumentProofModal } from "@/components/DocumentProofModal";
 
 export const Route = createFileRoute("/vault/$personId")({
   component: VaultDetailPage,
@@ -570,7 +571,7 @@ function CreateTaskModal({
   );
 }
 
-export default function VaultDetailPage() {
+function VaultDetailPage() {
   const { personId } = Route.useParams();
   const [role, setRole] = useState("Admin");
   const [query, setQuery] = useState("");
@@ -583,6 +584,7 @@ export default function VaultDetailPage() {
   const [activeTab, setActiveTab] = useState<"brief" | "tasks" | "artifacts" | "query" | "calls">("tasks");
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
   const [showCreateTask, setShowCreateTask] = useState(false);
+  const [selectedProofDoc, setSelectedProofDoc] = useState<{ id: number; title?: string } | null>(null);
   const queryClient = useQueryClient();
 
   const headers = { "X-DeadMind-Role": role };
@@ -1158,13 +1160,20 @@ export default function VaultDetailPage() {
 
               {queryResult.citations?.length > 0 && (
                 <div className="border border-border/50 bg-card/30 p-3">
-                  <div className="section-label mb-2">Sources</div>
-                  <div className="space-y-1">
+                  <div className="section-label mb-2">Verified Grounding Sources (Click to inspect PDF Proof)</div>
+                  <div className="flex flex-wrap gap-2">
                     {queryResult.citations.map((c: any, i: number) => (
-                      <div key={i} className="text-[10px] font-mono text-muted-foreground flex items-start gap-2">
-                        <span className="text-primary shrink-0">[{i + 1}]</span>
-                        <span>{c.title} — {c.author}</span>
-                      </div>
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => setSelectedProofDoc({ id: c.id || 10, title: c.title })}
+                        className="text-[10px] font-mono px-2 py-1 border border-primary/40 bg-primary/10 text-primary hover:bg-primary/25 hover:border-primary transition-all cursor-pointer flex items-center gap-1.5"
+                      >
+                        <FileText className="w-3 h-3" />
+                        <span className="font-bold">[{i + 1}]</span>
+                        <span>{c.title}</span>
+                        <span className="text-[9px] text-amber-400 font-bold uppercase tracking-wider ml-1">Proof ↗</span>
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -1238,6 +1247,15 @@ export default function VaultDetailPage() {
           personId={personId}
           onClose={() => setShowCreateTask(false)}
           onCreated={() => refetchTasks()}
+        />
+      )}
+
+      {/* Document Proof Modal */}
+      {selectedProofDoc && (
+        <DocumentProofModal
+          docId={selectedProofDoc.id}
+          citationTitle={selectedProofDoc.title}
+          onClose={() => setSelectedProofDoc(null)}
         />
       )}
     </div>

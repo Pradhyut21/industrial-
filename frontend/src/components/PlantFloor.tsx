@@ -1,8 +1,7 @@
 /**
- * PlantFloor — Munder Difflin–inspired 2D animated plant floor
- *
- * A lightweight <canvas> scene (no Pixi.js) that shows engineer avatars
- * walking between station nodes. Adapts the Munder Difflin visual language
+ * PlantFloor — DeadMind 2D animated plant floor
+ * Real-time top-down industrial floor simulation with animated worker sprites
+ * walking between station nodes. DeadMind industrial visual language
  * (walk-bob, status overlays, arrival dust, envelope flight) to DeadMind's
  * industrial-plant context.
  *

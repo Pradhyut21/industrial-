@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as X402DemoRouteImport } from './routes/x402-demo'
 import { Route as VaultRouteImport } from './routes/vault'
 import { Route as OfficeRouteImport } from './routes/office'
 import { Route as LessonsRouteImport } from './routes/lessons'
@@ -20,6 +21,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as VaultPersonIdRouteImport } from './routes/vault.$personId'
 import { Route as GameTaskIdRouteImport } from './routes/game.$taskId'
 
+const X402DemoRoute = X402DemoRouteImport.update({
+  id: '/x402-demo',
+  path: '/x402-demo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VaultRoute = VaultRouteImport.update({
   id: '/vault',
   path: '/vault',
@@ -80,6 +86,7 @@ export interface FileRoutesByFullPath {
   '/lessons': typeof LessonsRoute
   '/office': typeof OfficeRoute
   '/vault': typeof VaultRouteWithChildren
+  '/x402-demo': typeof X402DemoRoute
   '/game/$taskId': typeof GameTaskIdRoute
   '/vault/$personId': typeof VaultPersonIdRoute
 }
@@ -92,6 +99,7 @@ export interface FileRoutesByTo {
   '/lessons': typeof LessonsRoute
   '/office': typeof OfficeRoute
   '/vault': typeof VaultRouteWithChildren
+  '/x402-demo': typeof X402DemoRoute
   '/game/$taskId': typeof GameTaskIdRoute
   '/vault/$personId': typeof VaultPersonIdRoute
 }
@@ -105,6 +113,7 @@ export interface FileRoutesById {
   '/lessons': typeof LessonsRoute
   '/office': typeof OfficeRoute
   '/vault': typeof VaultRouteWithChildren
+  '/x402-demo': typeof X402DemoRoute
   '/game/$taskId': typeof GameTaskIdRoute
   '/vault/$personId': typeof VaultPersonIdRoute
 }
@@ -119,6 +128,7 @@ export interface FileRouteTypes {
     | '/lessons'
     | '/office'
     | '/vault'
+    | '/x402-demo'
     | '/game/$taskId'
     | '/vault/$personId'
   fileRoutesByTo: FileRoutesByTo
@@ -131,6 +141,7 @@ export interface FileRouteTypes {
     | '/lessons'
     | '/office'
     | '/vault'
+    | '/x402-demo'
     | '/game/$taskId'
     | '/vault/$personId'
   id:
@@ -143,6 +154,7 @@ export interface FileRouteTypes {
     | '/lessons'
     | '/office'
     | '/vault'
+    | '/x402-demo'
     | '/game/$taskId'
     | '/vault/$personId'
   fileRoutesById: FileRoutesById
@@ -156,11 +168,19 @@ export interface RootRouteChildren {
   LessonsRoute: typeof LessonsRoute
   OfficeRoute: typeof OfficeRoute
   VaultRoute: typeof VaultRouteWithChildren
+  X402DemoRoute: typeof X402DemoRoute
   GameTaskIdRoute: typeof GameTaskIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/x402-demo': {
+      id: '/x402-demo'
+      path: '/x402-demo'
+      fullPath: '/x402-demo'
+      preLoaderRoute: typeof X402DemoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/vault': {
       id: '/vault'
       path: '/vault'
@@ -253,6 +273,7 @@ const rootRouteChildren: RootRouteChildren = {
   LessonsRoute: LessonsRoute,
   OfficeRoute: OfficeRoute,
   VaultRoute: VaultRouteWithChildren,
+  X402DemoRoute: X402DemoRoute,
   GameTaskIdRoute: GameTaskIdRoute,
 }
 export const routeTree = rootRouteImport

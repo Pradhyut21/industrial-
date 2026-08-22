@@ -1,4 +1,4 @@
-"""
+﻿"""
 run_steps_abcde.py
 ==================
 End-to-end pre-submission verification: Steps A -> E
@@ -194,7 +194,7 @@ def step_b(pay_addr, agent_addr):
         transaction.wait_for_confirmation(client, txn_id, 6)
         ok("Payment confirmed on-chain!")
         ok(f"  txn_id   : {txn_id}")
-        ok(f"  Explorer : https://testnet.explorer.perawallet.app/tx/{txn_id}")
+        ok(f"  Explorer : https://lora.algokit.io/testnet/transaction/{txn_id}")
 
         # Build X-PAYMENT token
         payment_token = base64.b64encode(json.dumps({
@@ -220,7 +220,7 @@ def step_b(pay_addr, agent_addr):
 
         print()
         print(f"  *** STEP B TXN_ID (agent payment): {txn_id}")
-        print(f"  *** Explorer: https://testnet.explorer.perawallet.app/tx/{txn_id}")
+        print(f"  *** Explorer: https://lora.algokit.io/testnet/transaction/{txn_id}")
         return True, txn_id
 
     except Exception as e:
@@ -308,7 +308,7 @@ def step_c(payout_addr, verifier_addr):
     except Exception as e:
         warn(f"Post-payout balance check failed: {e}")
 
-    explorer = f"https://testnet.explorer.perawallet.app/tx/{txn_id}"
+    explorer = f"https://lora.algokit.io/testnet/transaction/{txn_id}"
     print()
     print(f"  *** STEP C TXN_ID (verifier payout): {txn_id}")
     print(f"  *** Explorer: {explorer}")
@@ -447,10 +447,10 @@ def main():
     print()
     if b_txn:
         print(f"  *** Step B txn_id (agent payment)  : {b_txn}")
-        print(f"      Explorer: https://testnet.explorer.perawallet.app/tx/{b_txn}")
+        print(f"      Explorer: https://lora.algokit.io/testnet/transaction/{b_txn}")
     if c_txn:
         print(f"  *** Step C txn_id (verifier payout) : {c_txn}")
-        print(f"      Explorer: https://testnet.explorer.perawallet.app/tx/{c_txn}")
+        print(f"      Explorer: https://lora.algokit.io/testnet/transaction/{c_txn}")
 
     all_passed = all(v is True for v in [step_a_ok, b_ok, c_ok, d_ok, e_ok])
     txns_real  = bool(b_txn and c_txn)

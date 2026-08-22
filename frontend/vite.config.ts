@@ -12,13 +12,11 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
-  server: {
-    proxy: {
-      "/api": "http://localhost:8000",
-      "/vault": "http://localhost:8000",
-      "/call-sessions": "http://localhost:8000",
-      "/voice": "http://localhost:8000",
-      "/whatsapp": "http://localhost:8000",
+  vite: {
+    server: {
+      proxy: {
+        "/api": "http://localhost:8000",
+      },
     },
   },
 });

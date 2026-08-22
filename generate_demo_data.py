@@ -373,6 +373,76 @@ def seed_data():
         forced_author="R. Nayar"
     )
 
+    doc10 = ingest_document(
+        title="IEEE/ASME Paper: Hydrodynamic Cavitation Dynamics & Acoustic Spectral Analysis (P-302)",
+        content="""
+        JOURNAL: IEEE Transactions on Industrial Informatics & ASME Fluids Engineering
+        DOI: 10.1109/TII.2024.3398112
+        AUTHORS: Dr. R. Nayar, T. Nair, Prof. K.V. Ramanathan
+        EQUIPMENT: P-302 Boiler Feedwater Pump A
+        DATE: 2024-05-18
+
+        ABSTRACT & EXPERIMENTAL METHODOLOGY:
+        Transient hydrodynamic cavitation in multi-stage centrifugal feedwater pumps induces severe high-frequency blade erosion and rotor unbalance.
+        This study benchmarks acoustic emission spectra (10 kHz - 40 kHz) against suction throttle velocity profiles across 1,200 operating hours.
+
+        DIAGNOSIS & MATHEMATICAL PROOF:
+        Empirical measurements demonstrate that electronic loop gain adjustments fail to alleviate cavitation during suction head depletion.
+        Cavitation is eliminated within 4 minutes by executing a 15% reduction in suction throttling combined with a minimum Net Positive Suction Head (NPSH) margin:
+        NPSH_available >= NPSH_required + 1.5 meters.
+        
+        RECOMMENDATION:
+        Execute Rajan Sharma's suction throttling sequence first before executing sensor re-calibration. Prevents catastrophic impeller pitting and saves ₹2.3 Cr in avoided downtime.
+        """,
+        doc_type="Research Paper",
+        forced_author="R. Nayar"
+    )
+
+    doc11 = ingest_document(
+        title="OISD-118 & ASME Boiler Code: Thermal Transient Positioner Linkage Drift Standard (B-101)",
+        content="""
+        STANDARD: Oil Industry Safety Directorate (OISD) STD-118 / ASME Section I
+        DOI: 10.1016/j.ijpvp.2023.104921
+        AUTHORS: Rajan Sharma, Vikram Sen, S. Kulkarni (Chief Safety Auditor)
+        EQUIPMENT: B-101 Primary Steam Boiler / V-205 Low-Ambient Control Valve
+        DATE: 2023-11-10
+
+        ABSTRACT & COMPLIANCE CODE:
+        Thermal contraction of mechanical feedback linkages during night-shift ambient temperature drops (<14°C) introduces a systematic 0.3 bar pressure oscillation in supercritical steam boilers.
+
+        DIAGNOSIS & RESOLUTION:
+        Field analysis proves that re-tuning DCS loop parameters results in unstable hunting cycles.
+        The compliant resolution mandates physical verification and mechanical calibration of the feedback arm zero/span alignment, with high-temperature graphite lubrication.
+        
+        RECOMMENDATION:
+        Verify mechanical positioner alignment and linkage backlash prior to adjusting digital controller PID gains. Adheres to OISD-118 Section 4.2 compliance directives.
+        """,
+        doc_type="Technical Standard",
+        forced_author="Rajan Sharma"
+    )
+
+    doc12 = ingest_document(
+        title="EPRI Technical Brief: Substation Switchgear Busbar Micro-Oxidation & Contact Resistance (S-501)",
+        content="""
+        JOURNAL: Electric Power Research Institute (EPRI) Technical Report Series
+        DOI: 10.1049/iet-gtd.2024.0189
+        AUTHORS: Amit Patel, K.V. Ramanathan
+        EQUIPMENT: S-501 Main Electrical Switchgear
+        DATE: 2024-03-22
+
+        ABSTRACT & EXPERIMENTAL FINDINGS:
+        Micro-oxidation on high-voltage 6.6kV switchgear busbar joints increases contact resistance exponentially, triggering localized thermal runaway and hazardous arc-flash risks.
+
+        DIAGNOSIS & PROTOCOL:
+        Thermographic scanning identified a 24°C localized delta. Panel isolation, abrasive removal of the oxide boundary layer, application of conductive silver-plated contact grease, and precision torque tightening to 85 Nm returned joint temperatures to baseline.
+        
+        RECOMMENDATION:
+        Conduct biannual pre-monsoon thermography scans and apply conductive grease to all Phase-B bolted connections. Avoids catastrophic substation outage and ₹1.1 Cr in emergency generator fuel burn.
+        """,
+        doc_type="Research Paper",
+        forced_author="Amit Patel"
+    )
+
     # Update freshness metrics in DB
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -385,6 +455,9 @@ def seed_data():
     cursor.execute("UPDATE documents SET age_years = 4, reference_count = 12, contradiction_count = 3, hardware_generation = 'Gen 1' WHERE id = ?", (doc7["id"],))
     cursor.execute("UPDATE documents SET age_years = 2, reference_count = 14, contradiction_count = 0, hardware_generation = 'Gen 2' WHERE id = ?", (doc8["id"],))
     cursor.execute("UPDATE documents SET age_years = 1, reference_count = 9, contradiction_count = 1, hardware_generation = 'Gen 2' WHERE id = ?", (doc9["id"],))
+    cursor.execute("UPDATE documents SET age_years = 1, reference_count = 24, contradiction_count = 0, hardware_generation = 'Gen 3' WHERE id = ?", (doc10["id"],))
+    cursor.execute("UPDATE documents SET age_years = 1, reference_count = 31, contradiction_count = 0, hardware_generation = 'Gen 3' WHERE id = ?", (doc11["id"],))
+    cursor.execute("UPDATE documents SET age_years = 1, reference_count = 18, contradiction_count = 0, hardware_generation = 'Gen 3' WHERE id = ?", (doc12["id"],))
     conn.commit()
     conn.close()
 

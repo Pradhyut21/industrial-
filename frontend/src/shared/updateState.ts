@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Auto-update status model + presentation mapping.
  *
  * Deliberately electron-free: main (src/main/updater.ts) produces these states
@@ -108,7 +108,7 @@ export function describeUpdate(status: UpdateStatus | null, currentVersion: stri
   const v = currentVersion;
   switch (status?.state) {
     case 'checking':
-      return { label: 'checking…', action: 'none', tone: 'busy', busy: true, title: `Checking for updates (you're on v${v})` };
+      return { label: 'checkingâ€¦', action: 'none', tone: 'busy', busy: true, title: `Checking for updates (you're on v${v})` };
     case 'available':
       return {
         label: `v${status.version} ready to install`, action: 'download', tone: 'ready', busy: false,
@@ -117,7 +117,7 @@ export function describeUpdate(status: UpdateStatus | null, currentVersion: stri
     case 'downloading':
       return {
         label: `downloading ${clampPercent(status.percent)}%`, action: 'none', tone: 'busy', busy: true,
-        title: `Downloading v${status.version}… ${clampPercent(status.percent)}%`
+        title: `Downloading v${status.version}â€¦ ${clampPercent(status.percent)}%`
       };
     case 'downloaded':
       return {
@@ -159,7 +159,7 @@ export interface UpdateSettingsView {
 }
 
 /**
- * What the Settings → General "Updates" block shows and does.
+ * What the Settings â†’ General "Updates" block shows and does.
  *
  * Separate from `describeUpdate` on purpose. The toolbar chip has room for two
  * words and has to stay quiet when nothing is happening, so its idle state says
@@ -177,7 +177,7 @@ export function describeUpdateSettings(
     case 'checking':
       return {
         headline: `You're on v${v}`,
-        detail: 'Checking for a newer release…',
+        detail: 'Checking for a newer releaseâ€¦',
         button: null, action: 'none', busy: true, tone: 'busy'
       };
     case 'available':
@@ -195,7 +195,7 @@ export function describeUpdateSettings(
     case 'downloaded':
       return {
         headline: `v${status.version} is ready to install`,
-        detail: `Restart Munder Difflin to finish updating from v${v}.`,
+        detail: `Restart DeadMind to finish updating from v${v}.`,
         button: 'Restart to update', action: 'restart', busy: false, tone: 'ready'
       };
     case 'available-manual':

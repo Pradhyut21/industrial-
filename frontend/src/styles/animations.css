@@ -1,13 +1,9 @@
 /* ═══════════════════════════════════════════════════════════════
- * DeadMind — Munder Difflin-inspired animations
- * Adapted from: github.com/chaitanyagiri/munder-difflin DESIGN.md
- *
- * Animation timing reference (Munder Difflin spec):
- *   - Walk bob:        sin(t·8π)·1px, 80px/sec
- *   - Status dots:     3-frame, 125ms/frame
- *   - Sparkle burst:   4 pixel stars, 250ms total
- *   - Arrival dust:    3 dots arc, 300ms
- *   - Mailbox pulse:   scale +1px every 800ms
+ * DeadMind — Industrial Micro-Animations
+ * Animation timing reference:
+ *   - Teleport:        0.15s
+ *   - Step/transition: 0.25s
+ *   - Status pulse:    2s
  *   - UI snap-in:      200ms cubic-bezier(.2,.8,.2,1)
  *   - Hover/press:     0ms (instant)
  * ═══════════════════════════════════════════════════════════════ */
@@ -190,7 +186,7 @@
 
 /* ══════════════════════════════════════════════════════════════
  * REDUCED MOTION — Respect user accessibility preferences
- * Matches Munder Difflin spec: walking → teleport, no bob, no particles
+ * Walking → teleport, no bob, no particles
  * ══════════════════════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
   .dm-float-bob,

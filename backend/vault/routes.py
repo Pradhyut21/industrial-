@@ -1,4 +1,4 @@
-"""
+﻿"""
 Continuity Intelligence Platform — FastAPI routes.
 
 Mounts under the main app as:
@@ -1102,7 +1102,7 @@ def verifier_payout(payload: VerifierPayoutRequest):
 
     This is the Section 9.6 differentiator: when a peer verifies a brief,
     money genuinely moves on-chain. The returned txn_id is checkable at:
-      https://testnet.explorer.perawallet.app/tx/<txn_id>
+      https://lora.algokit.io/testnet/transaction/<txn_id>
 
     Raises 503 if payout env vars are not configured.
     """
@@ -1161,9 +1161,9 @@ def verifier_payout(payload: VerifierPayoutRequest):
         )
 
         explorer_base = (
-            "https://testnet.explorer.perawallet.app/tx/"
+            "https://lora.algokit.io/testnet/transaction/"
             if network == "testnet"
-            else "https://explorer.perawallet.app/tx/"
+            else "https://lora.algokit.io/mainnet/transaction/"
         )
 
         return VerifierPayoutResponse(

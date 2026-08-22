@@ -1,63 +1,59 @@
 @import './tokens.css';
 
-/* Scoped exclusively to Munder Difflin office simulation containers */
-.munder-office-root,
-.munder-theme {
+/* Scoped exclusively to DeadMind office simulation containers */
+.deadmind-office-root,
+.deadmind-theme {
   box-sizing: border-box;
   font-family: var(--cth-font-ui);
-  color: var(--cth-ink-900);
+  color: #fdf6e3;
+  color-scheme: dark;
 }
 
-.munder-office-root *,
-.munder-office-root *::before,
-.munder-office-root *::after {
+.deadmind-office-root *,
+.deadmind-office-root *::before,
+.deadmind-office-root *::after {
   box-sizing: border-box;
 }
 
-.munder-office-root canvas,
-.munder-office-root img,
-.munder-office-root svg {
+.deadmind-office-root canvas,
+.deadmind-office-root img,
+.deadmind-office-root svg {
   image-rendering: pixelated;
   image-rendering: crisp-edges;
 }
 
-/* Custom scrollbar within Munder containers */
-.munder-office-root ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+/* Custom scrollbar within DeadMind containers */
+.deadmind-office-root ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
-.munder-office-root ::-webkit-scrollbar-track {
-  background: var(--cth-cream-200);
-  box-shadow: inset 0 0 0 1px var(--cth-ink-100);
+.deadmind-office-root ::-webkit-scrollbar-track {
+  background: #14121a;
+  box-shadow: inset 0 0 0 1px #2a2636;
 }
-.munder-office-root ::-webkit-scrollbar-thumb {
-  background: var(--cth-ink-700);
-  box-shadow: inset 0 0 0 1px var(--cth-ink-300);
+.deadmind-office-root ::-webkit-scrollbar-thumb {
+  background: #3c364c;
+  border-radius: 4px;
 }
-.munder-office-root ::-webkit-scrollbar-thumb:hover {
-  background: var(--cth-ink-900);
-}
-
-.munder-office-root {
-  color-scheme: light;
+.deadmind-office-root ::-webkit-scrollbar-thumb:hover {
+  background: #544c68;
 }
 
-.munder-office-root button,
-.munder-office-root input,
-.munder-office-root textarea,
-.munder-office-root select {
+.deadmind-office-root button,
+.deadmind-office-root input,
+.deadmind-office-root textarea,
+.deadmind-office-root select {
   font-family: inherit;
   font-size: inherit;
-  color: inherit;
 }
 
-.munder-office-root input,
-.munder-office-root textarea {
-  caret-color: var(--cth-ink-900);
+.deadmind-office-root input,
+.deadmind-office-root textarea {
+  caret-color: #ffe066;
 }
 
-.munder-office-root :focus-visible {
-  outline: 1px solid var(--cth-ink-300);
+.deadmind-office-root :focus-visible {
+  outline: 1px solid #ffe066;
   outline-offset: 2px;
 }
 

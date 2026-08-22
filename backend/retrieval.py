@@ -85,9 +85,20 @@ def retrieve_expert_knowledge(query: str, engineer_name: str = None, limit: int 
     scored_docs.sort(key=lambda x: x["score"], reverse=True)
     return scored_docs[:limit]
 
+# Minimum cosine similarity for semantic results to be considered a match.
+# Calibrated against live score data: out-of-domain queries score ~0.13,
+# in-domain queries score ~0.77. 0.25 provides a safe separation margin.
+MIN_SEMANTIC_SCORE = 0.25
+
 def retrieve_expert_knowledge_semantic(query: str, engineer_name: str = None, limit: int = 5):
-    """Semantic retrieval via sentence-transformer embeddings + FAISS cosine similarity."""
+    """Semantic retrieval via sentence-transformer embeddings + FAISS cosine similarity.
+    
+    Applies a minimum similarity threshold so out-of-domain queries (e.g. cafeteria,
+    wifi, HR questions) return empty rather than forcing a low-confidence match.
+    """
     results = store.search(query, k=limit, engineer_filter=engineer_name)
+    # Filter low-confidence results — allows negative-control abstention
+    results = [r for r in results if r.get("score", 0.0) >= MIN_SEMANTIC_SCORE]
     if results:
         return results
     # Graceful degrade: if vector index is empty (e.g. fresh clone, no ingested docs yet),
