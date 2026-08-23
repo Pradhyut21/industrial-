@@ -87,6 +87,7 @@ def get_service_discovery_catalog():
 
 # ── 2. Comprehensive 4-Flow Company Economy Dashboard (Sections 13 & 16) ──────
 @metering_router.get("/metering/company/{company_id}/dashboard")
+@metering_router.get("/company-economy/{company_id}/dashboard")
 def get_company_economy_dashboard(company_id: str = "INDO-POWER-PLANT-01"):
     """
     Unites all 4 enterprise economic flows:

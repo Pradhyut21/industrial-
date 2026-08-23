@@ -369,6 +369,28 @@ def search_solutions(q: str = ""):
     return SearchResponse(query=q, total_results=len(results), results=results)
 
 
+@troubleshooting_router.get(
+    "/pending",
+    response_model=List[TroubleshootingEntryResponse],
+    summary="List all pending review troubleshooting drafts",
+)
+def get_pending_solutions(employee_name: Optional[str] = None):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    if employee_name:
+        cursor.execute(
+            "SELECT * FROM troubleshooting_entries WHERE status = 'pending_review' AND employee_name = ? ORDER BY submitted_at DESC",
+            (employee_name,),
+        )
+    else:
+        cursor.execute(
+            "SELECT * FROM troubleshooting_entries WHERE status = 'pending_review' ORDER BY submitted_at DESC"
+        )
+    rows = cursor.fetchall()
+    conn.close()
+    return [_row_to_response(r) for r in rows]
+
+
 def _row_to_response(row) -> TroubleshootingEntryResponse:
     return TroubleshootingEntryResponse(
         id=row["id"],
