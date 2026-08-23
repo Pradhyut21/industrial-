@@ -1,21 +1,55 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import {
-  Sparkles,
-  Bot,
-  ListTodo,
+  Shield,
+  User,
+  Plus,
+  Search,
   CheckCircle2,
-  AlertOctagon,
-  HelpCircle,
+  AlertTriangle,
   Clock,
   ArrowRight,
-  FileCode2,
-  Wand2,
-  Copy,
-  Send,
-  Zap,
+  Sparkles,
+  GitBranch,
+  FileText,
+  Presentation,
+  Filter,
+  CheckCircle,
+  Building2,
+  Calendar,
+  Layers,
+  ChevronRight,
+  Gamepad2,
+  Loader2,
+  X,
+  ExternalLink,
+  BookOpen,
 } from "lucide-react";
 import { toast } from "sonner";
+
+export const Route = createFileRoute("/vault")({
+  head: () => ({
+    meta: [
+      { title: "Continuity Vaults — DeadMind Intelligence" },
+      {
+        name: "description",
+        content:
+          "Preserve retiring and departing plant engineers' tacit knowledge, AI handoff briefs, and in-flight tasks.",
+      },
+    ],
+  }),
+  component: VaultLayoutWrapper,
+});
+
+function VaultLayoutWrapper() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  if (pathname !== "/vault" && pathname !== "/vault/") {
+    return <Outlet />;
+  }
+  return <ContinuityVaultHub />;
+}
+
 
 const API =
   (import.meta.env.VITE_API_BASE_URL as string | undefined) ??
@@ -23,431 +57,677 @@ const API =
     ? `${window.location.protocol}//${window.location.hostname}:8000`
     : "");
 
-export const Route = createFileRoute("/vault")({
-  head: () => ({
-    meta: [
-      { title: "AI Standup Analyzer & Developer Hub — DeadMind CollabFlow" },
-      { name: "description", content: "AI meeting transcript analyzer, automated standup generator, and AI task expansion studio." },
-    ],
-  }),
-  component: DeveloperAnalyzerHub,
-});
+const DEPARTMENTS = [
+  "All Departments",
+  "Utility Operations",
+  "Electrical & Controls",
+  "Process & Chemistry",
+  "Turbine & Mechanical",
+  "Plant Safety & Compliance",
+];
 
-function DeveloperAnalyzerHub() {
-  const [activeSubTab, setActiveSubTab] = useState<"analyzer" | "expander" | "sprint">("analyzer");
+const DOMAINS = [
+  "All Domains",
+  "Mechanical / Steam Systems",
+  "Electrical / High Voltage",
+  "Automation & SCADA",
+  "Process Safety & OISD",
+  "Rotating Equipment",
+];
 
-  // Analyzer State
-  const [transcript, setTranscript] = useState<string>(
-    "Alex Mercer: We tested the zero-span positioner on B-101. We need to finalize the OISD-118 regression suite by Friday 5 PM.\nRajan Sharma: I am verifying secondary superheater temperature spike runbooks. I will deliver the step-by-step recovery guide tomorrow.\nK.V. Ramanathan: We decided to maintain the 6.6kV vacuum circuit breaker fast transfer threshold at 80ms to avoid arc-flash risk. I will verify the delay by Thursday.\nBlocker: We are waiting on the physical calibration test rig in Lab 4 before the final signoff."
-  );
-  const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
-  const [analysisResult, setAnalysisResult] = useState<any>({
-    commitments: [
-      { text: "Alex Mercer to finalize OISD-118 test suite for zero-span positioners", owner: "Alex Mercer", deadline: "Friday 5 PM" },
-      { text: "Rajan Sharma to review secondary superheater temperature spike runbooks", owner: "Rajan Sharma", deadline: "Tomorrow" },
-      { text: "K.V. Ramanathan to verify 6.6kV bus-tie transfer delay", owner: "K.V. Ramanathan", deadline: "Thursday" },
-    ],
-    decisions: [
-      { text: "Maintain vacuum circuit breaker bus transfer threshold at 80ms to avoid arc-flash risk.", participants: ["K.V. Ramanathan", "Plant Head"] },
-      { text: "Digitize all handwritten shift logs for Boiler-2 before weekend turnaround.", participants: ["Rajan Sharma", "Alex Mercer"] },
-    ],
-    blockers: [
-      { text: "Awaiting physical zero-span positioner calibration rig in Lab 4", blocker_owner: "Testing Pod", unblock_owner: "Maintenance Lead" },
-    ],
-    open_questions: [
-      { text: "Will the SCADA digital twin telemetry support Modbus TCP over plant fiber directly?" },
-    ],
-    standup: "Standup Summary: Alex Mercer on PRJ-TEST-09 positioner suite; Rajan Sharma verifying boiler drum runbooks; K.V. Ramanathan reviewing 6.6kV bus-tie delays. Key Blocker: Calibration rig in Lab 4.",
+function ContinuityVaultHub() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedDept, setSelectedDept] = useState("All Departments");
+  const [selectedDomain, setSelectedDomain] = useState("All Domains");
+  const [filterStatus, setFilterStatus] = useState<"all" | "departed" | "active">("all");
+  const [isWizardOpen, setIsWizardOpen] = useState(false);
+
+  // Wizard form state
+  const [wizardName, setWizardName] = useState("");
+  const [wizardRole, setWizardRole] = useState("");
+  const [wizardDomain, setWizardDomain] = useState("Mechanical / Steam Systems");
+  const [wizardDepartment, setWizardDepartment] = useState("Utility Operations");
+  const [wizardStatus, setWizardStatus] = useState("departed");
+  const [wizardExitDate, setWizardExitDate] = useState("2026-04-30");
+  const [wizardExitReason, setWizardExitReason] = useState("retirement");
+  const [wizardRepoUrl, setWizardRepoUrl] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const queryClient = useQueryClient();
+
+  // Fetch all registered persons
+  const { data: persons = [], isLoading, refetch } = useQuery<any[]>({
+    queryKey: ["persons"],
+    queryFn: async () => {
+      const res = await fetch(`${API}/vault/persons`, {
+        headers: { "X-DeadMind-Role": "Admin" },
+      });
+      if (!res.ok) {
+        // Fallback demo data if backend is in local fallback mode
+        return [
+          {
+            id: 1,
+            name: "Rajan Sharma",
+            role: "Senior Boiler & Turbine Lead",
+            domain: "Mechanical / Steam Systems",
+            department: "Utility Operations",
+            status: "departed",
+            exit_date: "2026-03-15",
+            exit_reason: "retirement",
+            created_at: "2026-08-15 12:00:00",
+          },
+          {
+            id: 2,
+            name: "Amit Patel",
+            role: "Electrical & Substation Lead",
+            domain: "Electrical / High Voltage",
+            department: "Electrical & Controls",
+            status: "departed",
+            exit_date: "2026-04-01",
+            exit_reason: "resignation",
+            created_at: "2026-08-16 09:30:00",
+          },
+          {
+            id: 3,
+            name: "Vikram Sen",
+            role: "DCS Automation Specialist",
+            domain: "Automation & SCADA",
+            department: "Electrical & Controls",
+            status: "active",
+            exit_date: "2026-11-30",
+            exit_reason: "transfer",
+            created_at: "2026-08-17 14:15:00",
+          },
+        ];
+      }
+      return res.json();
+    },
   });
 
-  // Task Expander State
-  const [taskInput, setTaskInput] = useState<string>("Boiler Secondary Bypass Pressure Spike Recovery");
-  const [isExpanding, setIsExpanding] = useState<boolean>(false);
-  const [expandedCard, setExpandedCard] = useState<any>({
-    title: "Boiler Secondary Bypass Pressure Spike Recovery",
-    description: "Execute complete technical investigation, SOP alignment, and implementation for: Boiler Secondary Bypass Pressure Spike Recovery.",
-    acceptance_criteria: [
-      "1. Historical incident records and P&ID drawings cross-referenced.",
-      "2. Standard Operating Procedure (SOP) validated against OISD-118 guidelines.",
-      "3. Verified runbook preserved in DeadMind vector store with zero active contradictions.",
-    ],
-    complexity: "High",
-    suggested_assignee: "Rajan Sharma (Senior Boiler Lead)",
+  // Filter persons
+  const filteredPersons = persons.filter((p) => {
+    const matchesSearch =
+      p.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.role?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.domain?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.department?.toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesDept =
+      selectedDept === "All Departments" || p.department === selectedDept;
+
+    const matchesDomain =
+      selectedDomain === "All Domains" || p.domain === selectedDomain;
+
+    const matchesStatus =
+      filterStatus === "all" ||
+      (filterStatus === "departed" && p.status === "departed") ||
+      (filterStatus === "active" && p.status !== "departed");
+
+    return matchesSearch && matchesDept && matchesDomain && matchesStatus;
   });
 
-  const handleAnalyze = async () => {
-    if (!transcript.trim()) return;
-    setIsAnalyzing(true);
-    try {
-      const res = await fetch(`${API}/api/analyze`, {
+  // Create person mutation
+  const createPersonMutation = useMutation({
+    mutationFn: async (payload: any) => {
+      const res = await fetch(`${API}/vault/persons`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ transcript, type: "meeting" }),
+        headers: {
+          "Content-Type": "application/json",
+          "X-DeadMind-Role": "Admin",
+        },
+        body: JSON.stringify(payload),
       });
-      if (res.ok) {
-        const data = await res.json();
-        setAnalysisResult(data);
-        toast.success("AI Standup & Meeting intelligence extracted successfully!");
+      if (!res.ok) {
+        throw new Error(await res.text());
       }
-    } catch {
-      toast.info("Meeting intelligence processed via local model");
-    } finally {
-      setIsAnalyzing(false);
+      return res.json();
+    },
+    onSuccess: async (newPerson) => {
+      toast.success(`Continuity Vault for ${newPerson.name} initialized!`);
+      // If repo provided, trigger git ingest
+      if (wizardRepoUrl.trim()) {
+        try {
+          await fetch(`${API}/vault/${newPerson.id}/ingest/git`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-DeadMind-Role": "Admin",
+            },
+            body: JSON.stringify({
+              repo_url: wizardRepoUrl.trim(),
+              max_commits: 15,
+            }),
+          });
+          toast.success("GitHub repository history indexed.");
+        } catch {
+          // non-blocking
+        }
+      }
+      // Trigger initial brief generation
+      try {
+        await fetch(`${API}/vault/${newPerson.id}/brief`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-DeadMind-Role": "Admin",
+          },
+          body: JSON.stringify({ requester_role: "Plant Head" }),
+        });
+        toast.success("AI Continuity Handoff Brief synthesized!");
+      } catch {
+        // non-blocking
+      }
+      setIsWizardOpen(false);
+      resetWizard();
+      queryClient.invalidateQueries({ queryKey: ["persons"] });
+      refetch();
+    },
+    onError: (err: any) => {
+      toast.error(`Failed to create vault: ${err.message}`);
+    },
+  });
+
+  const handleCreateSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!wizardName.trim() || !wizardRole.trim()) {
+      toast.error("Please enter engineer name and role.");
+      return;
     }
+    createPersonMutation.mutate({
+      name: wizardName.trim(),
+      role: wizardRole.trim(),
+      domain: wizardDomain,
+      department: wizardDepartment,
+      status: wizardStatus,
+      exit_date: wizardExitDate,
+      exit_reason: wizardExitReason,
+    });
   };
 
-  const handleExpandTask = async () => {
-    if (!taskInput.trim()) return;
-    setIsExpanding(true);
-    try {
-      const res = await fetch(`${API}/api/task/expand`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title: taskInput }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.card) setExpandedCard(data.card);
-        toast.success("Rough task converted to structured engineering specification!");
-      }
-    } catch {
-      toast.info("Task card generated from template");
-    } finally {
-      setIsExpanding(false);
-    }
-  };
-
-  const handleCopyStandup = () => {
-    if (!analysisResult?.standup) return;
-    navigator.clipboard.writeText(analysisResult.standup);
-    toast.success("Standup summary copied to clipboard!");
+  const resetWizard = () => {
+    setWizardName("");
+    setWizardRole("");
+    setWizardDomain("Mechanical / Steam Systems");
+    setWizardDepartment("Utility Operations");
+    setWizardStatus("departed");
+    setWizardExitDate("2026-04-30");
+    setWizardExitReason("retirement");
+    setWizardRepoUrl("");
   };
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6 font-sans text-foreground">
-      {/* ── Top Header & Tab Switcher ────────────────────────────────────── */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-4">
+      {/* ── Top Header & Action Banner ───────────────────────────────────── */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 text-[10px] font-mono font-bold bg-[#5ca97a]/20 text-[#5ca97a] border border-[#5ca97a]/40 uppercase">
-              CollabFlow Developer Studio
+            <span className="px-2 py-0.5 text-[10px] font-mono font-bold bg-primary/20 text-primary border border-primary/40 uppercase tracking-widest">
+              Continuity Intelligence Platform
             </span>
-            <span className="text-xs text-muted-foreground font-mono">AI Meeting & Task Engine</span>
+            <span className="text-xs text-muted-foreground font-mono">
+              Tacit Memory & Exit Handoff Hub
+            </span>
           </div>
           <h1 className="text-2xl font-bold font-display tracking-wide uppercase text-foreground mt-1">
-            Engineering & AI Standup Analyzer
+            Continuity Vaults & Cognitive Capsules
           </h1>
           <p className="text-xs text-muted-foreground max-w-2xl mt-0.5">
-            Transform meeting noise into commitments, blockers, and standups. Expand rough task ideas into full engineering specifications.
+            Capture, structure, and query everything departing plant specialists knew and built.
+            Access AI handoff briefs, in-flight task flowcharts, role-aware translations, and voice transcripts.
           </p>
         </div>
 
-        {/* View Switcher */}
-        <div className="flex items-center gap-1.5 p-1 bg-muted border border-border font-mono text-xs">
+        {/* Start Handoff Wizard Button */}
+        <div className="flex items-center gap-2 shrink-0">
           <button
             type="button"
-            onClick={() => setActiveSubTab("analyzer")}
-            className={`px-3 py-1.5 transition-all cursor-pointer ${
-              activeSubTab === "analyzer"
-                ? "bg-primary text-primary-foreground font-bold shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
+            onClick={() => setIsWizardOpen(true)}
+            className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 text-xs font-display uppercase tracking-wider hover:bg-primary/90 shadow-[0_0_15px_oklch(0.85_0.16_80_/_0.2)] transition-all cursor-pointer"
           >
-            🤖 AI Meeting Analyzer
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveSubTab("expander")}
-            className={`px-3 py-1.5 transition-all cursor-pointer ${
-              activeSubTab === "expander"
-                ? "bg-primary text-primary-foreground font-bold shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            ⚡ AI Task Expander
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveSubTab("sprint")}
-            className={`px-3 py-1.5 transition-all cursor-pointer ${
-              activeSubTab === "sprint"
-                ? "bg-primary text-primary-foreground font-bold shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            📋 Sprint Work Items
+            <Plus className="h-3.5 w-3.5" />
+            Start Handoff Wizard
           </button>
         </div>
       </div>
 
-      {/* ── TAB 1: AI MEETING & STANDUP ANALYZER ─────────────────────────── */}
-      {activeSubTab === "analyzer" && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 font-mono">
-          {/* Transcript Input Box */}
-          <div className="lg:col-span-5 p-4 bg-card border border-border flex flex-col justify-between space-y-3">
-            <div>
-              <div className="flex items-center justify-between border-b border-border pb-2.5">
-                <span className="font-bold text-xs uppercase text-foreground">
-                  Meeting Notes / Audio Transcript
-                </span>
-                <span className="text-[10px] text-muted-foreground">CollabFlow AI Parser</span>
-              </div>
-              <p className="text-[11px] text-muted-foreground mt-2 leading-relaxed">
-                Paste meeting conversations, plant shift handoffs, or Slack threads:
-              </p>
-              <textarea
-                value={transcript}
-                onChange={(e) => setTranscript(e.target.value)}
-                rows={10}
-                placeholder="Paste conversation transcript here..."
-                className="w-full mt-2 bg-background border border-border p-3 text-xs text-foreground focus:outline-none focus:border-primary font-mono leading-relaxed"
-              />
-            </div>
+      {/* ── Metric Snapshot Banner ───────────────────────────────────────── */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="border border-border bg-card/40 p-3.5 space-y-1">
+          <div className="flex items-center justify-between text-muted-foreground text-[10px] font-mono uppercase tracking-widest">
+            <span>Preserved Vaults</span>
+            <User className="h-3.5 w-3.5 text-primary" />
+          </div>
+          <div className="text-2xl font-display font-bold text-foreground">
+            {persons.length}
+          </div>
+          <div className="text-[10px] text-muted-foreground">
+            {persons.filter((p) => p.status === "departed").length} departed ·{" "}
+            {persons.filter((p) => p.status !== "departed").length} active
+          </div>
+        </div>
 
+        <div className="border border-border bg-card/40 p-3.5 space-y-1">
+          <div className="flex items-center justify-between text-muted-foreground text-[10px] font-mono uppercase tracking-widest">
+            <span>Verified Handoffs</span>
+            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
+          </div>
+          <div className="text-2xl font-display font-bold text-emerald-400">
+            {persons.length > 0 ? "100%" : "0%"}
+          </div>
+          <div className="text-[10px] text-muted-foreground">
+            Cryptographic SHA-256 peer audit trail
+          </div>
+        </div>
+
+        <div className="border border-border bg-card/40 p-3.5 space-y-1">
+          <div className="flex items-center justify-between text-muted-foreground text-[10px] font-mono uppercase tracking-widest">
+            <span>Retirement Exposure</span>
+            <AlertTriangle className="h-3.5 w-3.5 text-amber-400" />
+          </div>
+          <div className="text-2xl font-display font-bold text-amber-400">
+            ₹1.2 Cr
+          </div>
+          <div className="text-[10px] text-muted-foreground">
+            Protected against unplanned downtime
+          </div>
+        </div>
+
+        <div className="border border-border bg-card/40 p-3.5 space-y-1">
+          <div className="flex items-center justify-between text-muted-foreground text-[10px] font-mono uppercase tracking-widest">
+            <span>Multi-Channel Access</span>
+            <Layers className="h-3.5 w-3.5 text-primary" />
+          </div>
+          <div className="text-2xl font-display font-bold text-foreground">
+            Web · Voice · WA
+          </div>
+          <div className="text-[10px] text-muted-foreground">
+            Role-aware semantic answering
+          </div>
+        </div>
+      </div>
+
+      {/* ── Search & Filtering Bar ───────────────────────────────────────── */}
+      <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between bg-card/20 p-3 border border-border">
+        {/* Search input */}
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+          <input
+            type="text"
+            className="w-full bg-background border border-border pl-9 pr-3 py-1.5 text-xs font-mono placeholder:text-muted-foreground/60 focus:outline-none focus:border-primary text-foreground"
+            placeholder="Search by engineer name, domain, role, or equipment..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+
+        {/* Filter controls */}
+        <div className="flex flex-wrap items-center gap-2">
+          <select
+            className="bg-background border border-border text-xs font-mono px-2.5 py-1.5 focus:outline-none focus:border-primary text-foreground"
+            value={selectedDept}
+            onChange={(e) => setSelectedDept(e.target.value)}
+          >
+            {DEPARTMENTS.map((d) => (
+              <option key={d} value={d}>
+                {d}
+              </option>
+            ))}
+          </select>
+
+          <select
+            className="bg-background border border-border text-xs font-mono px-2.5 py-1.5 focus:outline-none focus:border-primary text-foreground"
+            value={selectedDomain}
+            onChange={(e) => setSelectedDomain(e.target.value)}
+          >
+            {DOMAINS.map((dm) => (
+              <option key={dm} value={dm}>
+                {dm}
+              </option>
+            ))}
+          </select>
+
+          <div className="flex border border-border bg-background p-0.5">
             <button
               type="button"
-              onClick={handleAnalyze}
-              disabled={isAnalyzing || !transcript.trim()}
-              className="w-full py-2.5 bg-primary text-primary-foreground font-bold hover:bg-primary/90 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md disabled:opacity-40"
+              onClick={() => setFilterStatus("all")}
+              className={`px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider transition-colors cursor-pointer ${
+                filterStatus === "all"
+                  ? "bg-primary text-primary-foreground font-bold"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
             >
-              <Sparkles className={`w-4 h-4 ${isAnalyzing ? "animate-spin" : ""}`} />
-              <span>{isAnalyzing ? "Extracting Intelligence..." : "Extract Commitments & Standup"}</span>
+              All
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilterStatus("departed")}
+              className={`px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider transition-colors cursor-pointer ${
+                filterStatus === "departed"
+                  ? "bg-primary text-primary-foreground font-bold"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Departed
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilterStatus("active")}
+              className={`px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider transition-colors cursor-pointer ${
+                filterStatus === "active"
+                  ? "bg-primary text-primary-foreground font-bold"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Active
             </button>
           </div>
+        </div>
+      </div>
 
-          {/* Structured Intelligence Output Box */}
-          <div className="lg:col-span-7 space-y-4">
-            {/* Standup Summary Banner */}
-            {analysisResult?.standup && (
-              <div className="p-3.5 bg-primary/10 border border-primary/40 space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-primary uppercase flex items-center gap-1.5">
-                    <Zap className="w-3.5 h-3.5 text-primary" /> Automated Standup Summary
-                  </span>
-                  <button
-                    type="button"
-                    onClick={handleCopyStandup}
-                    className="p-1 text-[10px] bg-primary/20 hover:bg-primary/30 text-primary border border-primary/40 flex items-center gap-1 cursor-pointer"
+      {/* ── Preserved Engineers Grid ─────────────────────────────────────── */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
+            Preserved Vault Roster ({filteredPersons.length} capsules)
+          </div>
+          <span className="text-[10px] text-muted-foreground font-mono">
+            Click any vault to inspect handoff brief & tasks
+          </span>
+        </div>
+
+        {isLoading ? (
+          <div className="border border-border/60 p-12 text-center space-y-2">
+            <Loader2 className="h-6 w-6 animate-spin text-primary mx-auto" />
+            <p className="text-xs text-muted-foreground font-mono">
+              Loading continuity vaults...
+            </p>
+          </div>
+        ) : filteredPersons.length === 0 ? (
+          <div className="border border-dashed border-border p-12 text-center space-y-3">
+            <BookOpen className="h-8 w-8 text-muted-foreground/30 mx-auto" />
+            <p className="text-xs text-muted-foreground font-mono">
+              No matching Continuity Vaults found.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                setSearchQuery("");
+                setSelectedDept("All Departments");
+                setSelectedDomain("All Domains");
+                setFilterStatus("all");
+              }}
+              className="text-xs text-primary underline cursor-pointer"
+            >
+              Clear filters
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredPersons.map((p) => (
+              <div
+                key={p.id}
+                className="border border-border bg-card/40 hover:border-primary/60 transition-all p-5 flex flex-col justify-between space-y-4 group relative"
+              >
+                {/* Top Row: Avatar + Name + Status */}
+                <div className="space-y-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-10 h-10 rounded-sm bg-muted/60 border border-border flex items-center justify-center font-display font-bold text-primary shrink-0 text-sm">
+                        {p.name
+                          .split(" ")
+                          .map((n: string) => n[0])
+                          .join("")
+                          .slice(0, 2)}
+                      </div>
+                      <div className="min-w-0">
+                        <Link
+                          to="/vault/$personId"
+                          params={{ personId: String(p.id) }}
+                          className="font-display font-bold text-sm text-foreground hover:text-primary transition-colors truncate block"
+                        >
+                          {p.name}
+                        </Link>
+                        <div className="text-[11px] text-muted-foreground truncate">
+                          {p.role}
+                        </div>
+                      </div>
+                    </div>
+
+                    <span
+                      className={`px-2 py-0.5 text-[9px] font-mono uppercase tracking-widest border shrink-0 ${
+                        p.status === "departed"
+                          ? "bg-rose-500/10 border-rose-500/40 text-rose-400"
+                          : "bg-emerald-500/10 border-emerald-500/40 text-emerald-400"
+                      }`}
+                    >
+                      {p.status}
+                    </span>
+                  </div>
+
+                  {/* Metadata Chips */}
+                  <div className="space-y-1.5 pt-1 border-t border-border/50 text-[11px] font-mono">
+                    <div className="flex items-center justify-between text-muted-foreground">
+                      <span className="flex items-center gap-1.5">
+                        <Building2 className="h-3 w-3 text-muted-foreground/60" />
+                        {p.department}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between text-muted-foreground">
+                      <span className="flex items-center gap-1.5">
+                        <Calendar className="h-3 w-3 text-muted-foreground/60" />
+                        Exit: {p.exit_date} ({p.exit_reason})
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-1">
+                      <span className="text-[10px] text-primary/80 bg-primary/10 border border-primary/20 px-1.5 py-0.5 truncate max-w-[200px]">
+                        {p.domain}
+                      </span>
+                      <span className="flex items-center gap-1 text-[10px] text-emerald-400">
+                        <CheckCircle2 className="h-3 w-3" /> Verified
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bottom Action Row */}
+                <div className="pt-3 border-t border-border flex items-center justify-between gap-2">
+                  <Link
+                    to="/vault/$personId"
+                    params={{ personId: String(p.id) }}
+                    className="flex-1 flex items-center justify-center gap-1.5 bg-primary/10 border border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground py-1.5 text-xs font-display uppercase tracking-wider transition-all text-center"
                   >
-                    <Copy className="w-3 h-3" /> Copy Standup
-                  </button>
-                </div>
-                <p className="text-xs text-foreground/90 leading-relaxed">{analysisResult.standup}</p>
-              </div>
-            )}
+                    Open Vault
+                    <ChevronRight className="h-3.5 w-3.5" />
+                  </Link>
 
-            {/* 4 Categorized Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-              {/* Commitments */}
-              <div className="p-3.5 bg-card border border-border space-y-2">
-                <div className="flex items-center gap-1.5 text-[#5ca97a] font-bold border-b border-border pb-1.5 text-[11px] uppercase">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> Commitments & Tasks ({analysisResult?.commitments?.length || 0})
-                </div>
-                <div className="space-y-1.5 max-h-[160px] overflow-y-auto pr-1">
-                  {analysisResult?.commitments?.map((c: any, i: number) => (
-                    <div key={i} className="p-2 bg-muted/40 border border-border/60 text-[10px] space-y-0.5">
-                      <div className="font-semibold text-foreground">{c.text}</div>
-                      <div className="text-muted-foreground flex items-center justify-between text-[9px]">
-                        <span>Owner: <strong className="text-primary">{c.owner}</strong></span>
-                        <span>Due: {c.deadline || "TBD"}</span>
-                      </div>
-                    </div>
-                  ))}
+                  <Link
+                    to="/vault/$personId"
+                    params={{ personId: String(p.id) }}
+                    className="px-2.5 py-1.5 border border-border hover:border-foreground text-muted-foreground hover:text-foreground text-xs transition-colors"
+                    title="View In-Flight Tasks"
+                  >
+                    <Layers className="h-3.5 w-3.5" />
+                  </Link>
                 </div>
               </div>
-
-              {/* Decisions */}
-              <div className="p-3.5 bg-card border border-border space-y-2">
-                <div className="flex items-center gap-1.5 text-[#e8d9a0] font-bold border-b border-border pb-1.5 text-[11px] uppercase">
-                  <Sparkles className="w-3.5 h-3.5" /> Key Decisions ({analysisResult?.decisions?.length || 0})
-                </div>
-                <div className="space-y-1.5 max-h-[160px] overflow-y-auto pr-1">
-                  {analysisResult?.decisions?.map((d: any, i: number) => (
-                    <div key={i} className="p-2 bg-muted/40 border border-border/60 text-[10px] space-y-0.5">
-                      <div className="text-foreground">{d.text}</div>
-                      <div className="text-[9px] text-muted-foreground">
-                        Participants: {d.participants?.join(", ") || "Team"}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Blockers */}
-              <div className="p-3.5 bg-card border border-border space-y-2">
-                <div className="flex items-center gap-1.5 text-[#d96a62] font-bold border-b border-border pb-1.5 text-[11px] uppercase">
-                  <AlertOctagon className="w-3.5 h-3.5" /> Blockers & Impediments ({analysisResult?.blockers?.length || 0})
-                </div>
-                <div className="space-y-1.5 max-h-[160px] overflow-y-auto pr-1">
-                  {analysisResult?.blockers?.map((b: any, i: number) => (
-                    <div key={i} className="p-2 bg-[#3b1d24]/40 border border-[#d96a62]/40 text-[10px] space-y-0.5">
-                      <div className="text-[#f3d3cd] font-semibold">{b.text}</div>
-                      <div className="text-[9px] text-muted-foreground flex items-center justify-between">
-                        <span>Owner: {b.blocker_owner}</span>
-                        <span className="text-[#e8d9a0]">Unblock: {b.unblock_owner}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Open Questions */}
-              <div className="p-3.5 bg-card border border-border space-y-2">
-                <div className="flex items-center gap-1.5 text-[#4f9faf] font-bold border-b border-border pb-1.5 text-[11px] uppercase">
-                  <HelpCircle className="w-3.5 h-3.5" /> Open Questions ({analysisResult?.open_questions?.length || 0})
-                </div>
-                <div className="space-y-1.5 max-h-[160px] overflow-y-auto pr-1">
-                  {analysisResult?.open_questions?.map((q: any, i: number) => (
-                    <div key={i} className="p-2 bg-muted/40 border border-border/60 text-[10px]">
-                      <div className="text-foreground">{q.text}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
-      {/* ── TAB 2: AI TASK EXPANDER STUDIO ──────────────────────────────── */}
-      {activeSubTab === "expander" && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 font-mono">
-          <div className="lg:col-span-5 p-4 bg-card border border-border space-y-3">
-            <div className="border-b border-border pb-2.5">
-              <span className="font-bold text-xs uppercase text-foreground">
-                Rough Task / User Story Input
-              </span>
-              <p className="text-[11px] text-muted-foreground mt-1">
-                Enter a raw feature, bug, or SOP title to generate complete acceptance criteria and assigned owner:
-              </p>
-            </div>
-
-            <input
-              type="text"
-              value={taskInput}
-              onChange={(e) => setTaskInput(e.target.value)}
-              placeholder="e.g. 6.6kV switchgear vacuum breaker fast-transfer test"
-              className="w-full bg-background border border-border p-2.5 text-xs text-foreground focus:outline-none focus:border-primary font-mono"
-            />
-
-            <button
-              type="button"
-              onClick={handleExpandTask}
-              disabled={isExpanding || !taskInput.trim()}
-              className="w-full py-2.5 bg-primary text-primary-foreground font-bold hover:bg-primary/90 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md disabled:opacity-40"
-            >
-              <Wand2 className={`w-4 h-4 ${isExpanding ? "animate-spin" : ""}`} />
-              <span>{isExpanding ? "Generating Card..." : "Expand into Engineering Task Card"}</span>
-            </button>
-          </div>
-
-          <div className="lg:col-span-7 p-4 bg-card border border-border space-y-3 font-mono">
-            <div className="flex items-center justify-between border-b border-border pb-2.5">
-              <span className="font-bold text-xs uppercase text-foreground">
-                Generated Engineering Specification Card
-              </span>
-              <span className="text-[10px] px-2 py-0.5 bg-primary/20 text-primary border border-primary/40">
-                Complexity: {expandedCard?.complexity || "Medium"}
-              </span>
-            </div>
-
-            <div className="space-y-3 text-xs">
+      {/* ── Start Handoff Wizard Modal ─────────────────────────────────────── */}
+      {isWizardOpen && (
+        <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-popover border border-border w-full max-w-lg shadow-2xl p-6 space-y-5 dm-snap-in relative">
+            <div className="flex items-center justify-between border-b border-border pb-3">
               <div>
-                <span className="text-[10px] text-muted-foreground uppercase block">Task Title:</span>
-                <strong className="text-foreground text-sm">{expandedCard?.title}</strong>
+                <span className="section-label">Continuity Ingestion Wizard</span>
+                <h2 className="text-lg font-display uppercase tracking-wider text-foreground">
+                  Register Departing Specialist
+                </h2>
               </div>
+              <button
+                type="button"
+                onClick={() => setIsWizardOpen(false)}
+                className="text-muted-foreground hover:text-foreground cursor-pointer"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
 
-              <div>
-                <span className="text-[10px] text-muted-foreground uppercase block">Technical Description:</span>
-                <p className="text-muted-foreground mt-0.5 leading-relaxed bg-muted/30 p-2.5 border border-border">
-                  {expandedCard?.description}
-                </p>
-              </div>
+            <form onSubmit={handleCreateSubmit} className="space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[9px] text-muted-foreground uppercase tracking-widest block mb-1">
+                    Specialist Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    className="w-full bg-muted/20 border border-border text-xs font-mono px-3 py-2 text-foreground focus:outline-none focus:border-primary"
+                    placeholder="e.g. Rajan Sharma"
+                    value={wizardName}
+                    onChange={(e) => setWizardName(e.target.value)}
+                  />
+                </div>
 
-              <div>
-                <span className="text-[10px] text-muted-foreground uppercase block mb-1">
-                  Acceptance Criteria Checklist:
-                </span>
-                <div className="space-y-1.5">
-                  {expandedCard?.acceptance_criteria?.map((crit: string, cIdx: number) => (
-                    <div key={cIdx} className="flex items-start gap-2 p-2 bg-muted/40 border border-border/60 text-[11px]">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-[#5ca97a] shrink-0 mt-0.5" />
-                      <span className="text-foreground/90">{crit}</span>
-                    </div>
-                  ))}
+                <div>
+                  <label className="text-[9px] text-muted-foreground uppercase tracking-widest block mb-1">
+                    Job Title / Role *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    className="w-full bg-muted/20 border border-border text-xs font-mono px-3 py-2 text-foreground focus:outline-none focus:border-primary"
+                    placeholder="e.g. Senior Boiler Lead"
+                    value={wizardRole}
+                    onChange={(e) => setWizardRole(e.target.value)}
+                  />
                 </div>
               </div>
 
-              <div className="pt-2 border-t border-border flex items-center justify-between text-[11px]">
-                <span className="text-muted-foreground">Suggested Assignee:</span>
-                <strong className="text-primary">{expandedCard?.suggested_assignee || "Alex Mercer"}</strong>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[9px] text-muted-foreground uppercase tracking-widest block mb-1">
+                    Department
+                  </label>
+                  <select
+                    className="w-full bg-muted/20 border border-border text-xs font-mono px-3 py-2 text-foreground focus:outline-none focus:border-primary"
+                    value={wizardDepartment}
+                    onChange={(e) => setWizardDepartment(e.target.value)}
+                  >
+                    {DEPARTMENTS.filter((d) => d !== "All Departments").map(
+                      (d) => (
+                        <option key={d} value={d}>
+                          {d}
+                        </option>
+                      )
+                    )}
+                  </select>
+                </div>
 
-      {/* ── TAB 3: SPRINT WORK ITEMS & VERIFICATION ─────────────────────── */}
-      {activeSubTab === "sprint" && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
-          {/* Column 1: Ready / Backlog */}
-          <div className="p-3.5 bg-card border border-border space-y-3">
-            <div className="flex items-center justify-between border-b border-border pb-2">
-              <span className="font-bold text-foreground uppercase">Backlog (2)</span>
-              <span className="text-[10px] text-muted-foreground">Sprint 14</span>
-            </div>
-            <div className="p-3 bg-muted/30 border border-border space-y-1">
-              <div className="font-bold text-foreground">PRJ-ENG-04: Modbus TCP Telemetry Map</div>
-              <div className="text-[10px] text-muted-foreground">Assignee: K.V. Ramanathan</div>
-              <div className="text-[9px] text-[#e8d9a0]">Due in 4 days</div>
-            </div>
-            <div className="p-3 bg-muted/30 border border-border space-y-1">
-              <div className="font-bold text-foreground">PRJ-TEST-09: Cryogenic Valve Cycle Assertions</div>
-              <div className="text-[10px] text-muted-foreground">Assignee: Alex Mercer</div>
-              <div className="text-[9px] text-[#e8d9a0]">Due in 6 days</div>
-            </div>
-          </div>
-
-          {/* Column 2: In-Progress */}
-          <div className="p-3.5 bg-card border border-border space-y-3">
-            <div className="flex items-center justify-between border-b border-border pb-2">
-              <span className="font-bold text-primary uppercase">In Progress (2)</span>
-              <span className="text-[10px] text-[#5ca97a] font-bold">Active</span>
-            </div>
-            <div className="p-3 bg-primary/10 border border-primary/40 space-y-1">
-              <div className="font-bold text-foreground">PRJ-OPS-01: Boiler Start-Up Bypass Runbook</div>
-              <div className="text-[10px] text-muted-foreground">Assignee: Rajan Sharma</div>
-              <div className="w-full h-1 bg-muted rounded-full overflow-hidden mt-1.5">
-                <div className="h-full bg-primary" style={{ width: "94%" }} />
+                <div>
+                  <label className="text-[9px] text-muted-foreground uppercase tracking-widest block mb-1">
+                    Technical Domain
+                  </label>
+                  <select
+                    className="w-full bg-muted/20 border border-border text-xs font-mono px-3 py-2 text-foreground focus:outline-none focus:border-primary"
+                    value={wizardDomain}
+                    onChange={(e) => setWizardDomain(e.target.value)}
+                  >
+                    {DOMAINS.filter((d) => d !== "All Domains").map((dm) => (
+                      <option key={dm} value={dm}>
+                        {dm}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
-            </div>
-            <div className="p-3 bg-primary/10 border border-primary/40 space-y-1">
-              <div className="font-bold text-foreground">PRJ-TEST-09: Zero-Span Positioner PyTest Suite</div>
-              <div className="text-[10px] text-muted-foreground">Assignee: Alex Mercer</div>
-              <div className="w-full h-1 bg-muted rounded-full overflow-hidden mt-1.5">
-                <div className="h-full bg-primary" style={{ width: "82%" }} />
-              </div>
-            </div>
-          </div>
 
-          {/* Column 3: Done & Verified */}
-          <div className="p-3.5 bg-card border border-border space-y-3">
-            <div className="flex items-center justify-between border-b border-border pb-2">
-              <span className="font-bold text-[#5ca97a] uppercase">Done & Preserved (2)</span>
-              <span className="text-[10px] text-[#5ca97a]">Verified</span>
-            </div>
-            <div className="p-3 bg-[#162e21] border border-[#5ca97a]/40 space-y-1">
-              <div className="font-bold text-foreground">PRJ-ENG-04: Single-Line Electrical Schematic DWG</div>
-              <div className="text-[10px] text-[#5ca97a]">Preserved in Vector Store · +50 Credits</div>
-            </div>
-            <div className="p-3 bg-[#162e21] border border-[#5ca97a]/40 space-y-1">
-              <div className="font-bold text-foreground">PRJ-OPS-01: Drum Level Trip Voice Log 03</div>
-              <div className="text-[10px] text-[#5ca97a]">Preserved in Vector Store · +75 Credits</div>
-            </div>
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="text-[9px] text-muted-foreground uppercase tracking-widest block mb-1">
+                    Status
+                  </label>
+                  <select
+                    className="w-full bg-muted/20 border border-border text-xs font-mono px-2 py-2 text-foreground focus:outline-none focus:border-primary"
+                    value={wizardStatus}
+                    onChange={(e) => setWizardStatus(e.target.value)}
+                  >
+                    <option value="departed">Departed</option>
+                    <option value="active">Active (Pending Exit)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-[9px] text-muted-foreground uppercase tracking-widest block mb-1">
+                    Exit Date
+                  </label>
+                  <input
+                    type="date"
+                    className="w-full bg-muted/20 border border-border text-xs font-mono px-2 py-2 text-foreground focus:outline-none focus:border-primary"
+                    value={wizardExitDate}
+                    onChange={(e) => setWizardExitDate(e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[9px] text-muted-foreground uppercase tracking-widest block mb-1">
+                    Exit Reason
+                  </label>
+                  <select
+                    className="w-full bg-muted/20 border border-border text-xs font-mono px-2 py-2 text-foreground focus:outline-none focus:border-primary"
+                    value={wizardExitReason}
+                    onChange={(e) => setWizardExitReason(e.target.value)}
+                  >
+                    <option value="retirement">Retirement</option>
+                    <option value="resignation">Resignation</option>
+                    <option value="transfer">Transfer</option>
+                    <option value="death">Deceased</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[9px] text-muted-foreground uppercase tracking-widest block mb-1">
+                  GitHub Repository URL (Optional Git Commit Ingestion)
+                </label>
+                <input
+                  type="url"
+                  className="w-full bg-muted/20 border border-border text-xs font-mono px-3 py-2 text-foreground focus:outline-none focus:border-primary"
+                  placeholder="https://github.com/org/boiler-controls"
+                  value={wizardRepoUrl}
+                  onChange={(e) => setWizardRepoUrl(e.target.value)}
+                />
+              </div>
+
+              <div className="pt-3 border-t border-border flex items-center justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsWizardOpen(false)}
+                  className="px-4 py-2 text-xs font-display uppercase tracking-wider border border-border text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={createPersonMutation.isPending}
+                  className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 text-xs font-display uppercase tracking-wider hover:bg-primary/90 transition-all disabled:opacity-40 cursor-pointer"
+                >
+                  {createPersonMutation.isPending ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <Sparkles className="h-3.5 w-3.5" />
+                  )}
+                  Initialize Vault & Brief
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
     </div>
   );
 }
-

@@ -100,6 +100,138 @@ export interface Coreference { id: number; standard_name: string; alias_name: st
 export interface NetworkRow { id: number; engineer: string; centrality: number; dependencies: string; domains_affected: number; resilience_drop: number; }
 export interface SopRow { id: number; sop_id: string; step_number: number; step_desc: string; compliance_rate: number; workaround_detected: string; }
 
+export interface GroundedSourceItem {
+  id: number;
+  title: string;
+  author: string;
+  equipment_tag: string;
+  failure_code: string;
+  source_type: "ORGANIZATIONAL" | "EMPLOYEE" | "INCIDENT" | "SOP" | "MAINTENANCE" | "CONTINUITY" | "REGULATORY" | string;
+  relevance_score: number;
+  excerpt: string;
+}
+
+export interface EmployeeInsightItem {
+  name: string;
+  role: string;
+  domain: string;
+  match_reason: string;
+  record_count: number;
+  knowledge_freshness: string;
+  is_peer_verified: boolean;
+  finding: string;
+  records_referenced: string[];
+}
+
+export interface StructuredChatResponse {
+  answer: string;
+  evidence_summary: {
+    organizational_count: number;
+    employee_record_count: number;
+    target_equipment: string;
+  };
+  employee_insights: EmployeeInsightItem[];
+  consensus?: {
+    consensus: string;
+    agreement: string;
+    weights: Record<string, number>;
+    dissent?: string | null;
+  } | null;
+  uncertainty: {
+    sparsity?: string;
+    staleness?: string;
+    disagreement?: string;
+    causal?: string;
+    risk_score: number;
+    risk_pct: number;
+    evidence_quality: string;
+    human_verification_required: boolean;
+  };
+  sources: GroundedSourceItem[];
+  recommended_steps: string[];
+  conversation_id: string;
+  search_query?: string;
+  usage_metrics?: {
+    credits_consumed: number;
+    balance_remaining: number;
+    itemized_cost?: Record<string, number>;
+  };
+}
+
+export interface UsageSettlementItem {
+  id: number;
+  service_tier: string;
+  credits_added: number;
+  amount_microusdc: number;
+  amount_usdc_formatted: string;
+  txn_id: string;
+  payer_address: string;
+  lora_explorer_url: string;
+  settled_at: string;
+}
+
+export interface UsageAccount {
+  company_allowance_total: number;
+  company_id: string;
+  user_id: string;
+  account_id: string;
+  allocated_credits: number;
+  used_credits: number;
+  balance_credits: number;
+  overage_count: number;
+  total_overage_microusdc: number;
+  total_overage_usdc_formatted: string;
+  todays_usage: {
+    chat: number;
+    rag_retrieval: number;
+    expert_consultation: number;
+    consensus_synthesis: number;
+    uncertainty_analysis: number;
+    agent_query: number;
+  };
+  settlements_count: number;
+  recent_settlements: UsageSettlementItem[];
+}
+
+export interface MessageItem {
+  id: string;
+  conversation_id: string;
+  role: "user" | "assistant" | "system";
+  content: string;
+  structured_data?: StructuredChatResponse;
+  timestamp: string;
+}
+
+export interface Conversation {
+  id: string;
+  user_id: string;
+  role: string;
+  title: string;
+  summary: string;
+  selected_experts: string[];
+  relevant_entities: string[];
+  is_favorite: boolean;
+  tag: string;
+  created_at: string;
+  updated_at: string;
+  message_count?: number;
+  messages?: MessageItem[];
+}
+
+export interface ExpertItem {
+  name: string;
+  role: string;
+  status: string;
+  retirement_year: number;
+  domains: string[];
+  primary_domain: string;
+  record_count: number;
+  incident_count: number;
+  is_peer_verified: boolean;
+  knowledge_freshness: string;
+  avatar: string;
+}
+
 // ─── Endpoints ────────────────────────────────────────────────────────────
 export const api = {
   engineers: () => req<Engineer[]>("/api/engineers", undefined, mock.engineers),
@@ -124,7 +256,160 @@ export const api = {
   coreference: () => req<Coreference[]>("/api/coreference", undefined, mock.coreference),
   network: () => req<NetworkRow[]>("/api/network", undefined, mock.network),
   sopAudit: () => req<SopRow[]>("/api/sop-audit", undefined, mock.sopAudit),
+  
+  // Organizational Memory Chat Endpoints
+  listConversations: (userId: string = "default_user", search?: string, tag?: string) =>
+    apiGet<Conversation[]>(`/api/chat/conversations?user_id=${encodeURIComponent(userId)}${search ? `&search=${encodeURIComponent(search)}` : ''}${tag ? `&tag=${encodeURIComponent(tag)}` : ''}`),
+  getConversation: (id: string, userId?: string) =>
+    apiGet<Conversation>(`/api/chat/conversations/${encodeURIComponent(id)}${userId ? `?user_id=${encodeURIComponent(userId)}` : ''}`),
+  createConversation: (payload: { title?: string; user_id?: string; role?: string; selected_experts?: string[]; tag?: string; initial_query?: string }) =>
+    apiPost<Conversation>("/api/chat/conversations", payload),
+  updateConversation: (id: string, payload: Partial<Conversation>) =>
+    apiPatch<{ status: string; conversation_id: string }>(`/api/chat/conversations/${encodeURIComponent(id)}`, payload),
+  deleteConversation: (id: string, userId?: string) =>
+    apiDelete<{ status: string; message: string }>(`/api/chat/conversations/${encodeURIComponent(id)}${userId ? `?user_id=${encodeURIComponent(userId)}` : ''}`),
+  queryChat: (payload: { query: string; conversation_id?: string; user_id?: string; role?: string; selected_experts?: string[]; analysis_mode?: string }) =>
+    apiPost<StructuredChatResponse>("/api/chat/query", payload),
+  listExperts: () =>
+    apiGet<ExpertItem[]>("/api/chat/experts"),
+
+  // Platform Metering & x402 Economy Endpoints
+  getUsageAccount: (userId: string = "default_user") =>
+    apiGet<UsageAccount>(`/api/metering/account/${encodeURIComponent(userId)}`),
+  getCompanyEconomyDashboard: (companyId: string = "INDO-POWER-PLANT-01") =>
+    apiGet<CompanyEconomyDashboard>(`/api/metering/company/${encodeURIComponent(companyId)}/dashboard`),
+  topupAccountX402: (payload: { user_id?: string; credits_to_add: number; amount_microusdc: number; txn_id: string; payer_address: string; service_tier?: string }) =>
+    apiPost<{ status: string; user_id: string; credits_added: number; balance_credits: number; txn_id: string; lora_url: string; amount_usdc: string; reimbursement?: ReimbursementRequest }>("/api/metering/topup-x402", payload),
+  simulateConsumption: (credits: number, userId: string = "default_user", description?: string) =>
+    apiPost<{ status: string; user_id: string; credits_depleted: number; new_balance: number; note: string }>("/api/metering/demo/simulate-depletion", { user_id: userId, credits_to_consume: credits, description }),
+  demoRefillCredits: (userId: string = "default_user", credits: number = 500) =>
+    apiPost<{ status: string; credits_added: number; balance_credits: number; txn_id: string; lora_url: string; amount_usdc: string }>(`/api/metering/demo/refill?user_id=${encodeURIComponent(userId)}&credits=${credits}`),
+  demoResetEconomy: () =>
+    apiPost<{ status: string; message: string }>("/api/metering/demo/reset"),
+
+  // Employee Reimbursement Endpoints
+  listReimbursements: (companyId: string = "INDO-POWER-PLANT-01", status?: string, employeeId?: string) =>
+    apiGet<ReimbursementListResponse>(`/api/reimbursements?company_id=${encodeURIComponent(companyId)}${status ? `&status=${encodeURIComponent(status)}` : ''}${employeeId ? `&employee_id=${encodeURIComponent(employeeId)}` : ''}`),
+  getReimbursementPolicy: (companyId: string = "INDO-POWER-PLANT-01") =>
+    apiGet<ReimbursementPolicy>(`/api/reimbursements/policy/${encodeURIComponent(companyId)}`),
+  updateReimbursementPolicy: (companyId: string, payload: Partial<ReimbursementPolicy>) =>
+    apiPut<ReimbursementPolicy>(`/api/reimbursements/policy/${encodeURIComponent(companyId)}`, payload),
+  approveReimbursement: (requestId: string, reviewerId?: string, notes?: string) =>
+    apiPost<ReimbursementRequest>(`/api/reimbursements/${encodeURIComponent(requestId)}/approve`, { reviewer_id: reviewerId, notes }),
+  rejectReimbursement: (requestId: string, reviewerId?: string, notes?: string) =>
+    apiPost<ReimbursementRequest>(`/api/reimbursements/${encodeURIComponent(requestId)}/reject`, { reviewer_id: reviewerId, notes }),
+  payoutReimbursement: (requestId: string, payoutMethod?: string, processedBy?: string, reference?: string) =>
+    apiPost<{ status: string; request: ReimbursementRequest; payout_transaction_id: string; payout_reference: string; amount_usdc: number; payout_method: string }>(`/api/reimbursements/${encodeURIComponent(requestId)}/payout`, { payout_method: payoutMethod, processed_by: processedBy, reference }),
+  reconcilePeriodEnd: (companyId: string = "INDO-POWER-PLANT-01", periodName: string = "August 2026") =>
+    apiPost<{ reconciliation_id: string; company_id: string; period_name: string; total_allocated: number; total_consumed: number; total_unused_returned: number; action: string; status: string; reconciled_at: string }>("/api/metering/company/reconcile", { company_id: companyId, period_name: periodName }),
 };
+
+export interface ReimbursementRequest {
+  id: string;
+  request_number: string;
+  employee_id: string;
+  employee_name: string;
+  company_id: string;
+  payment_transaction_id: string;
+  txn_id: string;
+  amount_usdc: number;
+  amount_microusdc: number;
+  credits_covered: number;
+  service: string;
+  status: "PENDING_REIMBURSEMENT" | "AUTO_APPROVED" | "APPROVED" | "REJECTED" | "REIMBURSED";
+  notes?: string;
+  payer_address: string;
+  reviewer_id?: string;
+  reviewed_at?: string;
+  reimbursed_at?: string;
+  reimbursement_payout_txn_id?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ReimbursementPolicy {
+  id: string;
+  company_id: string;
+  max_reimbursement_per_employee_usdc: number;
+  max_daily_overage_usdc: number;
+  max_monthly_overage_usdc: number;
+  auto_approval_threshold_usdc: number;
+  require_receipt: boolean;
+  allowed_services: string;
+  is_active: boolean;
+}
+
+export interface ReimbursementSummary {
+  pending_count: number;
+  pending_amount_usdc: number;
+  approved_count: number;
+  approved_amount_usdc: number;
+  reimbursed_count: number;
+  reimbursed_amount_usdc: number;
+  auto_approved_count: number;
+  auto_approved_amount_usdc: number;
+  rejected_count: number;
+  rejected_amount_usdc: number;
+  total_requests: number;
+  total_overage_amount_usdc: number;
+}
+
+export interface ReimbursementListResponse {
+  company_id: string;
+  summary: ReimbursementSummary;
+  requests: ReimbursementRequest[];
+}
+
+export interface CompanyEconomyDashboard {
+  company_id: string;
+  company_name: string;
+  current_period: string;
+  flow_a_base_platform: {
+    cloud_infra_cost_usd: number;
+    database_cost_usd: number;
+    storage_cost_usd: number;
+    baseline_ai_cost_usd: number;
+    total_platform_cost_usd: number;
+    company_monthly_budget_usd: number;
+  };
+  flow_b_employee_usage: {
+    total_employees: number;
+    allocated_usd: number;
+    consumed_usd: number;
+    unused_usd: number;
+    allocated_credits: number;
+    consumed_credits: number;
+    remaining_credits: number;
+    total_overage_events: number;
+    total_employee_paid_overage_usdc: string;
+  };
+  flow_c_reimbursements: {
+    pending_amount_usdc: number;
+    pending_count: number;
+    approved_amount_usdc: number;
+    approved_count: number;
+    reimbursed_amount_usdc: number;
+    reimbursed_count: number;
+    auto_approved_amount_usdc: number;
+    auto_approved_count: number;
+    total_reimbursement_requests: number;
+    auto_approval_threshold_usdc: number;
+  };
+  flow_d_period_reconciliation: {
+    total_pool_credits: number;
+    available_unallocated_credits: number;
+    reconciled_returned_credits: number;
+    reconciled_returned_usd: number;
+    reconciliation_rule: string;
+  };
+  employees: Array<{
+    user_id: string;
+    allocated_credits: number;
+    used_credits: number;
+    balance_credits: number;
+    overage_count: number;
+  }>;
+}
 
 export async function apiGet<T = any>(path: string, headers?: Record<string, string>): Promise<T> {
   const res = await fetch(`${BASE}${path.startsWith('/') ? path : `/${path}`}`, {
@@ -149,6 +434,55 @@ export async function apiPost<T = any>(path: string, body?: any, headers?: Recor
       ...(headers ?? {}),
     },
     body: body !== undefined ? JSON.stringify(body) : undefined,
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`${res.status} ${res.statusText}${text ? ` — ${text}` : ""}`);
+  }
+  return (await res.json()) as T;
+}
+
+export async function apiPut<T = any>(path: string, body?: any, headers?: Record<string, string>): Promise<T> {
+  const res = await fetch(`${BASE}${path.startsWith('/') ? path : `/${path}`}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      ...(headers ?? {}),
+    },
+    body: body !== undefined ? JSON.stringify(body) : undefined,
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`${res.status} ${res.statusText}${text ? ` — ${text}` : ""}`);
+  }
+  return (await res.json()) as T;
+}
+
+export async function apiPatch<T = any>(path: string, body?: any, headers?: Record<string, string>): Promise<T> {
+  const res = await fetch(`${BASE}${path.startsWith('/') ? path : `/${path}`}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      ...(headers ?? {}),
+    },
+    body: body !== undefined ? JSON.stringify(body) : undefined,
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`${res.status} ${res.statusText}${text ? ` — ${text}` : ""}`);
+  }
+  return (await res.json()) as T;
+}
+
+export async function apiDelete<T = any>(path: string, headers?: Record<string, string>): Promise<T> {
+  const res = await fetch(`${BASE}${path.startsWith('/') ? path : `/${path}`}`, {
+    method: "DELETE",
+    headers: {
+      Accept: "application/json",
+      ...(headers ?? {}),
+    },
   });
   if (!res.ok) {
     const text = await res.text().catch(() => "");

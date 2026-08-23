@@ -14,8 +14,25 @@ export default defineConfig({
   },
   vite: {
     server: {
+      host: true,
+      port: 8080,
+      hmr: {
+        clientPort: 8080,
+      },
       proxy: {
         "/api": "http://localhost:8000",
+        "/vault/persons": "http://localhost:8000",
+        "/vault/brief": "http://localhost:8000",
+        "^/vault/\\d+/(ingest|brief|query|tasks|freshness)": {
+          target: "http://localhost:8000",
+        },
+        "/troubleshooting": "http://localhost:8000",
+        "/call-sessions": "http://localhost:8000",
+        "/voice": "http://localhost:8000",
+        "/whatsapp": "http://localhost:8000",
+        "^/x402/": {
+          target: "http://localhost:8000",
+        },
       },
     },
   },

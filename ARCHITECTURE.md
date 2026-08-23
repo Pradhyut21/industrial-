@@ -203,3 +203,25 @@ export CELERY_BROKER_URL=redis://localhost:6379/1
 python run.py
 ```
 *The database layer (`backend/db_engine.py`) and vector store (`backend/vector_store.py`) automatically route queries to the enterprise cluster without any code modifications.*
+
+---
+
+## 5. Blockchain Integration & Architectural Restraint (Algorand & x402)
+
+DeadMind applies a strict architectural test to all blockchain integrations: **is the capability meaningfully worse, less trustworthy, or less provable without a decentralized ledger?**
+
+```mermaid
+flowchart TD
+    subgraph Genuine["✅ Genuine Algorand Use Cases"]
+        U1["x402 Autonomous Machine Payments: Sub-cent instant USDC settlement between AI agents and vault resources."]
+        U2["Cryptographic Brief Proofs: SHA-256 content hashes anchored in zero-ALGO transaction notes for tamper detection."]
+        U3["Verifier Accrual Rewards: Automated 30% micropayment shares sent to human peer auditors."]
+    end
+
+    subgraph Restraint["❌ Deliberately Rejected (Kept Off-Chain)"]
+        R1["RBAC / Access Grants: Needs microsecond latency on application server; off-chain enforcement is correct."]
+        R2["Voice / WhatsApp Call Logs: Ephemeral communication records; database timestamps are appropriate."]
+        R3["Task Schedules & Freshness Decay: Internal UI and scheduling coordination states."]
+        R4["Raw Ingestion Documents: Vector store & database belong off-chain; only verification events are anchored."]
+    end
+```

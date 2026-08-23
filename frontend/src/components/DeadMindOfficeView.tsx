@@ -1,5 +1,5 @@
 /**
- * DeadMindOfficeView — Full-Screen DeadMind Industrial Office Simulation
+ * DeadMindOfficeView â€” Full-Screen DeadMind Industrial Office Simulation
  *
  * Implements:
  * 1. Full Pixi.js Canvas rendering with authentic tileset maps, isometric desks, and character sprites
@@ -52,7 +52,7 @@ const API =
     ? `http://${window.location.hostname}:8000`
     : "");
 
-// Ã¢â€â‚¬Ã¢â€â‚¬ Department / Team Pods Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+// ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ Department / Team Pods ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
 export interface TeamPod {
   id: 'testing' | 'operations' | 'engineering';
   name: string;
@@ -478,7 +478,7 @@ export function DeadMindOfficeView() {
     {
       id: 'init-1',
       sender: 'bot',
-      text: "👋 Welcome to DeadMind Plant Operations! I am your AI Onboarding & Plant Mentor.\n\nWhether you need the live status and active work of any engineer or emergency boiler SOPs, ask me anything!",
+      text: "ðŸ‘‹ Welcome to DeadMind Plant Operations! I am your AI Onboarding & Plant Mentor.\n\nWhether you need the live status and active work of any engineer or emergency boiler SOPs, ask me anything!",
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       citations: ['DeadMind_Onboarding_Handbook_2026'],
     },
@@ -502,13 +502,13 @@ export function DeadMindOfficeView() {
     if (matchedAgent) {
       const podId = (matchedAgent as any).podId || 'operations';
       const pod = Object.values(TEAM_PODS).find((p) => p.id === podId);
-      const reply = `👷 **Personnel Profile & Live Status: ${matchedAgent.name}**\n\n` +
-        `• **Role / Title:** ${matchedAgent.description}\n` +
-        `• **Assigned Pod:** ${pod?.name || 'Operations'} (${pod?.badge || 'PLANT'})\n` +
-        `• **Current Live Action:** ${matchedAgent.action || 'Monitoring plant telemetry'}\n` +
-        `• **Active Project:** ${matchedAgent.project} — ${matchedAgent.progress || 90}% Complete\n` +
-        `• **Continuity Knowledge:** Preserved ${(matchedAgent as any).preservedDocs || 32}+ digitized procedures in DeadMind Vault.\n` +
-        `• **Live Shift Pose:** Seated at Unit Station | Telemetry nominal at 60Hz.`;
+      const reply = `ðŸ‘· **Personnel Profile & Live Status: ${matchedAgent.name}**\n\n` +
+        `â€¢ **Role / Title:** ${matchedAgent.description}\n` +
+        `â€¢ **Assigned Pod:** ${pod?.name || 'Operations'} (${pod?.badge || 'PLANT'})\n` +
+        `â€¢ **Current Live Action:** ${matchedAgent.action || 'Monitoring plant telemetry'}\n` +
+        `â€¢ **Active Project:** ${matchedAgent.project} â€” ${matchedAgent.progress || 90}% Complete\n` +
+        `â€¢ **Continuity Knowledge:** Preserved ${(matchedAgent as any).preservedDocs || 32}+ digitized procedures in DeadMind Vault.\n` +
+        `â€¢ **Live Shift Pose:** Seated at Unit Station | Telemetry nominal at 60Hz.`;
       return {
         reply,
         citations: [`Personnel_Record_${matchedAgent.name.replace(/\s+/g, '_')}.pdf`, 'Shift_Roster_2026', pod?.project.code || 'Vault_SOP']
@@ -527,16 +527,16 @@ export function DeadMindOfficeView() {
       q.includes('all') ||
       q.includes('list')
     ) {
-      let reply = `📋 **Live Personnel Status & Active Tasks (All 10 Engineers):**\n\n`;
+      let reply = `ðŸ“‹ **Live Personnel Status & Active Tasks (All 10 Engineers):**\n\n`;
       CANONICAL_OFFICE_AGENTS.forEach((a, i) => {
         const podId = (a as any).podId || 'operations';
         const pod = Object.values(TEAM_PODS).find((p) => p.id === podId);
-        const icon = podId === 'testing' ? '🔴' : podId === 'operations' ? '🟡' : '🟣';
+        const icon = podId === 'testing' ? 'ðŸ”´' : podId === 'operations' ? 'ðŸŸ¡' : 'ðŸŸ£';
         reply += `${i + 1}. ${icon} **${a.name}** [${pod?.badge || 'PLANT'}]:\n`;
-        reply += `   ↳ *Live Action:* ${a.action || 'Monitoring plant telemetry'}\n`;
-        reply += `   ↳ *Project:* ${a.project} (${a.progress || 90}%)\n\n`;
+        reply += `   â†³ *Live Action:* ${a.action || 'Monitoring plant telemetry'}\n`;
+        reply += `   â†³ *Project:* ${a.project} (${a.progress || 90}%)\n\n`;
       });
-      reply += `💡 *Tip: Click on any engineer's desk on the office canvas to view their full pixel portrait, step-by-step project stages, and AI chat terminal.*`;
+      reply += `ðŸ’¡ *Tip: Click on any engineer's desk on the office canvas to view their full pixel portrait, step-by-step project stages, and AI chat terminal.*`;
       return {
         reply,
         citations: ['Live_Plant_Operations_Roster_2026.pdf', 'Continuity_Vault_Manifest']
@@ -602,13 +602,13 @@ export function DeadMindOfficeView() {
         if (data.citations) citations = data.citations.map((c: any) => c.title || c.filename || 'Vault SOP');
       } else {
         if (query.toLowerCase().includes('pod') || query.toLowerCase().includes('intern')) {
-          reply = `🎓 **Plant Pod Overview for Interns:**\n\n1. 🔴 **Testing & QA Pod (Alex Mercer - Lead):** Manages automated SOP verification (PRJ-TEST-09) and tests zero-span positioners.\n2. 🟡 **Plant Operations & SRE Pod (Rajan Sharma - Senior Lead):** Preserves 28 years of institutional boiler start-up and drum level trip tribal knowledge (PRJ-OPS-01).\n3. 🟣 **Core Engineering & Controls (K.V. Ramanathan - Lead):** Supervises 6.6kV switchgear interlocking firmware and SCADA telemetry (PRJ-ENG-04).`;
+          reply = `ðŸŽ“ **Plant Pod Overview for Interns:**\n\n1. ðŸ”´ **Testing & QA Pod (Alex Mercer - Lead):** Manages automated SOP verification (PRJ-TEST-09) and tests zero-span positioners.\n2. ðŸŸ¡ **Plant Operations & SRE Pod (Rajan Sharma - Senior Lead):** Preserves 28 years of institutional boiler start-up and drum level trip tribal knowledge (PRJ-OPS-01).\n3. ðŸŸ£ **Core Engineering & Controls (K.V. Ramanathan - Lead):** Supervises 6.6kV switchgear interlocking firmware and SCADA telemetry (PRJ-ENG-04).`;
           citations = ['Plant_Org_Hierarchy_2026.pdf', 'Pod_Clearance_Matrix'];
         } else if (query.toLowerCase().includes('boiler') || query.toLowerCase().includes('bypass')) {
-          reply = `⚙️  **Boiler Emergency Startup Protocol (SOP-BLR-04):**\n\n1. Verify drum level transmitter differential pressure within ±15mm.\n2. Engage secondary superheater temperature spike bypass before ramping firing rate past 45%.\n3. Continuous purge cycle must maintain 5 volume air changes prior to ignition.\n\n*Source: Rajan Sharma (28 Years Preserved Tribal Knowledge)*`;
+          reply = `âš™ï¸  **Boiler Emergency Startup Protocol (SOP-BLR-04):**\n\n1. Verify drum level transmitter differential pressure within Â±15mm.\n2. Engage secondary superheater temperature spike bypass before ramping firing rate past 45%.\n3. Continuous purge cycle must maintain 5 volume air changes prior to ignition.\n\n*Source: Rajan Sharma (28 Years Preserved Tribal Knowledge)*`;
           citations = ['Boiler_SOP_BLR_04.pdf', 'Drum_Level_Recovery_Runbook'];
         } else {
-          reply = `🤖 **DeadMind AI Guidance:**\n\nFor "${query}": Please review the active procedures preserved in the Continuity Vault. You can click on any engineer's desk on the office floor to inspect their specific project stages or dispatch a cross-pod briefing.`;
+          reply = `ðŸ¤– **DeadMind AI Guidance:**\n\nFor "${query}": Please review the active procedures preserved in the Continuity Vault. You can click on any engineer's desk on the office floor to inspect their specific project stages or dispatch a cross-pod briefing.`;
           citations = ['DeadMind_Standard_Operating_Handbook_v2'];
         }
       }
@@ -640,7 +640,7 @@ export function DeadMindOfficeView() {
 
   return (
     <div className="deadmind-office-root deadmind-theme fixed inset-0 z-50 w-screen h-screen bg-[#14121a] text-[#ffffff] font-mono overflow-hidden flex flex-col select-none">
-      {/* ── Top Modern Industrial HUD Bar ──────────────────────────────────── */}
+      {/* â”€â”€ Top Modern Industrial HUD Bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="h-14 bg-[#14121a] border-b border-[#2d2838] px-4 flex items-center justify-between z-20 shadow-2xl shrink-0">
         <div className="flex items-center gap-3 shrink-0">
           {/* Close / Return Button */}
@@ -752,7 +752,7 @@ export function DeadMindOfficeView() {
         </div>
       </div>
 
-      {/* ── Main Viewport: Canvas Office Floor ─────────────────────────────── */}
+      {/* â”€â”€ Main Viewport: Canvas Office Floor â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="relative flex-1 w-full h-full bg-[#18161d] overflow-hidden">
         <OfficeFloor />
 
@@ -799,14 +799,14 @@ export function DeadMindOfficeView() {
           </div>
         )}
 
-        {/* Ã¢â€â‚¬Ã¢â€â‚¬ Floating AI Onboarding & Intern Assistant Chatbot Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */}
+        {/* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ Floating AI Onboarding & Intern Assistant Chatbot ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */}
         {showAssistantBot && (
           <div className="absolute left-4 bottom-4 w-96 max-h-[540px] h-[500px] bg-[#141218]/95 backdrop-blur-md border-2 border-[#52b788] shadow-2xl z-30 flex flex-col p-4 animate-in slide-in-from-bottom-5 duration-200">
             {/* Header */}
             <div className="border-b border-[#2d2838] pb-2.5 mb-2.5 flex items-center justify-between shrink-0">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-10 bg-[#18161d] border border-[#52b788] flex items-end justify-center overflow-hidden">
-                  <SpritePortrait character="michael" scale={1.2} />
+                  <SpritePortrait character="superintendent" scale={1.2} />
                 </div>
                 <div>
                   <div className="text-xs font-bold text-[#ffe066] uppercase">
@@ -839,7 +839,7 @@ export function DeadMindOfficeView() {
                     : 'bg-[#1e1c24] text-[#cfc7d9] border-[#383344] hover:bg-[#282430]'
                 }`}
               >
-                🎓 Intern Guide
+                ðŸŽ“ Intern Guide
               </button>
               <button
                 type="button"
@@ -850,7 +850,7 @@ export function DeadMindOfficeView() {
                     : 'bg-[#1e1c24] text-[#cfc7d9] border-[#383344] hover:bg-[#282430]'
                 }`}
               >
-                👷 Operator SOP
+                ðŸ‘· Operator SOP
               </button>
               <button
                 type="button"
@@ -861,7 +861,7 @@ export function DeadMindOfficeView() {
                     : 'bg-[#1e1c24] text-[#cfc7d9] border-[#383344] hover:bg-[#282430]'
                 }`}
               >
-                🛡️ Safety Rules
+                ðŸ›¡ï¸Â Safety Rules
               </button>
             </div>
 
@@ -872,42 +872,42 @@ export function DeadMindOfficeView() {
                 onClick={() => handleSendAssistant("What is the live status and current work of all employees?")}
                 className="px-2.5 py-1 bg-[#1e1c24] hover:bg-[#282430] border border-[#ffe066]/70 text-[10px] font-mono text-[#ffe066] shrink-0 cursor-pointer font-bold"
               >
-                👷 All Engineers Status
+                ðŸ‘· All Engineers Status
               </button>
               <button
                 type="button"
                 onClick={() => handleSendAssistant("What is Rajan Sharma working on?")}
                 className="px-2.5 py-1 bg-[#1e1c24] hover:bg-[#282430] border border-[#e3b341]/70 text-[10px] font-mono text-[#ffe066] shrink-0 cursor-pointer"
               >
-                🟡 Rajan (Ops)
+                ðŸŸ¡ Rajan (Ops)
               </button>
               <button
                 type="button"
                 onClick={() => handleSendAssistant("What is Alex Mercer's current task?")}
                 className="px-2.5 py-1 bg-[#1e1c24] hover:bg-[#282430] border border-[#ff7b72]/70 text-[10px] font-mono text-[#ff7b72] shrink-0 cursor-pointer"
               >
-                🔴 Alex (QA)
+                ðŸ”´ Alex (QA)
               </button>
               <button
                 type="button"
                 onClick={() => handleSendAssistant("What is K. V. Ramanathan's status?")}
                 className="px-2.5 py-1 bg-[#1e1c24] hover:bg-[#282430] border border-[#d2a8ff]/70 text-[10px] font-mono text-[#d2a8ff] shrink-0 cursor-pointer"
               >
-                🟣 K.V. (Controls)
+                ðŸŸ£ K.V. (Controls)
               </button>
               <button
                 type="button"
                 onClick={() => handleSendAssistant('Explain the Boiler emergency bypass sequence.')}
                 className="px-2.5 py-1 bg-[#1e1c24] hover:bg-[#282430] border border-[#383344] text-[10px] font-mono text-white shrink-0 cursor-pointer"
               >
-                ⚙️ Boiler SOP
+                âš™ï¸ Boiler SOP
               </button>
               <button
                 type="button"
                 onClick={() => handleSendAssistant('What are the 6.6kV vacuum circuit breaker safety interlocks?')}
                 className="px-2.5 py-1 bg-[#1e1c24] hover:bg-[#282430] border border-[#383344] text-[10px] font-mono text-white shrink-0 cursor-pointer"
               >
-                ⚡ 6.6kV Interlocks
+                âš¡ 6.6kV Interlocks
               </button>
             </div>
 
@@ -932,7 +932,7 @@ export function DeadMindOfficeView() {
                     <div className="whitespace-pre-wrap">{msg.text}</div>
                     {msg.citations && msg.citations.length > 0 && (
                       <div className="mt-2 pt-1 border-t border-[#2d2838] text-[9px] text-[#52b788] font-bold">
-                        📚 Citations: {msg.citations.join(', ')}
+                        ðŸ“š Citations: {msg.citations.join(', ')}
                       </div>
                     )}
                   </div>
@@ -975,7 +975,7 @@ export function DeadMindOfficeView() {
           </div>
         )}
 
-        {/* Ã¢â€â‚¬Ã¢â€â‚¬ Side Roster / Full Employee Dossier & AI Chat Drawer Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */}
+        {/* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ Side Roster / Full Employee Dossier & AI Chat Drawer ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */}
         {showRoster && (
           <div className="absolute right-4 bottom-4 top-4 w-[420px] bg-[#141218]/95 backdrop-blur-md border border-[#383344] shadow-2xl z-20 flex flex-col p-4 overflow-hidden animate-in slide-in-from-right duration-200">
             {/* Top Bar of Drawer */}
@@ -1018,10 +1018,10 @@ export function DeadMindOfficeView() {
                           ? 'border-[#ffe066] bg-[#2b2734] ring-1 ring-[#ffe066] shadow-md'
                           : 'border-[#383344] bg-[#1e1c24] hover:bg-[#282430]'
                       }`}
-                      title={`${a.name} — ${pod?.name || 'Operations'}`}
+                      title={`${a.name} â€”Â ${pod?.name || 'Operations'}`}
                     >
                       <div className="w-8 h-10 overflow-hidden flex items-end justify-center bg-[#18161d]/80 border border-[#2d2838]">
-                        <SpritePortrait character={(a as any).character || 'jim'} scale={1.1} />
+                        <SpritePortrait character={(a as any).character || 'dcs_lead'} scale={1.1} />
                       </div>
                       <span className="text-[10px] font-mono text-[#fdf6e3] max-w-[50px] truncate text-center font-bold">
                         {firstName}
@@ -1075,13 +1075,13 @@ export function DeadMindOfficeView() {
                   </button>
                 </div>
 
-                {/* Ã¢â€â‚¬Ã¢â€â‚¬ TAB 1: EMPLOYEE DOSSIER & PHOTO Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */}
+                {/* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ TAB 1: EMPLOYEE DOSSIER & PHOTO ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */}
                 {activeTab === 'dossier' && (
                   <div className="flex-1 overflow-y-auto space-y-3 pr-1 font-mono text-xs">
                     {/* Header with Pixel Bust Photo */}
                     <div className="p-3.5 bg-[#1e1c24] border border-[#383344] flex items-center gap-3.5">
                       <div className="w-16 h-20 bg-[#18161d] border-2 border-[#ffe066]/70 flex items-end justify-center overflow-hidden shadow-md shrink-0">
-                        <SpritePortrait character={(selectedAgent as any).character || 'jim'} scale={2.2} />
+                        <SpritePortrait character={(selectedAgent as any).character || 'dcs_lead'} scale={2.2} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="font-bold text-sm text-white truncate">{selectedAgent.name}</div>
@@ -1121,7 +1121,7 @@ export function DeadMindOfficeView() {
                     {/* Assigned Project Box */}
                     <div className="p-3 bg-[#1e1c24] border border-[#383344] space-y-2">
                       <div className="text-[10px] uppercase font-bold text-[#ffe066]">
-                        📌 Active Project: {activePodInfo.project.code}
+                        ðŸ“ŒÂ Active Project: {activePodInfo.project.code}
                       </div>
                       <div className="text-xs font-bold text-white">
                         {activePodInfo.project.title}
@@ -1153,7 +1153,7 @@ export function DeadMindOfficeView() {
                   </div>
                 )}
 
-                {/* Ã¢â€â‚¬Ã¢â€â‚¬ TAB 2: PROJECT STAGES Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */}
+                {/* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ TAB 2: PROJECT STAGES ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */}
                 {activeTab === 'stages' && (
                   <div className="flex-1 overflow-y-auto space-y-2.5 pr-1 font-mono text-xs">
                     <div className="text-xs font-bold text-white uppercase flex items-center justify-between border-b border-[#2d2838] pb-1.5">
@@ -1176,7 +1176,7 @@ export function DeadMindOfficeView() {
                           <div className="flex items-center justify-between mb-1">
                             <span className="font-bold text-xs">Stage {st.id}: {st.name}</span>
                             <span className="text-[10px] uppercase font-bold">
-                              {st.status === 'completed' ? '✓ DONE' : st.status === 'in_progress' ? '⚡ ACTIVE' : 'PENDING'}
+                              {st.status === 'completed' ? 'âœ“ DONE' : st.status === 'in_progress' ? 'âš¡ ACTIVE' : 'PENDING'}
                             </span>
                           </div>
                           <p className="text-[11px] text-[#cfc7d9] leading-snug">{st.desc}</p>
@@ -1186,7 +1186,7 @@ export function DeadMindOfficeView() {
                   </div>
                 )}
 
-                {/* Ã¢â€â‚¬Ã¢â€â‚¬ TAB 3: AI CHAT DESK TERMINAL Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */}
+                {/* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ TAB 3: AI CHAT DESK TERMINAL ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */}
                 {activeTab === 'chat' && (
                   <div className="flex-1 flex flex-col min-h-0 font-mono text-xs">
                     {/* Chat Messages */}
@@ -1216,7 +1216,7 @@ export function DeadMindOfficeView() {
                               <div className="whitespace-pre-wrap">{msg.text}</div>
                               {msg.citations && msg.citations.length > 0 && (
                                 <div className="mt-2 pt-1 border-t border-[#2d2838] text-[9px] text-[#4ea8de] font-bold">
-                                  📚 Citations: {msg.citations.join(', ')}
+                                  ðŸ“š Citations: {msg.citations.join(', ')}
                                 </div>
                               )}
                             </div>
@@ -1292,7 +1292,7 @@ export function DeadMindOfficeView() {
                     >
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-10 bg-[#18161d] overflow-hidden flex items-end justify-center border border-[#383344] group-hover:border-[#ffe066]">
-                          <SpritePortrait character={(agent as any).character || 'jim'} scale={1.1} />
+                          <SpritePortrait character={(agent as any).character || 'dcs_lead'} scale={1.1} />
                         </div>
                         <div>
                           <div className="font-bold text-xs text-white group-hover:text-[#ffe066] transition-colors">
@@ -1314,3 +1314,4 @@ export function DeadMindOfficeView() {
     </div>
   );
 }
+

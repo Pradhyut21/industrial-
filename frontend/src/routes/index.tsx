@@ -1,4 +1,4 @@
-﻿import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { api, type VulnNode, type CausalLink, type Counterfactual } from "@/lib/api";
@@ -90,7 +90,7 @@ const PLANT_EMPLOYEES = [
     name: "Rajan Sharma",
     role: "Senior Boiler Lead Specialist",
     pod: "Boiler Operations Pod",
-    avatarChar: "dwight",
+    avatarChar: "boiler_lead" as const,
     knowledgePreserved: 97,
     verifiedSops: 38,
     commitsCount: 142,
@@ -98,10 +98,10 @@ const PLANT_EMPLOYEES = [
       title: "PRJ-OPS-01: Secondary Superheater Pressure Bypass Calibration",
       branch: "feature/boiler-bypass-curve",
       targetAsset: "B-101 (Secondary Superheater)",
-      status: "In Flight Â· Sprint 4",
+      status: "In Flight · Sprint 4",
       description: "Tuning differential pressure trip threshold to prevent thermal shock during rapid cold-start bypass.",
       acceptanceCriteria: [
-        "1. Calibrate thermocouple response curve under 400Â°C.",
+        "1. Calibrate thermocouple response curve under 400°C.",
         "2. Validate against historical thermal incident logs from 2021 turnaround.",
         "3. Preserve step-by-step recovery guide into DeadMind vector store.",
       ],
@@ -109,15 +109,15 @@ const PLANT_EMPLOYEES = [
     meetings: [
       {
         id: "m1",
-        time: "09:00 AM â€“ 09:30 AM",
+        time: "09:00 AM – 09:30 AM",
         title: "Boiler Pod Daily Standup & Telemetry Sync",
-        room: "Control Pod A Â· Screen 2",
+        room: "Control Pod A · Screen 2",
         agenda: "Differential pressure curve checks on Steam Drum B-101 and monsoon temperature baseline tuning.",
         status: "Upcoming",
       },
       {
         id: "m2",
-        time: "02:30 PM â€“ 03:15 PM",
+        time: "02:30 PM – 03:15 PM",
         title: "Shift B Thermal Drift Review & Lab Sign-off",
         room: "Calibration Lab 2",
         agenda: "Reviewing 4-20mA positioner loop tolerances with QA Engineer Alex Mercer.",
@@ -125,7 +125,7 @@ const PLANT_EMPLOYEES = [
       },
       {
         id: "m3",
-        time: "05:00 PM â€“ 05:30 PM",
+        time: "05:00 PM – 05:30 PM",
         title: "Evening Shift Handover & Safety Briefing",
         room: "Unit Operations Deck",
         agenda: "Zero-loss handover sign-off and night-shift thermal monitor delegation.",
@@ -153,7 +153,7 @@ const PLANT_EMPLOYEES = [
         dueDate: "Tomorrow, 12:00 IST",
         credits: 50,
         done: false,
-        notes: "Automated regression assertion on thermocouple response under 400Â°C.",
+        notes: "Automated regression assertion on thermocouple response under 400°C.",
       },
       {
         id: "task-3",
@@ -184,7 +184,7 @@ const PLANT_EMPLOYEES = [
         instructor: "Alex Mercer (QA Lead)",
         sopCode: "SOP-TST-04",
         description: "Automating 500-cycle stress testing on industrial 4-20mA mechanical valve positioners.",
-        transcriptPreview: "Execute pytest tests/test_positioner.py with live Modbus simulator to assert Â±0.05% deadband repeatability...",
+        transcriptPreview: "Execute pytest tests/test_positioner.py with live Modbus simulator to assert ±0.05% deadband repeatability...",
       },
     ],
     benefits: {
@@ -196,7 +196,7 @@ const PLANT_EMPLOYEES = [
     },
     predecessorContinuity: {
       predecessorName: "S. Namboodiri",
-      predecessorRole: "Former Senior Boiler Chief (Retired November 2024 Â· 34 Yrs Exp)",
+      predecessorRole: "Former Senior Boiler Chief (Retired November 2024 · 34 Yrs Exp)",
       handoverDate: "November 2024",
       completedAssets: [
         "14 Baseline Boiler Startup & Cold-Start Curves",
@@ -209,12 +209,12 @@ const PLANT_EMPLOYEES = [
       continuityPlaybook: [
         "1. Check out open branch 'predecessor/s-namboodiri-v204-calibration' to inherit uncommitted sensor curves.",
         "2. Apply S. Namboodiri's 4.05mA offset parameter to the 4-20mA positioner loop.",
-        "3. Execute PyTest thermal regression assertion to verify zero drift under 400Â°C.",
+        "3. Execute PyTest thermal regression assertion to verify zero drift under 400°C.",
         "4. Click 'Submit Work to Plant Manager' to push PR and claim +50 Credit Bounty!",
       ],
       parameters: [
         { param: "Valve V-204 Zero-Span Setting", value: "4.05 mA (Monsoon Back-Pressure Compensated)" },
-        { param: "Max Permissible Steam Dump Delta", value: "Â±12.4 bar/min (Thermal Shock Limit)" },
+        { param: "Max Permissible Steam Dump Delta", value: "±12.4 bar/min (Thermal Shock Limit)" },
         { param: "Fast-Transfer Trip Interlock Delay", value: "< 45 ms (OISD-118 Section 4.2)" },
       ],
     },
@@ -224,7 +224,7 @@ const PLANT_EMPLOYEES = [
     name: "K.V. Ramanathan",
     role: "Controls & Switchgear Lead",
     pod: "Electrical Controls Pod",
-    avatarChar: "stanley",
+    avatarChar: "power_specialist" as const,
     knowledgePreserved: 94,
     verifiedSops: 41,
     commitsCount: 128,
@@ -232,7 +232,7 @@ const PLANT_EMPLOYEES = [
       title: "PRJ-ENG-04: 6.6kV Vacuum Breaker Fast-Transfer Interlock Tuning",
       branch: "feature/6.6kv-bus-transfer",
       targetAsset: "K-301 (6.6kV Bus-Tie Substation)",
-      status: "In Review Â· Sprint 4",
+      status: "In Review · Sprint 4",
       description: "Aligning vacuum circuit breaker bus transfer delay to under 80ms to eliminate arc-flash hazards.",
       acceptanceCriteria: [
         "1. Fast-transfer timing verified via oscilloscope telemetry.",
@@ -243,7 +243,7 @@ const PLANT_EMPLOYEES = [
     meetings: [
       {
         id: "m4",
-        time: "10:00 AM â€“ 10:45 AM",
+        time: "10:00 AM – 10:45 AM",
         title: "6.6kV Substation Arc-Flash Safety Audit",
         room: "Substation Control Room K-3",
         agenda: "Reviewing fast-transfer relay trip timing with Safety Officer Rajan Sharma.",
@@ -283,7 +283,7 @@ const PLANT_EMPLOYEES = [
     },
     predecessorContinuity: {
       predecessorName: "V. Swaminathan",
-      predecessorRole: "Lead Electrical Specialist (Retired March 2025 Â· 32 Yrs Exp)",
+      predecessorRole: "Lead Electrical Specialist (Retired March 2025 · 32 Yrs Exp)",
       handoverDate: "March 2025",
       completedAssets: [
         "6.6kV Switchgear Protective Relay Coordination Schemes",
@@ -309,7 +309,7 @@ const PLANT_EMPLOYEES = [
     name: "Alex Mercer",
     role: "Lead QA & Reliability Engineer",
     pod: "Testing & QA Pod",
-    avatarChar: "jim",
+    avatarChar: "reliability_spec" as const,
     knowledgePreserved: 92,
     verifiedSops: 29,
     commitsCount: 165,
@@ -317,10 +317,10 @@ const PLANT_EMPLOYEES = [
       title: "PRJ-TEST-09: Automated Zero-Span Positioner PyTest Regression",
       branch: "test/positioner-zero-span",
       targetAsset: "B-101 (Valve Positioner Rig)",
-      status: "Active Testing Â· Sprint 4",
+      status: "Active Testing · Sprint 4",
       description: "Automated regression tests asserting zero-drift tolerances on 4-20mA mechanical positioners.",
       acceptanceCriteria: [
-        "1. 500-cycle stress test asserting Â±0.05% deadband repeatability.",
+        "1. 500-cycle stress test asserting ±0.05% deadband repeatability.",
         "2. PyTest assertions for OISD-118 Section 4.2 compliance.",
         "3. Automated CI/CD execution pipeline passing with zero errors.",
       ],
@@ -328,7 +328,7 @@ const PLANT_EMPLOYEES = [
     meetings: [
       {
         id: "m5",
-        time: "11:30 AM â€“ 12:15 PM",
+        time: "11:30 AM – 12:15 PM",
         title: "Automated QA & CI/CD Regression Sweep",
         room: "Reliability Engineering Lab 4",
         agenda: "Hardware fault injection harness verification.",
@@ -384,7 +384,7 @@ const PLANT_EMPLOYEES = [
         "3. Merge into Vault with +50 credit release.",
       ],
       parameters: [
-        { param: "Deadband Tolerance", value: "Â±0.05% Repeatability" },
+        { param: "Deadband Tolerance", value: "±0.05% Repeatability" },
         { param: "Stress Cycles", value: "500 Cycles Continuous" },
       ],
     },
@@ -394,7 +394,7 @@ const PLANT_EMPLOYEES = [
     name: "Vikram Sen",
     role: "Boiler Steam Drum Field Engineer",
     pod: "Boiler Operations Pod",
-    avatarChar: "dwight",
+    avatarChar: "boiler_lead" as const,
     knowledgePreserved: 95,
     verifiedSops: 31,
     commitsCount: 115,
@@ -402,10 +402,10 @@ const PLANT_EMPLOYEES = [
       title: "PRJ-OPS-03: Secondary Boiler Drum Level Thermal Differential Sweep",
       branch: "feature/drum-level-sweep",
       targetAsset: "B-101 (Boiler Steam Drum)",
-      status: "In Flight Â· Sprint 4",
+      status: "In Flight · Sprint 4",
       description: "Asserting water-column level transmitter calibration under variable 250 bar pressure.",
       acceptanceCriteria: [
-        "1. Verify differential pressure transmitter zero-drift under 400Â°C.",
+        "1. Verify differential pressure transmitter zero-drift under 400°C.",
         "2. Ensure water column blowdown sequence conforms to NFPA-85 standards.",
         "3. Synchronize live transmitter readings with DeadMind Digital Twin telemetry.",
       ],
@@ -413,15 +413,15 @@ const PLANT_EMPLOYEES = [
     meetings: [
       {
         id: "m-vik-1",
-        time: "09:00 AM â€“ 09:30 AM",
+        time: "09:00 AM – 09:30 AM",
         title: "Boiler Pod Daily Standup & Telemetry Sync",
-        room: "Control Pod A Â· Screen 2",
+        room: "Control Pod A · Screen 2",
         agenda: "Differential pressure curve checks on Steam Drum B-101 with Rajan Sharma.",
         status: "Upcoming",
       },
       {
         id: "m-vik-2",
-        time: "03:00 PM â€“ 03:45 PM",
+        time: "03:00 PM – 03:45 PM",
         title: "Steam Drum Transducer Calibration Walkthrough",
         room: "Thermal Lab 3",
         agenda: "Field verification of differential sensor deadband.",
@@ -460,7 +460,7 @@ const PLANT_EMPLOYEES = [
       knowledgeBounty: "₹36,000 Earned This Quarter (Preserved 31 SOPs).",
     },
     predecessorContinuity: {
-      predecessorName: "K. Narayanan (Former Steam Drum Specialist Â· Retired 2024)",
+      predecessorName: "K. Narayanan (Former Steam Drum Specialist · Retired 2024)",
       predecessorRole: "Senior Steam Drum Specialist (29 Yrs Exp)",
       handoverDate: "October 2024",
       completedAssets: [
@@ -477,8 +477,8 @@ const PLANT_EMPLOYEES = [
         "3. Submit Pull Request for +65 Credit release.",
       ],
       parameters: [
-        { param: "Transmitter Span Offset", value: "Â±0.15% FS Limit" },
-        { param: "Max Permissible Level Surge", value: "Â±50 mm Delta" },
+        { param: "Transmitter Span Offset", value: "±0.15% FS Limit" },
+        { param: "Max Permissible Level Surge", value: "±50 mm Delta" },
       ],
     },
   },
@@ -487,7 +487,7 @@ const PLANT_EMPLOYEES = [
     name: "Sanjay Patel",
     role: "Substation Protection Relay Lead",
     pod: "Electrical Controls Pod",
-    avatarChar: "stanley",
+    avatarChar: "combustion_lead" as const,
     knowledgePreserved: 96,
     verifiedSops: 44,
     commitsCount: 150,
@@ -495,7 +495,7 @@ const PLANT_EMPLOYEES = [
       title: "PRJ-ENG-06: 6.6kV Bus-Tie Differential Protective Relay Coordination",
       branch: "feature/bus-tie-protection",
       targetAsset: "K-301 (6.6kV Substation)",
-      status: "In Flight Â· Sprint 4",
+      status: "In Flight · Sprint 4",
       description: "Configuring numerical relay trip curves for instantaneous overcurrent fault clearing under 40ms.",
       acceptanceCriteria: [
         "1. Numerical relay time-current characteristic curves verified.",
@@ -506,7 +506,7 @@ const PLANT_EMPLOYEES = [
     meetings: [
       {
         id: "m-st-1",
-        time: "10:00 AM â€“ 10:45 AM",
+        time: "10:00 AM – 10:45 AM",
         title: "6.6kV Substation Arc-Flash Safety Audit",
         room: "Substation Control Room K-3",
         agenda: "Reviewing numerical relay trip timing with K.V. Ramanathan.",
@@ -545,7 +545,7 @@ const PLANT_EMPLOYEES = [
       knowledgeBounty: "₹45,000 Earned This Quarter (Preserved 44 SOPs).",
     },
     predecessorContinuity: {
-      predecessorName: "V. Swaminathan (Lead Electrical Specialist Â· Retired 2025)",
+      predecessorName: "V. Swaminathan (Lead Electrical Specialist · Retired 2025)",
       predecessorRole: "Lead Electrical Specialist (32 Yrs Exp)",
       handoverDate: "March 2025",
       completedAssets: [
@@ -571,7 +571,7 @@ const PLANT_EMPLOYEES = [
     name: "Dev Sen",
     role: "Automated CI/CD & Sensor Rig Lead",
     pod: "Testing & QA Pod",
-    avatarChar: "jim",
+    avatarChar: "dcs_lead" as const,
     knowledgePreserved: 93,
     verifiedSops: 33,
     commitsCount: 172,
@@ -579,7 +579,7 @@ const PLANT_EMPLOYEES = [
       title: "PRJ-TEST-12: SCADA Modbus Port 502 Automated Regression Daemon",
       branch: "feature/modbus-ci-daemon",
       targetAsset: "B-101 (Valve Positioner Rig)",
-      status: "In Flight Â· Sprint 4",
+      status: "In Flight · Sprint 4",
       description: "Continuous background daemon asserting 0-latency register polling across all 14 equipment nodes.",
       acceptanceCriteria: [
         "1. Sub-10ms Modbus polling response rate asserted across all registers.",
@@ -590,7 +590,7 @@ const PLANT_EMPLOYEES = [
     meetings: [
       {
         id: "m-jim-1",
-        time: "11:30 AM â€“ 12:15 PM",
+        time: "11:30 AM – 12:15 PM",
         title: "Automated QA & CI/CD Regression Sweep",
         room: "Reliability Lab 4",
         agenda: "Deploying automated Modbus test daemon with Alex Mercer.",
@@ -629,7 +629,7 @@ const PLANT_EMPLOYEES = [
       knowledgeBounty: "₹35,000 Earned This Quarter (Preserved 33 SOPs).",
     },
     predecessorContinuity: {
-      predecessorName: "David Wallace (Senior QA Principal Â· Reassigned 2025)",
+      predecessorName: "David Wallace (Senior QA Principal · Reassigned 2025)",
       predecessorRole: "Senior QA Principal",
       handoverDate: "January 2025",
       completedAssets: [
@@ -655,7 +655,7 @@ const PLANT_EMPLOYEES = [
     name: "Ananya Deshmukh",
     role: "Chief Compliance & Statutory Administrator",
     pod: "Compliance & Safety Pod",
-    avatarChar: "angela",
+    avatarChar: "compliance_officer" as const,
     knowledgePreserved: 99,
     verifiedSops: 48,
     commitsCount: 185,
@@ -663,7 +663,7 @@ const PLANT_EMPLOYEES = [
       title: "PRJ-COMP-01: OISD-118 & NFPA-85 Regulatory Clearance Verification",
       branch: "main/statutory-compliance",
       targetAsset: "Plant-Wide Statutory Architecture",
-      status: "In Review Â· Sprint 4",
+      status: "In Review · Sprint 4",
       description: "Ensuring 100% statutory compliance across all 58 plant runbooks and safety interlocks.",
       acceptanceCriteria: [
         "1. OISD-118 Section 4.2 emergency trip standards certified.",
@@ -674,7 +674,7 @@ const PLANT_EMPLOYEES = [
     meetings: [
       {
         id: "m-ang-1",
-        time: "02:00 PM â€“ 02:45 PM",
+        time: "02:00 PM – 02:45 PM",
         title: "Statutory Compliance & Audit Review",
         room: "Compliance Boardroom A",
         agenda: "Reviewing OISD-118 compliance ledger with Safety Officer Rajan Sharma.",
@@ -740,7 +740,7 @@ const PLANT_EMPLOYEES = [
     name: "Marcus Vance",
     role: "Principal Plant Operations Strategist",
     pod: "Executive Strategy Pod",
-    avatarChar: "michael",
+    avatarChar: "superintendent" as const,
     knowledgePreserved: 98,
     verifiedSops: 34,
     commitsCount: 190,
@@ -759,9 +759,9 @@ const PLANT_EMPLOYEES = [
     meetings: [
       {
         id: "m6",
-        time: "04:00 PM â€“ 04:45 PM",
+        time: "04:00 PM – 04:45 PM",
         title: "Executive Plant Board & CFO ROI Briefing",
-        room: "Boardroom 1 Â· Executive Twin Console",
+        room: "Boardroom 1 · Executive Twin Console",
         agenda: "Presentation on zero knowledge loss SLA and 10.86 Cr downtime mitigation.",
         status: "Upcoming",
       },

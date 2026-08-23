@@ -11,9 +11,10 @@ const ROUTES: Array<{
   icon: typeof Activity;
 }> = [
   { label: "Plant Map", hint: "CFO · Telemetry & financial risk twin", to: "/", icon: Activity },
-  { label: "Office Simulation", hint: "Multi-Agent · Pods simulation & character chat", to: "/office", icon: MessageSquare },
-  { label: "Project & Operations Hub", hint: "CollabFlow · 10-phase pipeline & succession", to: "/audit", icon: ShieldCheck },
-  { label: "AI Standup & Dev Hub", hint: "CollabFlow · Meeting parser & sprint board", to: "/vault", icon: Archive },
+  { label: "Operations Floor", hint: "Simulation · 2D multi-agent control room", to: "/office", icon: MessageSquare },
+  { label: "Field Copilot", hint: "Field Tech · Multi-expert consultation & citations", to: "/copilot", icon: MessageSquare },
+  { label: "SOP Audit & Freshness", hint: "Ops Lead · Shadow SOP audit & decay matrix", to: "/audit", icon: ShieldCheck },
+  { label: "Continuity Vault", hint: "Vault Custodian · Cognitive capsules & handoff briefs", to: "/vault", icon: Archive },
 ];
 
 export function CommandPalette() {

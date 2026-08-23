@@ -35,6 +35,8 @@ frontend/.next/
 # Databases & local state
 *.db
 *.db-journal
+*.db-shm
+*.db-wal
 *.db.bak
 *.sqlite
 *.sqlite3

@@ -48,7 +48,7 @@ export interface HireManifest {
   description?: string;
   /** The standing goal/mission text pre-filled into the goal field. */
   goal?: string;
-  /** Office cast sprite id (e.g. 'pam'); unknown values fall back to default. */
+  /** Office cast sprite id (e.g. 'asset_health'); unknown values fall back to default. */
   character?: string;
   /** Accent color name (e.g. 'mint'); unknown values fall back to default. */
   accent?: string;

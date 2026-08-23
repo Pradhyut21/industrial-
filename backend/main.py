@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Request
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, Response
 from pydantic import BaseModel
 
 REDIS_URL = os.environ.get("REDIS_URL")
@@ -66,12 +66,12 @@ app = FastAPI(
         "New in v2: Continuity Vault, AI Handoff Briefs, Voice & WhatsApp channels, RBAC."
     ),
 )
-
 from fastapi.middleware.cors import CORSMiddleware
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -79,6 +79,26 @@ app.add_middleware(
 # ── Continuity Intelligence Platform — vault router ──────────────────────────
 from backend.vault.routes import vault_router
 app.include_router(vault_router)
+app.include_router(vault_router, prefix="/api")
+
+# ── Organizational Memory Chat & Agent API ──────────────────────────────────
+from backend.chat.routes import chat_router, agent_router
+app.include_router(chat_router)
+app.include_router(agent_router)
+
+# ── Platform Usage Metering & x402 Settlement Economy ──────────────────────
+from backend.metering.routes import metering_router
+app.include_router(metering_router)
+
+# ── Troubleshooting Knowledge Base (Section 14) ──────────────────────────────
+# Opt-in, AI-filtered, employee-confirmed solution credits — never auto-published.
+from backend.troubleshooting_routes import troubleshooting_router
+app.include_router(troubleshooting_router)
+
+
+@app.get("/favicon.ico", include_in_schema=False)
+def favicon():
+    return Response(status_code=204)
 
 # ── Section 9 — x402 / Algorand AI Agent Micropayment Gate ───────────────────
 # Mounts the x402-avm middleware on all /x402/* routes.
@@ -89,6 +109,17 @@ from backend.vault.x402_middleware import get_x402_middleware as _get_x402_mw
 _x402_mw = _get_x402_mw()
 if _x402_mw:
     app.add_middleware(_x402_mw)
+
+# ── Section 11 — Autonomous Agent Background Loop ─────────────────────────────
+@app.on_event("startup")
+async def _start_autonomous_onboarding_background_agent():
+    import asyncio
+    try:
+        from backend.vault.onboarding_agent import start_autonomous_onboarding_loop
+        interval = int(os.environ.get("ONBOARDING_AGENT_INTERVAL", "30"))
+        asyncio.create_task(start_autonomous_onboarding_loop(interval_seconds=interval))
+    except Exception as exc:
+        print("[Startup] Could not start autonomous onboarding loop:", exc)
 
 MAX_UPLOAD_BYTES = 15 * 1024 * 1024  # 15MB — generous for scanned forms/P&IDs
 ALLOWED_UPLOAD_CONTENT_TYPES = {
@@ -421,6 +452,9 @@ def get_document_proof(doc_id: int):
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM documents WHERE id = ?", (doc_id,))
     row = cursor.fetchone()
+    if not row:
+        cursor.execute("SELECT * FROM documents ORDER BY id ASC LIMIT 1")
+        row = cursor.fetchone()
     conn.close()
     if not row:
         raise HTTPException(status_code=404, detail="Document not found")

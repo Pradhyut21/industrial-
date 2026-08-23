@@ -299,6 +299,7 @@ def init_db():
         verification_status TEXT DEFAULT 'unverified',  -- 'unverified', 'verified'
         verified_by TEXT,
         verified_at TEXT,
+        verifier_algorand_address TEXT,  -- Section 9.6: wallet address for payout
         FOREIGN KEY (person_id) REFERENCES persons(id)
     )
     """)
@@ -360,6 +361,329 @@ def init_db():
         tag TEXT
     )
     """)
+
+    # 24. Agent Payments (Section 9.3 — x402 Algorand agent micropayment log)
+    # Records every successful x402 machine-agent payment for vault access.
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS agent_payments (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        person_id INTEGER,           -- vault being accessed
+        resource_url TEXT,           -- e.g. /x402/vault/1/brief
+        payment_txn_id TEXT,         -- Algorand transaction ID (mainnet or testnet)
+        amount_microalgo INTEGER,    -- amount paid in microALGO
+        payer_address TEXT,          -- Algorand wallet address of the agent
+        network TEXT DEFAULT 'testnet',
+        paid_at TEXT,
+        facilitator_response TEXT,   -- raw JSON from GoPlausible facilitator
+        FOREIGN KEY (person_id) REFERENCES persons(id)
+    )
+    """)
+
+    # 25. Verifier Payouts (Section 9.6 — peer reviewer reward on-chain)
+    # Records every payout to a brief verifier's Algorand wallet.
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS verifier_payouts (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        person_id INTEGER,           -- person whose brief was verified
+        verifier_name TEXT,
+        verifier_wallet_address TEXT,
+        txn_id TEXT,                 -- Algorand transaction ID
+        amount_microalgo INTEGER,
+        network TEXT DEFAULT 'testnet',
+        paid_at TEXT,
+        FOREIGN KEY (person_id) REFERENCES persons(id)
+    )
+    """)
+
+    # 26. Conversations (General-Purpose Organizational Memory Chat Threads)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS conversations (
+        id TEXT PRIMARY KEY,
+        user_id TEXT DEFAULT 'default_user',
+        role TEXT DEFAULT 'Field Technician',
+        title TEXT NOT NULL,
+        summary TEXT,
+        selected_experts TEXT, -- JSON array e.g. ["Rajan Sharma"] or ["auto"]
+        relevant_entities TEXT, -- JSON array e.g. ["P-302", "B-101"]
+        is_favorite INTEGER DEFAULT 0,
+        tag TEXT DEFAULT 'General',
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+    )
+    """)
+
+    # 27. Chat Messages (Multi-turn conversational messages with rich evidence & consensus)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS chat_messages (
+        id TEXT PRIMARY KEY,
+        conversation_id TEXT NOT NULL,
+        role TEXT NOT NULL, -- 'user', 'assistant', 'system'
+        content TEXT NOT NULL,
+        structured_data_json TEXT, -- Full structured JSON
+        timestamp TEXT NOT NULL,
+        FOREIGN KEY (conversation_id) REFERENCES conversations(id) ON DELETE CASCADE
+    )
+    """)
+
+    # ── USAGE ACCOUNTING & x402 FINANCIAL SETTLEMENT DOMAINS ───────────────────
+
+    # 28. Usage Accounts (Company Allowance & Employee Allocations)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS usage_accounts (
+        id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL UNIQUE,
+        company_id TEXT DEFAULT 'INDO-POWER-PLANT-01',
+        allocated_credits INTEGER DEFAULT 1000,
+        used_credits INTEGER DEFAULT 0,
+        balance_credits INTEGER DEFAULT 1000,
+        overage_count INTEGER DEFAULT 0,
+        total_overage_microusdc INTEGER DEFAULT 0,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+    )
+    """)
+
+    # 29. Usage Allocations (Periodic Allowance Grants from Company Pool)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS usage_allocations (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        account_id TEXT NOT NULL,
+        period_start TEXT NOT NULL,
+        period_end TEXT NOT NULL,
+        allocated_credits INTEGER NOT NULL,
+        source TEXT DEFAULT 'Company Funded Pool',
+        granted_at TEXT NOT NULL,
+        FOREIGN KEY (account_id) REFERENCES usage_accounts(id)
+    )
+    """)
+
+    # 30. Usage Events (Continuous Granular Metering Log)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS usage_events (
+        id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        conversation_id TEXT,
+        service_type TEXT NOT NULL, -- 'chat', 'rag_retrieval', 'expert_consultation', 'consensus_synthesis', 'uncertainty_analysis', 'agent_query'
+        query_tokens INTEGER DEFAULT 0,
+        retrieval_docs INTEGER DEFAULT 0,
+        experts_consulted INTEGER DEFAULT 0,
+        consensus_calculated INTEGER DEFAULT 0,
+        uncertainty_calculated INTEGER DEFAULT 0,
+        credits_consumed INTEGER NOT NULL,
+        balance_after INTEGER NOT NULL,
+        execution_time_ms REAL DEFAULT 0,
+        timestamp TEXT NOT NULL
+    )
+    """)
+
+    # 31. Usage Ledger (Double-Entry Balance Audit Log)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS usage_ledger (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        account_id TEXT NOT NULL,
+        delta_credits INTEGER NOT NULL,
+        balance_after INTEGER NOT NULL,
+        entry_type TEXT NOT NULL, -- 'allocation', 'consumption', 'x402_topup', 'adjustment'
+        description TEXT NOT NULL,
+        reference_id TEXT,
+        timestamp TEXT NOT NULL,
+        FOREIGN KEY (account_id) REFERENCES usage_accounts(id)
+    )
+    """)
+
+    # 32. Payment Requests (x402 Micropayment Challenges)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS payment_requests (
+        id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        resource_url TEXT NOT NULL,
+        required_credits INTEGER NOT NULL,
+        overage_credits INTEGER NOT NULL,
+        price_microusdc INTEGER NOT NULL,
+        challenge_nonce TEXT NOT NULL,
+        status TEXT DEFAULT 'pending', -- 'pending', 'settled', 'expired'
+        created_at TEXT NOT NULL,
+        settled_at TEXT
+    )
+    """)
+
+    # 33. Payment Transactions (On-chain verified settlements)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS payment_transactions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        payment_request_id TEXT,
+        txn_id TEXT NOT NULL UNIQUE,
+        payer_address TEXT NOT NULL,
+        amount_microusdc INTEGER NOT NULL,
+        network TEXT DEFAULT 'testnet',
+        asset_id INTEGER DEFAULT 10458941,
+        settled_at TEXT NOT NULL,
+        facilitator_response TEXT
+    )
+    """)
+
+    # 34. x402 Settlements (Platform-wide Settlement Audit Log)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS x402_settlements (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id TEXT NOT NULL,
+        service_tier TEXT NOT NULL,
+        credits_added INTEGER NOT NULL,
+        amount_microusdc INTEGER NOT NULL,
+        amount_usdc_formatted TEXT NOT NULL,
+        txn_id TEXT NOT NULL,
+        payer_address TEXT NOT NULL,
+        lora_explorer_url TEXT NOT NULL,
+        settled_at TEXT NOT NULL
+    )
+    """)
+
+    # 35. Company Pools (Enterprise-level credit pool & allowance governance)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS company_pools (
+        id TEXT PRIMARY KEY,
+        company_id TEXT NOT NULL UNIQUE,
+        company_name TEXT NOT NULL,
+        total_pool_credits INTEGER DEFAULT 100000,
+        allocated_credits INTEGER DEFAULT 0,
+        consumed_credits INTEGER DEFAULT 0,
+        available_unallocated_credits INTEGER DEFAULT 100000,
+        reconciled_returned_credits INTEGER DEFAULT 0,
+        current_period_name TEXT DEFAULT 'August 2026',
+        period_start TEXT NOT NULL,
+        period_end TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+    )
+    """)
+
+    # 36. Period Reconciliations (Unused credits return to company pool)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS period_reconciliations (
+        id TEXT PRIMARY KEY,
+        company_id TEXT NOT NULL,
+        period_name TEXT NOT NULL,
+        period_start TEXT NOT NULL,
+        period_end TEXT NOT NULL,
+        total_allocated INTEGER NOT NULL,
+        total_consumed INTEGER NOT NULL,
+        total_unused_returned INTEGER NOT NULL,
+        total_overage_events INTEGER NOT NULL,
+        total_x402_settlement_microusdc INTEGER NOT NULL,
+        reconciled_by TEXT DEFAULT 'Plant Operations Admin',
+        reconciled_at TEXT NOT NULL,
+        status TEXT DEFAULT 'CLOSED'
+    )
+    """)
+
+    # 37. Reimbursement Policies (Corporate governance rules for employee overage repayment)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS reimbursement_policies (
+        id TEXT PRIMARY KEY,
+        company_id TEXT NOT NULL UNIQUE,
+        max_reimbursement_per_employee_usdc REAL DEFAULT 100.0,
+        max_daily_overage_usdc REAL DEFAULT 20.0,
+        max_monthly_overage_usdc REAL DEFAULT 150.0,
+        auto_approval_threshold_usdc REAL DEFAULT 5.0,
+        require_receipt BOOLEAN DEFAULT 0,
+        allowed_services TEXT DEFAULT 'all',
+        is_active BOOLEAN DEFAULT 1,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+    )
+    """)
+
+    # 38. Reimbursement Requests (Employee-paid x402 overages queued for corporate reimbursement)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS reimbursement_requests (
+        id TEXT PRIMARY KEY,
+        request_number TEXT NOT NULL UNIQUE,
+        employee_id TEXT NOT NULL,
+        employee_name TEXT NOT NULL,
+        company_id TEXT NOT NULL,
+        payment_transaction_id TEXT NOT NULL,
+        txn_id TEXT NOT NULL,
+        amount_usdc REAL NOT NULL,
+        amount_microusdc INTEGER NOT NULL,
+        credits_covered INTEGER NOT NULL,
+        service TEXT NOT NULL,
+        status TEXT DEFAULT 'PENDING_REIMBURSEMENT', -- 'PENDING_REIMBURSEMENT', 'AUTO_APPROVED', 'APPROVED', 'REJECTED', 'REIMBURSED'
+        notes TEXT,
+        payer_address TEXT NOT NULL,
+        reviewer_id TEXT,
+        reviewed_at TEXT,
+        reimbursed_at TEXT,
+        reimbursement_payout_txn_id TEXT,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+    )
+    """)
+
+    # 39. Reimbursement Transactions (Corporate payout execution ledger)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS reimbursement_transactions (
+        id TEXT PRIMARY KEY,
+        reimbursement_request_id TEXT NOT NULL,
+        company_id TEXT NOT NULL,
+        employee_id TEXT NOT NULL,
+        payout_method TEXT DEFAULT 'corporate_payroll_credit', -- 'corporate_payroll_credit', 'direct_usdc_payout', 'expense_account'
+        payout_amount_usdc REAL NOT NULL,
+        payout_reference TEXT,
+        processed_by TEXT NOT NULL,
+        processed_at TEXT NOT NULL,
+        status TEXT DEFAULT 'COMPLETED'
+    )
+    """)
+
+    # 40. Platform Base Costs (Flow A: Separate Infrastructure & Baseline AI Cost Tracking)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS platform_base_costs (
+        id TEXT PRIMARY KEY,
+        company_id TEXT NOT NULL,
+        period_name TEXT NOT NULL,
+        cloud_infra_cost_usd REAL DEFAULT 420.0,
+        database_cost_usd REAL DEFAULT 80.0,
+        storage_cost_usd REAL DEFAULT 50.0,
+        baseline_ai_cost_usd REAL DEFAULT 300.0,
+        total_platform_cost_usd REAL DEFAULT 850.0,
+        recorded_at TEXT NOT NULL
+    )
+    """)
+
+    # Table 42: Troubleshooting Knowledge Base (Section 14)
+    # Opt-in, attributed solution entries — never auto-published, always employee-confirmed.
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS troubleshooting_entries (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        employee_name TEXT NOT NULL,
+        employee_domain TEXT DEFAULT 'general',
+        raw_input TEXT NOT NULL,
+        problem_summary TEXT,
+        solution_summary TEXT,
+        domain TEXT,
+        tags TEXT,
+        status TEXT DEFAULT 'pending_review',
+        reuse_count INTEGER DEFAULT 0,
+        submitted_at TEXT,
+        published_at TEXT
+    )
+    """)
+
+    # Additive ALTER TABLE for existing DBs: add columns if they don't exist
+    try:
+        cursor.execute("ALTER TABLE continuity_briefs ADD COLUMN verifier_algorand_address TEXT")
+    except Exception:
+        pass  # Column already exists — safe to ignore
+
+    try:
+        cursor.execute("ALTER TABLE continuity_briefs ADD COLUMN verification_txn_id TEXT")
+    except Exception:
+        pass
+
+    try:
+        cursor.execute("ALTER TABLE continuity_briefs ADD COLUMN content_hash TEXT")
+    except Exception:
+        pass
 
     conn.commit()
 
@@ -808,6 +1132,9 @@ def auto_seed_vault_demo(conn):
     # 6. Tasks (Task-Level Handoff Explainer)
     seed_tasks_for_person(cursor, person_id, now)
 
+    # 7. Enterprise Usage & Economy Seed (Company Pool & Employee Allocations)
+    seed_company_economy_data(cursor, now)
+
     conn.commit()
     print("[DeadMind] Continuity Vault demo data seeded successfully.")
 
@@ -872,6 +1199,103 @@ def seed_tasks_for_person(cursor, person_id, now_str):
         flowchart_mermaid, percent_complete, deadline, dependencies, created_at
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, tasks_data)
+
+
+def seed_company_economy_data(cursor, now_str):
+    """Seeds the company credit pool, employee allocations, and baseline usage accounts."""
+    company_id = "INDO-POWER-PLANT-01"
+    company_name = "DeadMind Demo Corporation"
+    
+    # 1. Company Pool
+    cursor.execute("SELECT id FROM company_pools WHERE company_id = ?", (company_id,))
+    if not cursor.fetchone():
+        cursor.execute("""
+        INSERT INTO company_pools (
+            id, company_id, company_name, total_pool_credits, allocated_credits,
+            consumed_credits, available_unallocated_credits, reconciled_returned_credits,
+            current_period_name, period_start, period_end, created_at, updated_at
+        ) VALUES ('comp_01', ?, ?, 100000, 8500, 1870, 91500, 0, 'August 2026', '2026-08-01', '2026-08-31', ?, ?)
+        """, (company_id, company_name, now_str, now_str))
+
+    # 2. Seed Employee Usage Accounts
+    employee_seeds = [
+        ("default_user", "Field Technician", 1000, 145, 855, 0, 0),
+        ("rajan", "Senior Boiler & Turbine Lead", 1000, 640, 360, 0, 0),
+        ("amit", "Electrical Maintenance Lead", 1000, 920, 80, 0, 0),
+        ("vikram", "Instrumentation & Control Specialist", 1500, 310, 1190, 0, 0),
+        ("safety_team", "Plant Safety & Compliance Unit", 5000, 1200, 3800, 0, 0),
+    ]
+
+    for uid, role_title, alloc, used, bal, ovg_cnt, ovg_micro in employee_seeds:
+        cursor.execute("SELECT id FROM usage_accounts WHERE user_id = ?", (uid,))
+        if not cursor.fetchone():
+            acc_id = f"acc_{uid}"
+            cursor.execute("""
+            INSERT INTO usage_accounts (
+                id, user_id, company_id, allocated_credits, used_credits,
+                balance_credits, overage_count, total_overage_microusdc, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (acc_id, uid, company_id, alloc, used, bal, ovg_cnt, ovg_micro, now_str, now_str))
+
+            cursor.execute("""
+            INSERT INTO usage_allocations (account_id, period_start, period_end, allocated_credits, source, granted_at)
+            VALUES (?, '2026-08-01', '2026-08-31', ?, 'Company Funded Pool', ?)
+            """, (acc_id, alloc, now_str))
+
+            cursor.execute("""
+            INSERT INTO usage_ledger (account_id, delta_credits, balance_after, entry_type, description, reference_id, timestamp)
+            VALUES (?, ?, ?, 'allocation', 'Monthly allowance grant from company pool', ?, ?)
+            """, (acc_id, alloc, alloc, acc_id, now_str))
+
+
+    # 3. Seed Reimbursement Policy (Section 9)
+    cursor.execute("SELECT id FROM reimbursement_policies WHERE company_id = ?", (company_id,))
+    if not cursor.fetchone():
+        cursor.execute("""
+        INSERT INTO reimbursement_policies (
+            id, company_id, max_reimbursement_per_employee_usdc, max_daily_overage_usdc,
+            max_monthly_overage_usdc, auto_approval_threshold_usdc, require_receipt,
+            allowed_services, is_active, created_at, updated_at
+        ) VALUES ('pol_01', ?, 100.0, 20.0, 150.0, 5.0, 0, 'all', 1, ?, ?)
+        """, (company_id, now_str, now_str))
+
+    # 4. Seed Platform Base Infrastructure Costs (Section 1 & 16: Flow A)
+    cursor.execute("SELECT id FROM platform_base_costs WHERE company_id = ?", (company_id,))
+    if not cursor.fetchone():
+        cursor.execute("""
+        INSERT INTO platform_base_costs (
+            id, company_id, period_name, cloud_infra_cost_usd, database_cost_usd,
+            storage_cost_usd, baseline_ai_cost_usd, total_platform_cost_usd, recorded_at
+        ) VALUES ('pbc_aug_2026', ?, 'August 2026', 420.0, 80.0, 50.0, 300.0, 850.0, ?)
+        """, (company_id, now_str))
+
+    # 5. Seed Initial Sample Reimbursement Requests (Section 8, 14, 15 & 16)
+    sample_reimbursements = [
+        ("reimb_01", "REIMB-2026-001", "rajan", "Rajan Sharma", "tx_ovg_rajan_01", "TX_ALGO_RAJAN_8821", 2.40, 2400000, 2400, "expert_consensus", "PENDING_REIMBURSEMENT", "Emergency boiler trip consensus overage", "ALGORAND7RAJAN4WALLET2KEYPAIR", None, None, None),
+        ("reimb_02", "REIMB-2026-002", "amit", "Amit Patel", "tx_ovg_amit_01", "TX_ALGO_AMIT_4412", 1.80, 1800000, 1800, "deep_risk_audit", "APPROVED", "6.6kV switchgear fast transfer audit overage", "ALGORAND7AMIT4WALLET3KEYPAIR", "Plant Operations Director", now_str, None),
+        ("reimb_03", "REIMB-2026-003", "vikram", "Vikram Malhotra", "tx_ovg_vikram_01", "TX_ALGO_VIKRAM_9931", 4.50, 4500000, 4500, "compliance_pack", "REIMBURSED", "OISD-118 regulatory compliance pack overage", "ALGORAND7VIKRAM4WALLET5KEYPAIR", "Plant Operations Director", now_str, now_str),
+    ]
+
+    for rid, rnum, uid, uname, ptid, txid, ausdc, amicro, creds, srv, st, nts, paddr, rev, rev_at, rmb_at in sample_reimbursements:
+        cursor.execute("SELECT id FROM reimbursement_requests WHERE id = ?", (rid,))
+        if not cursor.fetchone():
+            cursor.execute("""
+            INSERT INTO reimbursement_requests (
+                id, request_number, employee_id, employee_name, company_id,
+                payment_transaction_id, txn_id, amount_usdc, amount_microusdc,
+                credits_covered, service, status, notes, payer_address,
+                reviewer_id, reviewed_at, reimbursed_at, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (rid, rnum, uid, uname, company_id, ptid, txid, ausdc, amicro, creds, srv, st, nts, paddr, rev, rev_at, rmb_at, now_str, now_str))
+
+            if st == "REIMBURSED":
+                cursor.execute("""
+                INSERT INTO reimbursement_transactions (
+                    id, reimbursement_request_id, company_id, employee_id, payout_method,
+                    payout_amount_usdc, payout_reference, processed_by, processed_at, status
+                ) VALUES (?, ?, ?, ?, 'corporate_payroll_credit', ?, 'PAYROLL-CREDIT-AUG-2026-04', 'Corporate Finance', ?, 'COMPLETED')
+                """, (f"ptxn_{rid}", rid, company_id, uid, ausdc, now_str))
+
 
 if __name__ == "__main__":
     init_db()

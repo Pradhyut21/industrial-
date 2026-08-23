@@ -182,7 +182,7 @@ Fetch the latest Continuity Brief. Returns `404` if not yet generated.
 
 ### POST /vault/{person_id}/brief/verify
 
-Mark a brief as peer-verified. Records the verifier's name and timestamp.
+Mark a brief as peer-verified and anchor a cryptographic SHA-256 hash on the Algorand blockchain (Section 12.1).
 
 **Request body:**
 ```json
@@ -197,7 +197,32 @@ Mark a brief as peer-verified. Records the verifier's name and timestamp.
 {
   "status": "verified",
   "verified_by": "S. Kulkarni (Safety Auditor)",
-  "verified_at": "2026-08-15 14:30:00"
+  "verified_at": "2026-08-15 14:30:00",
+  "content_hash": "a4f89d3c...e712",
+  "verification_txn_id": "QVFEASCDSJCLIZ6BK2XW5N6I5DLXWNA67DIZE57GTKVSRIJQY5BQ",
+  "lora_explorer_url": "https://lora.algokit.io/testnet/transaction/QVFEASCDSJCLIZ6BK2XW5N6I5DLXWNA67DIZE57GTKVSRIJQY5BQ"
+}
+```
+
+---
+
+### GET /vault/{person_id}/brief/audit-proof
+
+Cryptographic on-chain verification proof for a Continuity Brief (Section 12.1). Recomputes the SHA-256 hash of the live database record and checks it against the immutable hash anchored on Algorand.
+
+**Response:**
+```json
+{
+  "person_id": 1,
+  "brief_id": 2,
+  "verification_status": "verified",
+  "verified_by": "S. Kulkarni (Safety Auditor)",
+  "verified_at": "2026-08-15 14:30:00",
+  "current_content_hash": "a4f89d3c...e712",
+  "anchored_content_hash": "a4f89d3c...e712",
+  "verification_txn_id": "QVFEASCDSJCLIZ6BK2XW5N6I5DLXWNA67DIZE57GTKVSRIJQY5BQ",
+  "is_tamper_free": true,
+  "lora_explorer_url": "https://lora.algokit.io/testnet/transaction/QVFEASCDSJCLIZ6BK2XW5N6I5DLXWNA67DIZE57GTKVSRIJQY5BQ"
 }
 ```
 
@@ -512,3 +537,219 @@ Attempting to access above your allowed level returns `403 Forbidden`.
 
 > **Note:** The `X-DeadMind-Role` header is a mock authentication mechanism for demo purposes.
 > In production, replace with JWT validation from your identity provider.
+
+---
+
+## Section 13: Tiered x402 Micropayment Endpoints (Machine-to-Machine)
+
+External AI agents can query specialized cognitive engines using Algorand USDC micropayments:
+
+### POST /x402/consensus (Tier 2 — 0.03 USDC)
+Queries multiple expert personas, measures semantic divergence, and synthesizes consensus and dissent.
+
+**Request body:**
+```json
+{
+  "query": "What is the procedure for boiler drum level instability?",
+  "experts": ["Rajan Sharma", "T. Nair", "S. Kulkarni"]
+}
+```
+
+**Response:**
+```json
+{
+  "consensus": "Weighted consensus favors Rajan Sharma: ...",
+  "agreement": "3 of 3 experts returned grounded answers.",
+  "weights": {"Rajan Sharma": 45, "T. Nair": 35, "S. Kulkarni": 20},
+  "dissent": "T. Nair diverges from Rajan Sharma's framing..."
+}
+```
+
+---
+
+### POST /x402/compliance-audit (Tier 3 — 0.05 USDC)
+Scans plant documentation against regulatory requirements (ISO/OSHA/IBR) and returns identified gaps.
+
+**Request body:**
+```json
+{
+  "equipment_tag": "B-101"
+}
+```
+
+**Response:**
+```json
+{
+  "status": "success",
+  "total_gaps_identified": 2,
+  "gaps": [
+    {
+      "clause_id": "IBR-Sec-4",
+      "gap_type": "Missing Evidence",
+      "severity": "Critical",
+      "action": "Schedule inspection immediately."
+    }
+  ]
+}
+```
+
+---
+
+### POST /x402/incident-match (Tier 4 — 0.04 USDC)
+Matches observed vibration/acoustic anomalies against historical shift notes and extracts causal co-occurrence probabilities.
+
+**Request body:**
+```json
+{
+  "note": "Severe cavitation noise and discharge valve vibration on Boiler Feed Pump P-302"
+}
+```
+
+**Response:**
+```json
+{
+  "status": "success",
+  "query_note": "Severe cavitation noise and discharge valve vibration on Boiler Feed Pump P-302",
+  "match_result": {
+    "triggered": true,
+    "details": {
+      "tag": "P-302",
+      "expert": "Rajan Sharma",
+      "alert": "Pattern match: P-302 Cavitation Shift Log (similarity 88%)",
+      "causal_warning": "Downstream risk on B-101 — co-occurs in historical logs with P-302 (estimated causal probability: 70%).",
+      "extracted_entities": {"equipment": ["P-302"]}
+    }
+  }
+}
+```
+
+---
+
+## Troubleshooting Knowledge Base (Section 14)
+
+Opt-in, AI-filtered, employee-confirmed solution attribution. Never auto-publishes. The submit → confirm two-step flow is a mandatory design contract: nothing is attributed to an employee's name without their explicit confirmation.
+
+UI copy contract: "solution", "credit", "recognized" — never "error log", "mistake", or similar negative framing.
+
+---
+
+### POST /troubleshooting/submit
+
+Submit a raw problem description for AI filtering. Returns a `pending_review` draft — **not published**.
+
+**No authentication required** (any employee can submit).
+
+**Request body:**
+```json
+{
+  "employee_name": "T. Nair",
+  "employee_domain": "rotating-equipment",
+  "raw_input": "Boiler feed pump P-204 was cavitating intermittently. Found inducer vanes with micro-pitting from condensate contamination. Replaced inducer and installed condensate separator. No recurrence in 6 weeks.",
+  "tags": "pump,cavitation,inducer,condensate"
+}
+```
+
+`raw_input` minimum 20 characters. `employee_domain` and `tags` are optional.
+
+**Response:**
+```json
+{
+  "entry_id": 5,
+  "status": "pending_review",
+  "message": "Your solution draft has been prepared. Please review the AI-filtered summary below and call POST /troubleshooting/{id}/confirm to publish it under your name, or to submit corrections first.",
+  "draft_problem_summary": "A boiler feed pump exhibited intermittent cavitation caused by micro-pitting on the inducer vanes due to condensate contamination.",
+  "draft_solution_summary": "The inducer assembly was replaced and a condensate separator was installed upstream of the pump suction. Cavitation events ceased following the repair."
+}
+```
+
+**Design note:** If `GROQ_API_KEY` is not set, a deterministic template filter is used. The draft is clearly marked `[AI filter unavailable — see raw input]` so the employee can review and edit before confirming.
+
+---
+
+### POST /troubleshooting/{entry_id}/confirm
+
+Employee approves the AI-filtered draft, optionally providing corrected text. **This is the only call that publishes an entry.**
+
+**Request body (all fields optional — omit to accept AI draft):**
+```json
+{
+  "problem_summary": "Optional employee correction to the problem description.",
+  "solution_summary": "Optional employee correction to the solution description."
+}
+```
+
+**Response:** Full `TroubleshootingEntryResponse` with `status: "published"` and `published_at` set.
+
+```json
+{
+  "id": 5,
+  "employee_name": "T. Nair",
+  "employee_domain": "rotating-equipment",
+  "problem_summary": "A boiler feed pump exhibited intermittent cavitation...",
+  "solution_summary": "The inducer assembly was replaced...",
+  "domain": "rotating-equipment",
+  "tags": "pump,cavitation,inducer,condensate",
+  "status": "published",
+  "reuse_count": 0,
+  "submitted_at": "2026-08-23T09:00:00Z",
+  "published_at": "2026-08-23T09:01:12Z"
+}
+```
+
+**Error:** `409 Conflict` if entry is already published.
+**Error:** `404 Not Found` if entry ID does not exist.
+
+---
+
+### GET /troubleshooting/search?q=...
+
+Full-text search over **published** entries only. `pending_review` entries are never returned regardless of query.
+
+Increments `reuse_count` on all matched entries and returns the updated count.
+
+**Query parameter:** `q` (URL-encoded search string). Omit or leave blank to return the 20 most recently published entries.
+
+**Response:**
+```json
+{
+  "query": "cavitation pump",
+  "total_results": 1,
+  "results": [
+    {
+      "id": 5,
+      "employee_name": "T. Nair",
+      "employee_domain": "rotating-equipment",
+      "problem_summary": "A boiler feed pump exhibited intermittent cavitation...",
+      "solution_summary": "The inducer assembly was replaced...",
+      "domain": "rotating-equipment",
+      "tags": "pump,cavitation,inducer,condensate",
+      "status": "published",
+      "reuse_count": 1,
+      "submitted_at": "2026-08-23T09:00:00Z",
+      "published_at": "2026-08-23T09:01:12Z"
+    }
+  ]
+}
+```
+
+---
+
+## Brief Hash Anchor Check (Section 12.1)
+
+### GET /vault/{person_id}/brief/anchor-check
+
+Recomputes the SHA-256 hash from the current brief content and compares against the stored `content_hash`. If an Algorand `verification_txn_id` exists, returns the Lora explorer URL for on-chain verification.
+
+**Response:**
+```json
+{
+  "match": true,
+  "stored_hash": "sha256hexdigest...",
+  "current_content_hash": "sha256hexdigest...",
+  "txn_id": "ALGORAND_TXN_ID_OR_STUB",
+  "lora_url": "https://lora.algokit.io/testnet/transaction/ALGORAND_TXN_ID",
+  "message": "Brief content matches the verified anchor hash."
+}
+```
+
+`match: false` means the brief content has changed since verification — a signal that re-verification is needed.

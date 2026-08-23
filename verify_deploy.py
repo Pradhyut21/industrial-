@@ -1,3 +1,4 @@
+
 """
 Full pre-demo verification: seed data, run tests, measure retrieval quality,
 and hit every live endpoint with REAL models (no mocks). Prints a clean

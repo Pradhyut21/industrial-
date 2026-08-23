@@ -94,6 +94,9 @@ class BriefResponse(BaseModel):
     verification_status: str
     verified_by: Optional[str]
     verified_at: Optional[str]
+    verification_txn_id: Optional[str] = None
+    content_hash: Optional[str] = None
+    lora_explorer_url: Optional[str] = None
 
 
 class VerifyBriefRequest(BaseModel):
@@ -105,6 +108,22 @@ class VerifyBriefResponse(BaseModel):
     status: str
     verified_by: str
     verified_at: str
+    content_hash: Optional[str] = None
+    verification_txn_id: Optional[str] = None
+    lora_explorer_url: Optional[str] = None
+
+
+class AuditProofResponse(BaseModel):
+    person_id: int
+    brief_id: int
+    verification_status: str
+    verified_by: Optional[str]
+    verified_at: Optional[str]
+    current_content_hash: str
+    anchored_content_hash: Optional[str]
+    verification_txn_id: Optional[str]
+    is_tamper_free: bool
+    lora_explorer_url: Optional[str]
 
 
 # ── Cross-domain Query ────────────────────────────────────────────────────────

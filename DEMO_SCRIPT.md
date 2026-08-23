@@ -18,7 +18,16 @@
 | **Act 5** | `2:45 - 3:30` | In-Flight Task Explainer, Mermaid Blockers & 3D Recovery Run |
 | **Act 6** | `3:30 - 4:00` | Multi-Expert Copilot, Dissent Synthesis & Wrap-up |
 
+**Extended Technical Deep-Dive additions (8-minute version):**
+| Act | Duration | Section / Focus Area |
+| :--- | :--- | :--- |
+| **Act 7** | `4:00 - 5:30` | Autonomous x402 Agent: Watch This Run With Zero Input From Me |
+| **Act 8** | `5:30 - 6:30` | Incident Pattern Match (Tier 4 paid endpoint) — Predictive Maintenance Agent |
+| **Act 9** | `6:30 - 7:15` | Knowledge Credits — Opt-In Solution Attribution Workflow |
+| **Act 10** | `7:15 - 8:00` | Payment Audit Trail, Verifier Payout, & Wrap-up |
+
 ---
+
 
 ## 🎬 Detailed Script & Click-by-Click Walkthrough
 
@@ -96,17 +105,41 @@
 * **Visual:** Navigate to `/copilot` in the sidebar.
 * **Click Action:**
   1. Select `R. Nayar` (preserved digital twin).
-  2. Query: *"What causes P-302 cavitation?"* ➔ Show response with grounded citations and source log snippets.
-  3. Click **Consensus Engine** ➔ Select multiple engineers (Rajan Sharma, Amit Patel, Vikram Sen).
+  2. Query: *"What causes P-302 cavitation?"* → Show response with grounded citations and source log snippets.
+  3. Click **Consensus Engine** → Select multiple engineers (Rajan Sharma, Amit Patel, Vikram Sen).
   4. Show the side-by-side consensus synthesis and highlighted dissenting opinions.
 * **Speaker Script:**
-  > *"Finally, on our Field Copilot, technicians can query preserved digital twins with 100% citation grounding. When complex troubleshooting requires multiple viewpoints, our Consensus Engine queries multiple expert twins simultaneously, synthesizing agreements and highlighting dissents.
+  > *"Finally, on our Field Copilot, technicians can query preserved digital twins with 100% citation grounding. When complex troubleshooting requires multiple viewpoints, our Consensus Engine queries multiple expert twins simultaneously, synthesizing agreements and highlighting dissents.*
   > 
-  > DeadMind bridges the demographic cliff, preserves institutional memory, and guarantees operational safety for the next generation of industrial engineers. Thank you!"*
+  > *DeadMind bridges the demographic cliff, preserves institutional memory, and guarantees operational safety for the next generation of industrial engineers. Thank you!"*
 
 ---
 
-## ⚡ Emergency Contingency Plan
+### 🏆 Act 9 (Extended): Knowledge Credits — Opt-In Solution Attribution (6:30 - 7:15)
+
+*This beat works best as an extension of the vault demo (after Act 3 or Act 5) or as a standalone feature for judges asking about collaborative knowledge capture.*
+
+* **Visual:** Open any person's Continuity Vault → Click **Knowledge Credits** tab.
+* **Click Action:**
+  1. Fill in Your Name (`T. Nair`), Domain (`rotating-equipment`).
+  2. Type a raw problem description in the textarea: *"Boiler feed pump P-204 was cavitating intermittently. Found inducer vanes with micro-pitting from condensate contamination. Replaced inducer and installed condensate separator. No recurrence in 6 weeks."*
+  3. Click **Prepare Solution Draft** — observe the AI-filtered draft appear with personal details removed.
+  4. Click **Confirm & Publish Credit** — entry goes live.
+  5. Switch to the Search bar. Type `cavitation pump`. Press Enter.
+  6. Show the published entry with `T. Nair` attribution and `reuse_count` visible.
+
+* **Speaker Script:**
+  > *"DeadMind doesn't just preserve the knowledge of people who have left — it also captures the knowledge people are generating right now, when they solve a real problem.*
+  > 
+  > *Here's how it works: a technician types a raw description of what happened. Our AI filters it — removing shift names, dates, any personally identifying details — and rewrites it into a clean recognized-solution record. The technician reviews that draft and confirms it with one click. Only then does it get published under their name.*
+  > 
+  > *Now when a colleague faces the same cavitation signature on a different pump, they search 'cavitation pump' and find T. Nair's recognized solution, with T. Nair credited by name. This is institutional knowledge being created today, not just preserved from the past — and it's entirely opt-in, never surveillance."*
+
+* **Key talking point for judges:** The two-step flow (submit → confirm) is not a UX choice, it's a design contract: nothing is attributed to an employee's name without their explicit approval, which is directly relevant to India's DPDP Act and enterprise trust requirements.
+
+---
+
+
 
 | Scenario | Fast Fix / Talking Point |
 | :--- | :--- |
@@ -162,109 +195,109 @@ the Algorand transaction automatically. No human reads it.
 
 ---
 
-### Step 2 — Pay and retry (full agent round-trip)
+### 🤖 Machine-to-Machine x402 Algorand Micropayments (Section 9.9 & Section 11)
 
-Use the x402-avm Python client to simulate an AI agent paying and retrying:
+> **Key Judge Takeaway:** DeadMind demonstrates true **Machine-to-Machine** x402 agentic payments on Algorand. There is **no human in the loop** — no wallet popups, no clicking "connect wallet", and no manual triggers required. An autonomous onboarding agent detects when domain intelligence is needed, pays the x402 fee on Algorand, and compiles a handoff digest.
 
-```python
-# agent_demo.py — run this to prove the full x402 round trip
-# pip install "x402-avm[fastapi,avm]==2.0.2"
+---
 
-import asyncio
-from x402_avm.client import X402Client   # x402-avm client
+### Step 1 — Zero-Click Autonomous Background Agent (Headline Demo)
 
-AGENT_MNEMONIC = "your agent wallet 25-word mnemonic here"  # testnet-funded agent wallet
+When the DeadMind FastAPI server is started, it automatically spawns the **Autonomous Onboarding Background Agent** (`backend/vault/onboarding_agent.py`):
 
-async def demo():
-    client = X402Client(mnemonic=AGENT_MNEMONIC, network="testnet")
-    # Client automatically:
-    #   1. Gets the 402 → reads payment terms
-    #   2. Signs + submits Algorand payment to GoPlausible
-    #   3. Retries with X-PAYMENT header
-    #   4. Returns 200 with brief content
-    response = await client.get("http://localhost:8000/x402/vault/1/brief")
-    print("Status:", response.status_code)   # 200
-    print("Brief:", response.json()["summary"][:200])
-    print("Payment txn:", response.payment_txn_id)
+1. **Autonomous Decision to Act**: The agent scans the vault for departing/departed domain specialists whose verified briefs have not yet been acquired for incoming personnel.
+2. **Autonomous 402 Negotiation**: The agent issues `GET /x402/vault/{person_id}/brief`, receives the `HTTP 402 Payment Required` challenge, and reads the payment requirements (amount in USDC, receiver address, network).
+3. **Autonomous Signing & Settlement**: The agent signs the Algorand transaction using its own funded wallet (`AGENT_ALGORAND_MNEMONIC`) and retries with the `X-PAYMENT` header.
+4. **Autonomous Value Consumption**: Upon receiving `HTTP 200`, it compiles a multi-point Onboarding Digest, delivers it to incoming engineers, and logs the on-chain settlement.
 
-asyncio.run(demo())
+**Show Judges in the Server Console:**
+```
+[ONBOARDING-AGENT-AUTONOMOUS] Background monitoring loop active (polling every 30s).
+[ONBOARDING-AGENT-AUTONOMOUS] Detected 1 unretrieved handoff brief(s): ['Rajan Sharma']
+[ONBOARDING-AGENT-AUTONOMOUS] Autonomously initiating x402 payment flow for Rajan Sharma (person_id=8)...
+[x402-direct] Sender MAKGET7H... has 500000 microUSDC — sufficient for payment
+[x402-direct] Transaction SUBMITTED — txid=QPH... Lora: https://lora.algokit.io/testnet/transaction/QPH...
+[ONBOARDING-AGENT-AUTONOMOUS] Brief for 'Rajan Sharma' autonomously retrieved and settled on-chain.
+[ONBOARDING-AGENT-AUTONOMOUS] Handed off 1 continuity brief(s) to incoming personnel with zero human intervention.
+```
+
+---
+
+### Step 2 — On-Demand CLI Audit (`agent_demo.py`)
+
+If judges want to trigger an on-demand audit cycle for an individual vault:
+
+```bash
+python agent_demo.py --person-id 8
 ```
 
 **Expected output:**
 ```
-Status: 200
-Brief: Rajan Sharma served as Senior Boiler & Turbine Lead for 28 years...
-Payment txn: <ALGORAND_TXN_ID>
-```
+============================================================
+  DeadMind x402 Demo — Person ID: 8
+============================================================
+Target endpoint: http://localhost:8000/x402/vault/8/brief
+Mode: LIVE (real Algorand payment)
 
-Verify the payment transaction on the explorer:
-```
-https://lora.algokit.io/testnet/transaction/<ALGORAND_TXN_ID>
+STEP 1 — Calling endpoint with no payment header...
+  Response status: 402
+
+STEP 2 — HTTP 402 received. Payment terms:
+  Amount:      10000 microUSDC  (0.0100 USDC)
+  Pay to:      AB7CDOEJ2CAO5U4MYT4BG7G5ARW65BJPEPHLLI2BQ5HW653UYIM3XY4IUY
+  Network:     algorand-testnet
+  Facilitator: https://x402.goplausible.xyz/facilitate
+
+STEP 3 — Signing Algorand USDC payment...
+  Payment token: gqNzaWfEQ...
+
+STEP 4 — Retrying request with X-PAYMENT header...
+  [OK] HTTP 200 -- Algorand payment accepted. Brief content:
+  {
+    "summary": "Rajan Sharma served as Senior Boiler Lead for 38 years...",
+    "verification_status": "verified"
+  }
+
+  Transaction ID: <ALGORAND_TXN_ID>
+  Lora explorer:  https://lora.algokit.io/testnet/transaction/<ALGORAND_TXN_ID>
 ```
 
 ---
 
-### Step 3 — Verifier payout (Section 9.6 — money genuinely moves)
+### Step 3 — Predictive Maintenance Anomaly Match (Tier 4 Paid x402 Route)
 
-When a peer stamps a vault brief as verified, the platform pays them a micro-reward in ALGO.
+**What to say to judges:**
+> *"DeadMind's payment layer isn't a single toy endpoint — it provides cost-reflective tiers for different agent personas. For instance, imagine an external IoT predictive-maintenance agent that detects an anomalous acoustic or vibration signature on a boiler feed pump. The agent doesn't know if this failure mode has happened before, so it autonomously pays 0.04 USDC to hit DeadMind's `/x402/incident-match` endpoint and gets back historical failure logs and causal co-occurrence risk probabilities."*
 
+**Live Demo Command:**
 ```bash
-curl -X POST http://localhost:8000/api/x402/verifier-payout \
+curl -X POST http://localhost:8000/x402/incident-match \
   -H "Content-Type: application/json" \
-  -d '{
-    "person_id": 1,
-    "verifier_wallet_address": "<VERIFIER_ALGORAND_ADDRESS>",
-    "verifier_name": "S. Kulkarni (Chief Operator)"
-  }'
+  -d '{"note": "Severe cavitation noise and discharge valve vibration on Boiler Feed Pump P-302"}'
 ```
 
-**Expected response:**
-```json
-{
-  "ok": true,
-  "txn_id": "<ALGORAND_TXN_ID>",
-  "amount_microalgo": 10000,
-  "network": "testnet",
-  "verifier_wallet_address": "<VERIFIER_ALGORAND_ADDRESS>",
-  "note": "Payout confirmed on-chain. Verify at https://lora.algokit.io/testnet/transaction/<TXN_ID>"
-}
-```
-
-**Prove it to a judge — open the URL in the `note` field in any browser:**
-```
-https://lora.algokit.io/testnet/transaction/<ALGORAND_TXN_ID>
-```
-The explorer shows the exact ALGO amount transferred from the platform's payout wallet to
-the verifier's wallet. This is the proof that money genuinely moved — not just a 200 OK.
+**Judges see:**
+- In payment-gated mode: `HTTP 402` with 40,000 microUSDC ($0.04) terms.
+- After payment: instant pattern match with historical incident documents, causal co-occurrence warnings (*"Downstream risk on B-101 — co-occurs in historical logs with P-302"*), and extracted equipment entities.
 
 ---
 
-### Wallet Setup (one-time, before demo)
+### Step 4 — Verifier Payout Accrual & Audit Trail (`GET /x402/payments/log`)
+
+Open `http://localhost:8000/x402/payments/log` in the browser or via curl:
 
 ```bash
-# 1. Generate a fresh testnet keypair (never reuse a mainnet wallet)
-python -c "
-from algosdk import account, mnemonic
-pk, addr = account.generate_account()
-print('Address:', addr)
-print('Mnemonic:', mnemonic.from_private_key(pk))
-"
-
-# 2. Fund both wallets (payout wallet + agent wallet) at:
-#    https://bank.testnet.algorand.network/
-
-# 3. Set in .env (NEVER commit .env — it's in .gitignore):
-#    ALGORAND_PAYMENT_ADDRESS=<address that receives payments>
-#    ALGORAND_PAYOUT_MNEMONIC=<25-word mnemonic for payout wallet>
-#    ALGORAND_NETWORK=testnet
-
-# 4. Confirm balance before demo:
-python -c "
-from algosdk.v2client import algod
-import os
-client = algod.AlgodClient('', 'https://testnet-api.algonode.cloud')
-info = client.account_info(os.environ['ALGORAND_PAYMENT_ADDRESS'])
-print('Payment wallet balance:', info['amount'], 'microALGO')
-"
+curl http://localhost:8000/x402/payments/log
 ```
+
+**Judges see:**
+1. **Agent Payments:** Every machine-to-machine x402 micropayment settled on Algorand across all tiers.
+2. **Verifier Payouts:** 30% of each verified brief access fee automatically accrued to the human peer who audited the brief (`Kavita Rao`), creating a sustainable decentralized incentive loop for high-quality industrial knowledge preservation.
+3. **Direct Lora Explorer Links:** Every entry links directly to Algorand Testnet explorer for instant third-party validation.
+
+---
+
+### Step 5 — Developer Debug Harness (`X402DemoView.tsx`)
+
+*(Note for Evaluators: `/x402-demo` in the web frontend is provided solely as an internal developer debugging tool to inspect raw 402 responses and wallet states in a browser context. The headline proof-of-concept is the autonomous agent above.)*
 

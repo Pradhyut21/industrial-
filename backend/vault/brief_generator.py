@@ -227,6 +227,23 @@ def _upsert_brief(person_id: int, brief_data: dict) -> int:
     return brief_id
 
 
+import hashlib
+
+
+def compute_brief_content_hash(summary_text: str, unresolved_items: list, glossary: dict) -> str:
+    """
+    Computes a canonical deterministic SHA-256 hash of the brief contents (Section 12.1).
+    Used for tamper-evident on-chain anchoring on Algorand.
+    """
+    payload = {
+        "summary_text": summary_text.strip() if summary_text else "",
+        "unresolved_items": sorted(unresolved_items) if isinstance(unresolved_items, list) else unresolved_items,
+        "glossary": glossary or {},
+    }
+    canonical = json.dumps(payload, sort_keys=True, separators=(',', ':'))
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
 # ── Public API ────────────────────────────────────────────────────────────────
 
 def generate_brief(person_id: int, requester_role: str = "Admin") -> dict:
@@ -263,6 +280,10 @@ def generate_brief(person_id: int, requester_role: str = "Admin") -> dict:
     row = dict(cursor.fetchone())
     conn.close()
 
+    network = os.environ.get("ALGORAND_NETWORK", "testnet").strip()
+    txn_id = row.get("verification_txn_id")
+    lora_url = f"https://lora.algokit.io/{network}/transaction/{txn_id}" if txn_id else None
+
     return {
         "id": row["id"],
         "person_id": row["person_id"],
@@ -273,6 +294,9 @@ def generate_brief(person_id: int, requester_role: str = "Admin") -> dict:
         "verification_status": row["verification_status"],
         "verified_by": row["verified_by"],
         "verified_at": row["verified_at"],
+        "verification_txn_id": txn_id,
+        "content_hash": row.get("content_hash"),
+        "lora_explorer_url": lora_url,
     }
 
 
@@ -286,6 +310,10 @@ def get_brief(person_id: int) -> Optional[dict]:
     if not row:
         return None
     row = dict(row)
+    network = os.environ.get("ALGORAND_NETWORK", "testnet").strip()
+    txn_id = row.get("verification_txn_id")
+    lora_url = f"https://lora.algokit.io/{network}/transaction/{txn_id}" if txn_id else None
+
     return {
         "id": row["id"],
         "person_id": row["person_id"],
@@ -296,4 +324,7 @@ def get_brief(person_id: int) -> Optional[dict]:
         "verification_status": row["verification_status"],
         "verified_by": row["verified_by"],
         "verified_at": row["verified_at"],
+        "verification_txn_id": txn_id,
+        "content_hash": row.get("content_hash"),
+        "lora_explorer_url": lora_url,
     }

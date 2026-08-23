@@ -19,8 +19,8 @@ const items: Array<{ title: string; url: string; icon: React.FC<{ className?: st
   { title: "Operations Floor",      url: "/office",    icon: Building2,   role: "Simulation" },
   { title: "Field Copilot",         url: "/copilot",   icon: Bot,         role: "Field Technician" },
   { title: "SOP Audit & Freshness", url: "/audit",     icon: ShieldCheck, role: "Ops Lead" },
-  { title: "Continuity Vault",      url: "/vault",     icon: Archive,     role: "Vault Custodian" },
-  { title: "x402 Payment Demo",     url: "/x402-demo", icon: Zap,         role: "x402" },
+  { title: "Continuity Vaults",     url: "/vault",     icon: Archive,     role: "Handoff & Exit" },
+  { title: "x402 Micropayments",    url: "/x402-demo", icon: Zap,         role: "Agent Economy" },
 ];
 
 export function AppSidebar() {

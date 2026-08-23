@@ -91,8 +91,12 @@ def generate_learning_resources(
     # Add dependencies domains if matched
     if dependencies:
         for dep in dependencies:
-            note = dep.get("note", "")
-            domain = dep.get("domain", "")
+            if isinstance(dep, dict):
+                note = dep.get("note", "")
+                domain = dep.get("domain", "")
+            else:
+                note = str(dep)
+                domain = ""
             if "DCS" in note or "DCS" in domain:
                 matched_topics.add(("Distributed Control System (DCS) Interfacing", "Understanding DCS firmware and control loop integration"))
             if "Safety" in domain or "QHS" in domain:

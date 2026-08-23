@@ -581,7 +581,23 @@ function VaultDetailPage() {
   const [uploadFile, setUploadFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadMsg, setUploadMsg] = useState("");
-  const [activeTab, setActiveTab] = useState<"brief" | "tasks" | "artifacts" | "query" | "calls">("tasks");
+  const [activeTab, setActiveTab] = useState<"brief" | "tasks" | "artifacts" | "query" | "calls" | "credits">("tasks");
+  // Knowledge Credits tab state
+  const [creditsSearchQ, setCreditsSearchQ] = useState("");
+  const [creditsSearchResults, setCreditsSearchResults] = useState<any[]>([]);
+  const [creditsSearching, setCreditsSearching] = useState(false);
+  const [creditsDraft, setCreditsDraft] = useState<{
+    entry_id: number;
+    draft_problem_summary: string;
+    draft_solution_summary: string;
+  } | null>(null);
+  const [creditsSubmitting, setCreditsSubmitting] = useState(false);
+  const [creditsConfirming, setCreditsConfirming] = useState(false);
+  const [creditsPublished, setCreditsPublished] = useState<any | null>(null);
+  const [creditsRawInput, setCreditsRawInput] = useState("");
+  const [creditsAuthor, setCreditsAuthor] = useState("");
+  const [creditsDomain, setCreditsDomain] = useState("");
+  const [creditsTags, setCreditsTags] = useState("");
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
   const [showCreateTask, setShowCreateTask] = useState(false);
   const [selectedProofDoc, setSelectedProofDoc] = useState<{ id: number; title?: string } | null>(null);
@@ -788,13 +804,13 @@ function VaultDetailPage() {
       )}
 
       {/* Tab Nav */}
-      <div className="flex border-b border-border">
-        {(["tasks", "brief", "artifacts", "query", "calls"] as const).map((tab) => (
+      <div className="flex border-b border-border overflow-x-auto">
+        {(["tasks", "brief", "artifacts", "query", "calls", "credits"] as const).map((tab) => (
           <button
             key={tab}
             type="button"
             onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2 text-[11px] font-display uppercase tracking-widest transition-colors cursor-pointer ${
+            className={`px-4 py-2 text-[11px] font-display uppercase tracking-widest transition-colors cursor-pointer whitespace-nowrap ${
               activeTab === tab
                 ? "border-b-2 border-primary text-primary font-bold"
                 : "text-muted-foreground hover:text-foreground"
@@ -808,7 +824,9 @@ function VaultDetailPage() {
               ? "Upload Artifacts"
               : tab === "query"
               ? "Role-Aware Query"
-              : "Call Log"}
+              : tab === "calls"
+              ? "Call Log"
+              : "Knowledge Credits"}
           </button>
         ))}
       </div>
@@ -1227,6 +1245,258 @@ function VaultDetailPage() {
                 )}
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── Tab: Knowledge Credits (Section 14) ───────────────────────────── */}
+      {activeTab === "credits" && (
+        <div className="space-y-6 dm-snap-in">
+          <div>
+            <div className="section-label">Knowledge Credits</div>
+            <p className="text-[11px] text-muted-foreground mt-0.5">
+              When you solve a problem, share the solution and receive credit by name.
+              Every entry is AI-filtered and requires your confirmation before it's published.
+            </p>
+          </div>
+
+          {/* ── Submit Form ── */}
+          {!creditsDraft && !creditsPublished && (
+            <div className="border border-border bg-card/30 p-5 space-y-4">
+              <div className="text-[10px] font-mono text-primary uppercase tracking-widest">Submit a Recognized Solution</div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[9px] text-muted-foreground uppercase tracking-widest block mb-1">Your Name</label>
+                  <input
+                    className="w-full bg-muted/20 border border-border text-xs font-mono px-3 py-2 focus:outline-none focus:border-primary text-foreground"
+                    placeholder="e.g. T. Nair"
+                    value={creditsAuthor}
+                    onChange={(e) => setCreditsAuthor(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label className="text-[9px] text-muted-foreground uppercase tracking-widest block mb-1">Domain</label>
+                  <input
+                    className="w-full bg-muted/20 border border-border text-xs font-mono px-3 py-2 focus:outline-none focus:border-primary text-foreground"
+                    placeholder="e.g. rotating-equipment"
+                    value={creditsDomain}
+                    onChange={(e) => setCreditsDomain(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="text-[9px] text-muted-foreground uppercase tracking-widest block mb-1">Describe What Happened and How You Resolved It</label>
+                <textarea
+                  rows={5}
+                  className="w-full bg-muted/20 border border-border text-xs font-mono px-3 py-2 focus:outline-none focus:border-primary text-foreground resize-none"
+                  placeholder="Describe the technical problem and the fix. Personal names and shift identifiers will be removed by AI before publishing."
+                  value={creditsRawInput}
+                  onChange={(e) => setCreditsRawInput(e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="text-[9px] text-muted-foreground uppercase tracking-widest block mb-1">Tags (optional, comma-separated)</label>
+                <input
+                  className="w-full bg-muted/20 border border-border text-xs font-mono px-3 py-2 focus:outline-none focus:border-primary text-foreground"
+                  placeholder="e.g. pump,seal,vibration"
+                  value={creditsTags}
+                  onChange={(e) => setCreditsTags(e.target.value)}
+                />
+              </div>
+              <button
+                type="button"
+                disabled={!creditsAuthor.trim() || creditsRawInput.trim().length < 20 || creditsSubmitting}
+                onClick={async () => {
+                  setCreditsSubmitting(true);
+                  try {
+                    const r = await fetch(`${API}/troubleshooting/submit`, {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        employee_name: creditsAuthor.trim(),
+                        employee_domain: creditsDomain.trim() || "general",
+                        raw_input: creditsRawInput.trim(),
+                        tags: creditsTags.trim() || undefined,
+                      }),
+                    });
+                    const d = await r.json();
+                    setCreditsDraft(d);
+                  } finally {
+                    setCreditsSubmitting(false);
+                  }
+                }}
+                className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 text-xs font-display uppercase tracking-wider hover:bg-primary/90 transition-all disabled:opacity-40 cursor-pointer"
+              >
+                {creditsSubmitting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
+                Prepare Solution Draft
+              </button>
+            </div>
+          )}
+
+          {/* ── Confirm Step ── */}
+          {creditsDraft && !creditsPublished && (
+            <div className="border border-amber-400/30 bg-amber-400/5 p-5 space-y-4 dm-snap-in">
+              <div className="flex items-center gap-2">
+                <Eye className="h-4 w-4 text-amber-400" />
+                <span className="text-[10px] font-mono text-amber-300 uppercase tracking-widest">Review Your AI-Filtered Draft</span>
+              </div>
+              <p className="text-[11px] text-muted-foreground">
+                The AI has removed personal details and rewritten your description as a clean solution credit.
+                Review below, edit if needed, then confirm to publish under your name.
+              </p>
+              <div className="space-y-3">
+                <div>
+                  <div className="text-[9px] text-muted-foreground uppercase tracking-widest mb-1">Problem Recognized</div>
+                  <p className="text-xs font-mono bg-muted/20 p-3 border border-border text-foreground/90 leading-relaxed">
+                    {creditsDraft.draft_problem_summary}
+                  </p>
+                </div>
+                <div>
+                  <div className="text-[9px] text-muted-foreground uppercase tracking-widest mb-1">Solution Credit</div>
+                  <p className="text-xs font-mono bg-muted/20 p-3 border border-border text-foreground/90 leading-relaxed">
+                    {creditsDraft.draft_solution_summary}
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  disabled={creditsConfirming}
+                  onClick={async () => {
+                    setCreditsConfirming(true);
+                    try {
+                      const r = await fetch(`${API}/troubleshooting/${creditsDraft.entry_id}/confirm`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({}),
+                      });
+                      const d = await r.json();
+                      setCreditsPublished(d);
+                      setCreditsDraft(null);
+                    } finally {
+                      setCreditsConfirming(false);
+                    }
+                  }}
+                  className="flex items-center gap-2 bg-emerald-600 text-white px-4 py-2 text-xs font-display uppercase tracking-wider hover:bg-emerald-500 transition-all disabled:opacity-40 cursor-pointer"
+                >
+                  {creditsConfirming ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <CheckCircle className="h-3.5 w-3.5" />}
+                  Confirm & Publish Credit
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setCreditsDraft(null); setCreditsRawInput(""); setCreditsAuthor(""); }}
+                  className="px-4 py-2 text-xs font-display uppercase tracking-wider border border-border text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                >
+                  Start Over
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* ── Published Confirmation ── */}
+          {creditsPublished && (
+            <div className="border border-emerald-500/30 bg-emerald-500/5 p-5 space-y-3 dm-snap-in">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-widest">Solution Credit Published</span>
+              </div>
+              <p className="text-xs text-foreground/80">
+                Your solution credit has been published and is now searchable by colleagues across the platform.
+              </p>
+              <button
+                type="button"
+                onClick={() => { setCreditsPublished(null); setCreditsRawInput(""); setCreditsDomain(""); setCreditsTags(""); setCreditsAuthor(""); }}
+                className="text-xs text-primary hover:underline cursor-pointer"
+              >
+                Submit another solution
+              </button>
+            </div>
+          )}
+
+          {/* ── Search Published Credits ── */}
+          <div className="space-y-3">
+            <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">Browse Recognized Solutions</div>
+            <div className="flex gap-2">
+              <input
+                className="flex-1 bg-muted/20 border border-border text-xs font-mono px-3 py-2 focus:outline-none focus:border-primary text-foreground"
+                placeholder="Search published solutions (e.g. pump, seal, vibration)..."
+                value={creditsSearchQ}
+                onChange={(e) => setCreditsSearchQ(e.target.value)}
+                onKeyDown={async (e) => {
+                  if (e.key === "Enter") {
+                    setCreditsSearching(true);
+                    const r = await fetch(`${API}/troubleshooting/search?q=${encodeURIComponent(creditsSearchQ)}`);
+                    const d = await r.json();
+                    setCreditsSearchResults(d.results ?? []);
+                    setCreditsSearching(false);
+                  }
+                }}
+              />
+              <button
+                type="button"
+                disabled={creditsSearching}
+                onClick={async () => {
+                  setCreditsSearching(true);
+                  const r = await fetch(`${API}/troubleshooting/search?q=${encodeURIComponent(creditsSearchQ)}`);
+                  const d = await r.json();
+                  setCreditsSearchResults(d.results ?? []);
+                  setCreditsSearching(false);
+                }}
+                className="flex items-center gap-1.5 bg-muted/40 border border-border px-4 py-2 text-xs font-display uppercase tracking-wider hover:bg-muted/60 transition-all cursor-pointer"
+              >
+                {creditsSearching ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Search className="h-3.5 w-3.5" />}
+              </button>
+            </div>
+
+            {creditsSearchResults.length === 0 && !creditsSearching && (
+              <div className="border border-dashed border-border/50 p-6 text-center">
+                <BookOpen className="h-6 w-6 text-muted-foreground/30 mx-auto mb-2" />
+                <p className="text-xs text-muted-foreground">Search to find published solution credits, or submit your own above.</p>
+              </div>
+            )}
+
+            <div className="space-y-3">
+              {creditsSearchResults.map((entry: any) => (
+                <div key={entry.id} className="border border-border bg-card/40 p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <User className="h-3.5 w-3.5 text-primary shrink-0" />
+                      <span className="text-[11px] font-mono text-primary font-semibold">{entry.employee_name}</span>
+                      {entry.employee_domain && (
+                        <span className="text-[9px] text-muted-foreground uppercase tracking-widest border border-border/50 px-1.5 py-0.5">
+                          {entry.employee_domain}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-3">
+                      {entry.reuse_count > 0 && (
+                        <span className="text-[9px] text-emerald-400 font-mono">
+                          ✓ {entry.reuse_count} colleague{entry.reuse_count !== 1 ? 's' : ''} found this useful
+                        </span>
+                      )}
+                      {entry.tags && (
+                        <span className="text-[9px] font-mono text-muted-foreground/60">{entry.tags}</span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <div className="text-[9px] text-muted-foreground uppercase tracking-widest mb-1">Problem Recognized</div>
+                      <p className="text-xs text-foreground/80 leading-relaxed">{entry.problem_summary}</p>
+                    </div>
+                    <div>
+                      <div className="text-[9px] text-emerald-400/80 uppercase tracking-widest mb-1">Solution</div>
+                      <p className="text-xs text-foreground/80 leading-relaxed">{entry.solution_summary}</p>
+                    </div>
+                  </div>
+                  {entry.published_at && (
+                    <div className="text-[9px] font-mono text-muted-foreground/50">
+                      Published {entry.published_at?.slice(0, 10)}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
