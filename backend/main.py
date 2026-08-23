@@ -217,9 +217,13 @@ FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
 
 from fastapi.responses import RedirectResponse
 
-@app.get("/", include_in_schema=False)
+@app.api_route("/", methods=["GET", "HEAD"], include_in_schema=False)
 def root_redirect():
     return RedirectResponse(url="/docs")
+
+@app.api_route("/health", methods=["GET", "HEAD"], include_in_schema=False)
+def health_check():
+    return {"status": "ok", "service": "DeadMind AI Platform"}
 
 # API Models
 class ChatQuery(BaseModel):
