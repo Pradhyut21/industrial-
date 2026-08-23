@@ -3,6 +3,7 @@ DeadMind Chat & Organizational Memory Service Unit & Integration Tests.
 Verifies Conversation Store CRUD, Coreference Memory, Auto/Manual Expert Routing,
 Consensus & Uncertainty Synthesis, Grounded Attribution, and AI Agent x402 Endpoints.
 """
+import uuid
 import pytest
 from fastapi.testclient import TestClient
 from backend.main import app
@@ -113,9 +114,10 @@ def test_expert_router_generic_vs_equipment():
 
 def test_chat_service_full_synthesis():
     query = "Why is P-302 showing high vibration during startup?"
+    test_uid = f"test_synth_user_{uuid.uuid4().hex[:6]}"
     result = chat_service.process_query(
         query=query,
-        user_id="test_user_2",
+        user_id=test_uid,
         role="Field Technician"
     )
 
@@ -132,10 +134,11 @@ def test_chat_service_full_synthesis():
 
 
 def test_chat_api_endpoints():
+    test_user_id = f"test_api_user_{uuid.uuid4().hex[:6]}"
     # 1. Create conversation
     resp1 = client.post("/api/chat/conversations", json={
         "title": "B-101 Superheater Startup",
-        "user_id": "test_api_user",
+        "user_id": test_user_id,
         "tag": "Boiler Operations"
     })
     assert resp1.status_code == 200
@@ -146,7 +149,7 @@ def test_chat_api_endpoints():
     resp2 = client.post("/api/chat/query", json={
         "query": "What are the temperature ramp limits for B-101?",
         "conversation_id": conv_id,
-        "user_id": "test_api_user"
+        "user_id": test_user_id
     })
     assert resp2.status_code == 200
     query_data = resp2.json()
@@ -155,7 +158,7 @@ def test_chat_api_endpoints():
     assert len(query_data["sources"]) > 0
 
     # 3. List conversations
-    resp3 = client.get(f"/api/chat/conversations?user_id=test_api_user")
+    resp3 = client.get(f"/api/chat/conversations?user_id={test_user_id}")
     assert resp3.status_code == 200
     convs = resp3.json()
     assert len(convs) >= 1
@@ -169,7 +172,7 @@ def test_chat_api_endpoints():
     assert "primary_domain" in experts[0]
 
     # Clean up
-    client.delete(f"/api/chat/conversations/{conv_id}?user_id=test_api_user")
+    client.delete(f"/api/chat/conversations/{conv_id}?user_id={test_user_id}")
 
 
 def test_agent_api_standard_and_x402():
