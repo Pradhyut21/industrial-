@@ -1,7 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "cd frontend && NITRO_PRESET=vercel npm run build",
-  "outputDirectory": "frontend/.vercel/output",
+  "buildCommand": "cd frontend && NITRO_PRESET=vercel npm run build && node -e \"require('fs').cpSync('.vercel/output', '../.vercel/output', {recursive: true})\"",
   "installCommand": "cd frontend && npm install",
   "framework": null
 }
