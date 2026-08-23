@@ -40,11 +40,9 @@ import { toast } from "sonner";
 import { SpritePortrait } from "@/components/SpritePortrait";
 import type { OfficeCharacterName } from "@/scene/office/cast";
 
-const API =
-  (import.meta.env.VITE_API_BASE_URL as string | undefined) ??
-  (typeof window !== "undefined" && window.location.port !== "8000"
-    ? `${window.location.protocol}//${window.location.hostname}:8000`
-    : "");
+import { API_BASE } from "@/lib/api";
+
+const API = API_BASE;
 
 type IndexSearch = { node?: string };
 

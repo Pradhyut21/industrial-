@@ -13,11 +13,9 @@ import { useRef, useEffect, useCallback, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 
-const API =
-  (import.meta.env.VITE_API_BASE_URL as string | undefined) ??
-  (typeof window !== "undefined" && window.location.port !== "8000"
-    ? `http://${window.location.hostname}:8000`
-    : "");
+import { API_BASE } from "@/lib/api";
+
+const API = API_BASE;
 
 // ── Station Layout ────────────────────────────────────────────────────────
 interface Station {

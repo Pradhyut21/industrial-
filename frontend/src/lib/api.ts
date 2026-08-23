@@ -1,7 +1,22 @@
 import { mock } from "./mock-data";
 import { toast } from "sonner";
 
-const BASE = (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? "http://localhost:8000";
+export const DEFAULT_PROD_API = "https://industrial-pwbj.onrender.com";
+
+export function getApiBaseUrl(): string {
+  if (import.meta.env.VITE_API_BASE_URL) {
+    return (import.meta.env.VITE_API_BASE_URL as string).replace(/\/$/, "");
+  }
+  if (typeof window !== "undefined") {
+    if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+      return "http://localhost:8000";
+    }
+  }
+  return DEFAULT_PROD_API;
+}
+
+export const API_BASE = getApiBaseUrl();
+const BASE = API_BASE;
 const MOCK_ONLY = (import.meta.env.VITE_API_MOCK as string | undefined) === "1";
 
 // Once a request fails, flip to mock-only for the rest of the session so we

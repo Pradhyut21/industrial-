@@ -42,11 +42,9 @@ export const Route = createFileRoute("/vault/$personId")({
   component: VaultDetailPage,
 });
 
-const API =
-  (import.meta.env.VITE_API_BASE_URL as string | undefined) ??
-  (typeof window !== "undefined" && window.location.port !== "8000"
-    ? `http://${window.location.hostname}:8000`
-    : "");
+import { API_BASE } from "@/lib/api";
+
+const API = API_BASE;
 
 const ROLES = [
   "Admin",
