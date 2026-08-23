@@ -20,7 +20,7 @@ import uuid
 import pytest
 import concurrent.futures
 from fastapi.testclient import TestClient
-from backend.main import app
+from backend.main import app as _app
 from backend.metering.meter import usage_meter
 from backend.metering.store import UsageStore
 from backend.metering.pricing import pricing_engine
@@ -28,7 +28,7 @@ from backend.metering.reimbursement import reimbursement_engine
 from backend.database import init_db
 
 init_db()
-client = TestClient(app)
+client = TestClient(_app)
 
 
 # ── 1 & 2: Company Account & Employee Allocation ─────────────────────────────

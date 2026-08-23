@@ -1,8 +1,8 @@
 from fastapi.testclient import TestClient
-from backend.main import app
+from backend.main import app as _app
 
 def test_voice_note_fallback():
-    client = TestClient(app)
+    client = TestClient(_app)
     # Provide an invalid audio base64 to force the fallback to trigger
     res = client.post("/api/voice-note", json={
         "engineer": "R. Nayar",

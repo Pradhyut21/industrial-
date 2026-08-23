@@ -6,7 +6,7 @@ Consensus & Uncertainty Synthesis, Grounded Attribution, and AI Agent x402 Endpo
 import uuid
 import pytest
 from fastapi.testclient import TestClient
-from backend.main import app
+from backend.main import app as _app
 from backend.chat.conversation_store import ConversationStore, auto_generate_title
 from backend.chat.memory import ChatMemoryEngine
 from backend.chat.expert_router import ExpertRouter
@@ -15,7 +15,7 @@ from backend.database import init_db
 
 # Initialize test database
 init_db()
-client = TestClient(app)
+client = TestClient(_app)
 
 
 def test_auto_generate_title():
