@@ -7,3 +7,5 @@ services:
     envVars:
       - key: GROQ_API_KEY
         sync: false
+      - key: LOW_MEMORY_MODE
+        value: "1"
