@@ -83,11 +83,13 @@ AGENT_ADDRESS  = os.environ.get("AGENT_ALGORAND_ADDRESS", "").strip()
 NODE_URL       = os.environ.get("ALGORAND_NODE_URL", "https://mainnet-api.algonode.cloud").strip()
 NODE_TOKEN     = os.environ.get("ALGORAND_NODE_TOKEN", "").strip()
 NETWORK        = os.environ.get("ALGORAND_NETWORK", "testnet").strip()
-FACILITATOR    = os.environ.get("X402_FACILITATOR_URL", "https://facilitator.goplausible.xyz/verify").strip()
-BASE_URL       = os.environ.get("DEADMIND_BASE_URL", "http://localhost:8000").rstrip("/")
+def get_base_url() -> str:
+    port = os.environ.get("PORT", "8000")
+    return os.environ.get("DEADMIND_BASE_URL", f"http://127.0.0.1:{port}").rstrip("/")
 
-DB_PATH = Path(__file__).parents[2] / "deadmind.db"
-DIGEST_LOG = Path(__file__).parent / "agent_digest.log"
+FACILITATOR    = os.environ.get("X402_FACILITATOR_URL", "https://facilitator.goplausible.xyz/verify").strip()
+DB_PATH        = Path(__file__).parents[2] / "deadmind.db"
+DIGEST_LOG     = Path(__file__).parent / "agent_digest.log"
 
 DRY_RUN = not bool(AGENT_MNEMONIC)
 
@@ -247,7 +249,7 @@ def fetch_brief_with_payment(person_id: int) -> Optional[dict]:
 
     This is machine-to-machine: no human interaction at any step.
     """
-    url = f"{BASE_URL}/x402/vault/{person_id}/brief"
+    url = f"{get_base_url()}/x402/vault/{person_id}/brief"
     logger.info("[x402] Requesting brief for person_id=%d — URL: %s", person_id, url)
 
     try:
