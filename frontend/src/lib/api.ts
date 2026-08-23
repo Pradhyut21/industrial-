@@ -505,5 +505,3 @@ export async function apiDelete<T = any>(path: string, headers?: Record<string, 
   }
   return (await res.json()) as T;
 }
-
-export { BASE as API_BASE };
