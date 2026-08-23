@@ -3,6 +3,7 @@ DeadMind Usage Metering, Enterprise AI Economy & Reimbursement FastAPI Router.
 Exposes company governance, 4-flow economy dashboard, employee usage accounts,
 reimbursement lifecycles, service discovery, period-end reconciliation, and demo controls.
 """
+import uuid
 from typing import Optional, Dict, Any, List
 from pydantic import BaseModel
 from fastapi import APIRouter, HTTPException, Query

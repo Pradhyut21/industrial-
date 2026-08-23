@@ -12,7 +12,7 @@ from __future__ import annotations
 import datetime
 import json
 import os
-from typing import Optional
+from typing import Optional, List
 
 from fastapi import APIRouter, BackgroundTasks, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import Response
