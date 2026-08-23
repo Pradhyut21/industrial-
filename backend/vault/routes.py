@@ -1277,7 +1277,7 @@ def x402_discovery(request: Request):
 
     pay_to = _os.environ.get("ALGORAND_PAYMENT_ADDRESS", "")
     network = _os.environ.get("ALGORAND_NETWORK", "testnet")
-    facilitator = _os.environ.get("X402_FACILITATOR_URL", "https://x402.goplausible.xyz/facilitate")
+    facilitator = _os.environ.get("X402_FACILITATOR_URL", "https://facilitator.goplausible.xyz/verify")
     usdc_id = 31566704 if network == "mainnet" else 10458941
 
     return {

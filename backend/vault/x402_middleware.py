@@ -62,7 +62,7 @@ NETWORK = os.environ.get("ALGORAND_NETWORK", "testnet").strip()          # testn
 AMOUNT_USDC = os.environ.get("ALGORAND_PAYMENT_AMOUNT_USDC", "0.01")    # cost per call
 FACILITATOR_URL = os.environ.get(
     "X402_FACILITATOR_URL",
-    "https://x402.goplausible.xyz/facilitate",
+    "https://facilitator.goplausible.xyz/verify",
 )
 
 # Convert USDC to microUSDC for the x402 wire format (1 USDC = 1_000_000 microUSDC)
@@ -283,16 +283,30 @@ class _X402GateMiddleware:
             server = scope.get("server", ("localhost", 8000))
             resource_url = f"{scheme}://{server[0]}:{server[1]}{path}"
 
+            requirements = make_402_body(resource_url, "DeadMind Continuity Vault")["accepts"][0]
             verify_payload = json.dumps({
-                "x402Version": 1,
-                "paymentToken": payment_header,
-                "paymentRequirements": make_402_body(resource_url, "DeadMind Continuity Vault")["accepts"][0],
+                "paymentPayload": {
+                    "x402Version": 2,
+                    "resource": {
+                        "url": resource_url,
+                        "description": "DeadMind Continuity Brief",
+                    },
+                    "accepted": requirements,
+                    "payload": {
+                        "paymentGroup": [payment_header],
+                        "paymentIndex": 0,
+                    },
+                },
+                "paymentRequirements": requirements,
             }).encode()
 
             req = urllib.request.Request(
                 FACILITATOR_URL,
                 data=verify_payload,
-                headers={"Content-Type": "application/json"},
+                headers={
+                    "Content-Type": "application/json",
+                    "User-Agent": "x402-avm/2.12.0 (DeadMind AI)",
+                },
                 method="POST",
             )
 
@@ -350,39 +364,48 @@ class _X402GateMiddleware:
             txn = signed_txn.transaction
 
             # Structural validation
-            if txn.type != "axfer":
-                return f"Expected ASA transfer, got: {txn.type}"
+            if txn.type == "axfer":
+                usdc_asa_id = 31566704 if NETWORK == "mainnet" else 10458941
+                if txn.index != usdc_asa_id:
+                    return f"Wrong ASA: {txn.index} != {usdc_asa_id}"
+                if txn.receiver != PAYMENT_ADDRESS:
+                    return f"Wrong receiver: {txn.receiver} != {PAYMENT_ADDRESS}"
+                required_str, _ = get_route_pricing(path)
+                required = int(required_str)
+                if txn.amount < required:
+                    return f"Insufficient amount: {txn.amount} < {required} microUSDC"
+                sender = txn.sender
+                # Live balance check
+                try:
+                    account_info = algod_client.account_info(sender)
+                    assets = {a["asset-id"]: a for a in account_info.get("assets", [])}
+                    usdc_balance = assets.get(usdc_asa_id, {}).get("amount", 0)
+                    if usdc_balance < required:
+                        return (
+                            f"Insufficient USDC balance: {usdc_balance} microUSDC "
+                            f"(need {required})"
+                        )
+                except Exception as bal_exc:
+                    logger.warning("[x402-direct] Balance check failed (proceeding): %s", bal_exc)
 
-            if txn.receiver != PAYMENT_ADDRESS:
-                return f"Wrong receiver: {txn.receiver} != {PAYMENT_ADDRESS}"
-
-            usdc_asa_id = 31566704 if NETWORK == "mainnet" else 10458941
-            if txn.index != usdc_asa_id:
-                return f"Wrong ASA: {txn.index} != {usdc_asa_id}"
-
-            required_str, _ = get_route_pricing(path)
-            required = int(required_str)
-            if txn.amount < required:
-                return f"Insufficient amount: {txn.amount} < {required} microUSDC"
-
-            sender = txn.sender
-
-            # Live balance check
-            try:
-                account_info = algod_client.account_info(sender)
-                assets = {a["asset-id"]: a for a in account_info.get("assets", [])}
-                usdc_balance = assets.get(usdc_asa_id, {}).get("amount", 0)
-                if usdc_balance < required:
-                    return (
-                        f"Insufficient USDC balance: {usdc_balance} microUSDC "
-                        f"(need {required})"
-                    )
-                logger.info(
-                    "[x402-direct] Sender %s has %d microUSDC — sufficient for payment",
-                    sender, usdc_balance,
-                )
-            except Exception as bal_exc:
-                logger.warning("[x402-direct] Balance check failed (proceeding): %s", bal_exc)
+            elif txn.type == "pay":
+                if txn.receiver != PAYMENT_ADDRESS:
+                    return f"Wrong receiver: {txn.receiver} != {PAYMENT_ADDRESS}"
+                required_str, _ = get_route_pricing(path)
+                required = int(required_str)
+                amt = getattr(txn, "amt", getattr(txn, "amount", 0))
+                if amt < required:
+                    return f"Insufficient amount: {amt} < {required} microALGO"
+                sender = txn.sender
+                try:
+                    account_info = algod_client.account_info(sender)
+                    algo_balance = account_info.get("amount", 0)
+                    if algo_balance < required + 1000:
+                        return f"Insufficient ALGO balance: {algo_balance} microALGO (need {required + 1000})"
+                except Exception as bal_exc:
+                    logger.warning("[x402-direct] Balance check failed (proceeding): %s", bal_exc)
+            else:
+                return f"Expected ASA transfer (axfer) or ALGO payment (pay), got: {txn.type}"
 
             # Broadcast directly to the Algorand node
             try:

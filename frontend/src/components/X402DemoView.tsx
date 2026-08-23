@@ -157,7 +157,7 @@ export function X402DemoView() {
               amount: "10000",
               amountFormatted: "0.0100 USDC",
               payTo: DEFAULT_TESTNET_PAYEE,
-              facilitator: "https://x402.goplausible.xyz/facilitate",
+              facilitator: "https://facilitator.goplausible.xyz/verify",
             },
           ],
         };

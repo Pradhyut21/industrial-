@@ -83,7 +83,7 @@ AGENT_ADDRESS  = os.environ.get("AGENT_ALGORAND_ADDRESS", "").strip()
 NODE_URL       = os.environ.get("ALGORAND_NODE_URL", "https://mainnet-api.algonode.cloud").strip()
 NODE_TOKEN     = os.environ.get("ALGORAND_NODE_TOKEN", "").strip()
 NETWORK        = os.environ.get("ALGORAND_NETWORK", "testnet").strip()
-FACILITATOR    = os.environ.get("X402_FACILITATOR_URL", "https://x402.goplausible.xyz/facilitate").strip()
+FACILITATOR    = os.environ.get("X402_FACILITATOR_URL", "https://facilitator.goplausible.xyz/verify").strip()
 BASE_URL       = os.environ.get("DEADMIND_BASE_URL", "http://localhost:8000").rstrip("/")
 
 DB_PATH = Path(__file__).parents[2] / "deadmind.db"
@@ -190,15 +190,32 @@ def _build_payment_token(payment_terms: dict) -> Optional[str]:
         algod_client = algod.AlgodClient(node_token, node_url, headers)
         params = algod_client.suggested_params()
 
-        # Build ASA transfer transaction (USDC payment)
-        txn = algo_tx.AssetTransferTxn(
-            sender=sender,
-            sp=params,
-            receiver=pay_to,
-            amt=amount,
-            index=usdc_asa_id,
-            note=b"DeadMind x402 agent payment",
-        )
+        # Check if sender has USDC or ALGO
+        account_info = algod_client.account_info(sender)
+        assets = {a["asset-id"]: a for a in account_info.get("assets", [])}
+        usdc_balance = assets.get(usdc_asa_id, {}).get("amount", 0)
+
+        if usdc_balance >= amount:
+            # Build ASA transfer transaction (USDC payment)
+            txn = algo_tx.AssetTransferTxn(
+                sender=sender,
+                sp=params,
+                receiver=pay_to,
+                amt=amount,
+                index=usdc_asa_id,
+                note=b"DeadMind x402 agent payment (USDC)",
+            )
+            logger.info("[x402] Signed Algorand USDC payment — amount=%s microUSDC pay_to=%s", amount, pay_to)
+        else:
+            # Build ALGO payment transaction (native micropayment)
+            txn = algo_tx.PaymentTxn(
+                sender=sender,
+                sp=params,
+                receiver=pay_to,
+                amt=amount,
+                note=b"DeadMind x402 agent payment (ALGO)",
+            )
+            logger.info("[x402] Signed Algorand ALGO micropayment — amount=%s microALGO pay_to=%s", amount, pay_to)
 
         # Sign the transaction
         signed_txn = txn.sign(private_key)
@@ -209,10 +226,6 @@ def _build_payment_token(payment_terms: dict) -> Optional[str]:
         if isinstance(token, bytes):
             token = token.decode("ascii")
 
-        logger.info(
-            "[x402] Signed Algorand USDC payment — amount=%s microUSDC pay_to=%s",
-            amount, pay_to,
-        )
         return token
 
     except Exception as exc:
