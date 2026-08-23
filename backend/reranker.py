@@ -1,19 +1,16 @@
-from sentence_transformers import CrossEncoder
+import os
 import threading
-
-_reranker_model = None
-_model_lock = threading.Lock()   # guards model construction only
-_lock = threading.Lock()         # existing — guards .predict() calls (kept as-is,
-                                  # cross-encoder inference isn't proven thread-safe
-                                  # either, so serializing predict() calls stays)
-
 import numpy as np
 from rapidfuzz import fuzz
 
+_reranker_model = None
+_model_lock = threading.Lock()   # guards model construction only
+_lock = threading.Lock()         # existing — guards .predict() calls
+
 class OfflineCrossEncoder:
     """
-    Fallback cross-encoder for sandboxes or air-gapped environments without
-    Hugging Face access. Uses fuzzy token alignment scores.
+    Fallback cross-encoder for sandboxes or memory-constrained cloud environments (512MB RAM).
+    Uses fuzzy token alignment scores with zero PyTorch overhead.
     """
     def __init__(self, *args, **kwargs):
         pass
@@ -30,16 +27,21 @@ class OfflineCrossEncoder:
         return np.array(scores, dtype="float32")
 
 def get_reranker():
-    """Thread-safe lazy singleton with offline fallback."""
+    """Thread-safe lazy singleton with low-memory/offline fallback."""
     global _reranker_model
     if _reranker_model is not None:
         return _reranker_model
     with _model_lock:
         if _reranker_model is None:
+            low_mem = os.environ.get("LOW_MEMORY_MODE", "").lower() in ("1", "true", "yes")
+            if low_mem:
+                _reranker_model = OfflineCrossEncoder()
+                return _reranker_model
             try:
+                from sentence_transformers import CrossEncoder
                 _reranker_model = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2", max_length=512)
             except Exception as e:
-                print(f"[Reranker] Notice: CrossEncoder download unavailable ({e}). Using offline lexical matcher.")
+                print(f"[Reranker] Notice: CrossEncoder unavailable or memory constrained ({e}). Using offline lexical matcher.")
                 _reranker_model = OfflineCrossEncoder()
     return _reranker_model
 

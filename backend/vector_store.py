@@ -3,21 +3,21 @@ import numpy as np
 import pickle
 import os
 import threading
-from sentence_transformers import SentenceTransformer
 
 MODEL_NAME = "all-MiniLM-L6-v2"
 INDEX_PATH = "backend/data/faiss.index"
 META_PATH = "backend/data/faiss_meta.pkl"
 
 _model = None
-_model_lock = threading.Lock()          # NEW — guards model construction only
-_vs_lock = threading.Lock()             # existing — guards FAISS index mutation
+_model_lock = threading.Lock()          # guards model construction only
+_vs_lock = threading.Lock()             # guards FAISS index mutation
 _save_timer = None
 
 class OfflineEmbeddingModel:
     """
-    Deterministic fallback embedding model for air-gapped environments or
-    sandboxes without Hugging Face network access.
+    Deterministic fallback embedding model for memory-constrained cloud tiers
+    (Render 512MB, Vercel Serverless) or air-gapped sandboxes.
+    Uses zero PyTorch RAM (~15MB total).
     """
     def __init__(self, dim: int = 384):
         self.dim = dim
@@ -52,17 +52,23 @@ class OfflineEmbeddingModel:
 
 def get_model():
     """
-    Thread-safe lazy singleton with sandbox/offline fallback.
+    Thread-safe lazy singleton with low-memory/offline fallback.
     """
     global _model
     if _model is not None:
         return _model
     with _model_lock:
         if _model is None:
+            # If explicit low memory mode or Render free tier
+            low_mem = os.environ.get("LOW_MEMORY_MODE", "").lower() in ("1", "true", "yes")
+            if low_mem:
+                _model = OfflineEmbeddingModel()
+                return _model
             try:
+                from sentence_transformers import SentenceTransformer
                 _model = SentenceTransformer(MODEL_NAME)
             except Exception as e:
-                print(f"[VectorStore] Notice: SentenceTransformer download unavailable in this environment ({e}). Using offline deterministic embedding engine.")
+                print(f"[VectorStore] Notice: SentenceTransformer unavailable or memory constrained ({e}). Using offline deterministic embedding engine.")
                 _model = OfflineEmbeddingModel()
     return _model
 

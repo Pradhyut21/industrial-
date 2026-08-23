@@ -1,12 +1,6 @@
 import re
 from datetime import datetime
 from backend.database import get_db_connection
-
-import spacy
-try:
-    spacy.require_gpu()
-except:
-    pass
 from rapidfuzz import fuzz, process
 from backend.vector_store import store
 import threading
@@ -29,9 +23,19 @@ def get_nlp():
     global _nlp_model
     if _nlp_model is None:
         try:
-            _nlp_model = spacy.load("en_core_web_sm")
-        except Exception:
-            _nlp_model = spacy.blank("en")
+            import spacy
+            try:
+                _nlp_model = spacy.load("en_core_web_sm")
+            except Exception:
+                _nlp_model = spacy.blank("en")
+        except ImportError:
+            class SimpleNLP:
+                def __call__(self, text):
+                    class Doc:
+                        ents = []
+                        sents = [{"text": s.strip()} for s in text.split(".") if s.strip()]
+                    return Doc()
+            _nlp_model = SimpleNLP()
     return _nlp_model
 
 def build_alias_index(conn):

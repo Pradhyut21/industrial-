@@ -1,13 +1,18 @@
 import base64
 import tempfile
 import os
-from faster_whisper import WhisperModel
-
 _whisper_model = None
 def get_whisper():
     global _whisper_model
     if _whisper_model is None:
-        _whisper_model = WhisperModel("tiny.en", device="cpu", compute_type="int8")  # fast, CPU-friendly
+        try:
+            from faster_whisper import WhisperModel
+            _whisper_model = WhisperModel("tiny.en", device="cpu", compute_type="int8")
+        except Exception as e:
+            class DummyWhisper:
+                def transcribe(self, path, **kwargs):
+                    return [], None
+            _whisper_model = DummyWhisper()
     return _whisper_model
 
 def transcribe_audio(audio_base64: str) -> str:
