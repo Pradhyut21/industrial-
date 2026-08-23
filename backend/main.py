@@ -177,20 +177,39 @@ app.add_middleware(
 
 @app.on_event("startup")
 def startup_event():
-    from backend.hybrid_retrieval import build_bm25_index
-    build_bm25_index()
+    # 1. Initialize schema and auto-seed if fresh deployment
+    from backend.database import init_db, get_db_connection
+    init_db()
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM engineers")
+        count = cursor.fetchone()[0]
+        conn.close()
+        if count == 0:
+            print("[Startup] Fresh cloud instance detected. Auto-seeding initial plant records...")
+            import generate_demo_data
+            generate_demo_data.seed_data()
+    except Exception as e:
+        print("[Startup] Database auto-seed check:", e)
 
-    # Warm the embedding + reranker models synchronously before accepting
-    # traffic, so concurrent cold-start requests never race on lazy
-    # construction (see backend/vector_store.py get_model() and
-    # backend/reranker.py get_reranker() for the thread-safety fix itself —
-    # this just avoids relying on it under normal startup conditions).
-    print("Warming embedding + reranker models before accepting traffic...")
-    from backend.vector_store import get_model
-    from backend.reranker import get_reranker
-    get_model()
-    get_reranker()
-    print("Models warm. Server ready.")
+    # 2. Build BM25 index
+    try:
+        from backend.hybrid_retrieval import build_bm25_index
+        build_bm25_index()
+    except Exception as e:
+        print("[Startup] Hybrid retrieval index notice:", e)
+
+    # 3. Warm embedding / cross-encoder models
+    try:
+        print("Warming embedding engine before accepting traffic...")
+        from backend.vector_store import get_model
+        from backend.reranker import get_reranker
+        get_model()
+        get_reranker()
+        print("Models warm. Server ready.")
+    except Exception as e:
+        print("[Startup] Model warm notice:", e)
 
 # Setup pathing
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
