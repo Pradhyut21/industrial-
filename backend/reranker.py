@@ -33,8 +33,13 @@ def get_reranker():
         return _reranker_model
     with _model_lock:
         if _reranker_model is None:
-            low_mem = os.environ.get("LOW_MEMORY_MODE", "").lower() in ("1", "true", "yes")
+            low_mem = (
+                os.environ.get("LOW_MEMORY_MODE", "").lower() in ("1", "true", "yes")
+                or bool(os.environ.get("RENDER"))
+                or bool(os.environ.get("VERCEL"))
+            )
             if low_mem:
+                print("[Reranker] Cloud / Low-memory tier detected. Using instant offline lexical matcher.")
                 _reranker_model = OfflineCrossEncoder()
                 return _reranker_model
             try:

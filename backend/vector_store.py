@@ -59,9 +59,14 @@ def get_model():
         return _model
     with _model_lock:
         if _model is None:
-            # If explicit low memory mode or Render free tier
-            low_mem = os.environ.get("LOW_MEMORY_MODE", "").lower() in ("1", "true", "yes")
+            # If explicit low memory mode or Render/Vercel free tier
+            low_mem = (
+                os.environ.get("LOW_MEMORY_MODE", "").lower() in ("1", "true", "yes")
+                or bool(os.environ.get("RENDER"))
+                or bool(os.environ.get("VERCEL"))
+            )
             if low_mem:
+                print("[VectorStore] Cloud / Low-memory tier detected. Using instant zero-overhead embedding engine.")
                 _model = OfflineEmbeddingModel()
                 return _model
             try:
