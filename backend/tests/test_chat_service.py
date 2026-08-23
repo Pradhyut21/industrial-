@@ -151,6 +151,7 @@ def test_chat_api_endpoints():
         "user_id": test_user_id
     })
     assert resp2.status_code == 200
+    query_data = resp2.json()
     assert "answer" in query_data
     assert isinstance(query_data["answer"], str)
     assert "sources" in query_data
